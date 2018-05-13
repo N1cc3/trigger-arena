@@ -6,7 +6,7 @@ class App extends Component {
     super()
 
     this.state = {
-      endpoint: 'http://trigger-arena.herokuapp.com',
+      endpoint: 'https://trigger-arena.herokuapp.com',
       color: 'white'
     }
   }
