@@ -1,4 +1,4 @@
-#Trigger Arena
+# Trigger Arena
 
 Digital board game.
 
