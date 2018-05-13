@@ -6,7 +6,7 @@ class App extends Component {
     super()
 
     this.state = {
-      endpoint: process.env.SERVER_URL || 'http://localhost:8080',
+      endpoint: 'http://trigger-arena.herokuapp.com',
       color: 'white'
     }
   }
