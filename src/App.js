@@ -6,7 +6,7 @@ class App extends Component {
     super()
 
     this.state = {
-      endpoint: process.env.SERVER_URL || "http://localhost:8080",
+      endpoint: process.env.SERVER_URL || 'http://localhost:8080',
       color: 'white'
     }
   }
@@ -27,10 +27,10 @@ class App extends Component {
     })
 
     return (
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: 'center' }}>
         <button onClick={() => this.send() }>Change Color</button>
-        <button id="blue" onClick={() => this.setColor('blue')}>Blue</button>
-        <button id="red" onClick={() => this.setColor('red')}>Red</button>
+        <button id='blue' onClick={() => this.setColor('blue')}>Blue</button>
+        <button id='red' onClick={() => this.setColor('red')}>Red</button>
       </div>
     )
   }
