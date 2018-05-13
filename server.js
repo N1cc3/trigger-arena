@@ -4,7 +4,7 @@ const socketIO = require('socket.io')
 const path = require('path');
 
 // our localhost port
-const port = 4001
+const port = process.env.PORT || 8080;
 
 const app = express()
 
