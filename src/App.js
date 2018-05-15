@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client'
+import Card from './Card'
 
 class App extends Component {
   constructor() {
@@ -27,10 +28,10 @@ class App extends Component {
     })
 
     return (
-      <div style={{ textAlign: 'center' }}>
-        <button onClick={() => this.send() }>Change Color</button>
-        <button id='blue' onClick={() => this.setColor('blue')}>Blue</button>
-        <button id='red' onClick={() => this.setColor('red')}>Red</button>
+      <div>
+        <Card></Card>
+        <Card></Card>
+        <Card></Card>
       </div>
     )
   }
