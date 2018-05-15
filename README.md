@@ -2,6 +2,6 @@
 
 Digital board game.
 
-Play here: https://n1cc3.github.io/trigger-arena/
+Play here: http://trigger-arena.herokuapp.com/
 
 Works best via "Add to Home Screen".
