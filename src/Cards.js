@@ -47,8 +47,8 @@ class Cards extends Component {
   render() {
     return (
       <div className={styles.cards}>
-        {this.state.cards.map(card => (
-          <Card card={card} />
+        {this.state.cards.map((card, index) => (
+          <Card key={index} card={card} />
         ))}
       </div>
     )
