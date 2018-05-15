@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client'
-import Card from './Card'
+import Cards from './Cards'
 
 class App extends Component {
   constructor() {
@@ -28,11 +28,7 @@ class App extends Component {
     })
 
     return (
-      <div>
-        <Card></Card>
-        <Card></Card>
-        <Card></Card>
-      </div>
+      <Cards/>
     )
   }
 }
