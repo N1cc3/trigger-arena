@@ -8,6 +8,13 @@ class App extends Component {
 
     this.socket = socketIOClient(window.location.href.startsWith('http://localhost') ? 'http://localhost:8080' : window.location.href)
 
+    this.socket.on('use card', (res) => {
+
+    })
+
+    this.socket.on('discard card', (res) => {
+
+    })
   }
 
   render() {

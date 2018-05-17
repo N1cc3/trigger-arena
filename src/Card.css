@@ -18,3 +18,18 @@
   border-width: 1px;
   border-radius: 10px;
 }
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.use {
+  background-color: green;
+}
+
+.discard {
+  background-color: red;
+}

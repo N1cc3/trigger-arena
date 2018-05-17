@@ -23,6 +23,7 @@ const clients = []
 
 const testCards = [
   {
+    id: 1,
     name: 'Test Card 1',
     trigger: {
       type: 'Action',
@@ -34,6 +35,7 @@ const testCards = [
     },
   },
   {
+    id: 2,
     name: 'Test Card 2',
     trigger: {
       type: 'Action',
@@ -45,6 +47,7 @@ const testCards = [
     },
   },
   {
+    id: 3,
     name: 'Test Card 3',
     trigger: {
       type: 'Action',
@@ -61,6 +64,23 @@ io.on('connection', socket => {
   let socketId = socket.id
   console.log(`New client connected: ${socketId}`)
   clients.push(socketId)
+
+  socket.on('use card', (cardId) => {
+    console.log(`Client ${socketId} wants to use card ${cardId}`)
+    socket.to(socketId).emit('use card', {
+      card: cardId,
+      success: true,
+    })
+  })
+
+  socket.on('discard card', (cardId) => {
+    console.log(`Client ${socketId} wants to discard card ${cardId}`)
+    socket.to(socketId).emit('discard card', {
+      card: cardId,
+      success: true,
+    })
+  })
+
   socket.on('cards', () => {
     console.log(`Client ${socketId} asks for his cards`)
     io.sockets.connected[socketId].emit('cards', testCards)
