@@ -6,7 +6,7 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    this.socket = socketIOClient(window.location.href)
+    this.socket = socketIOClient(window.location.href.startsWith('http://localhost') ? 'http://localhost:8080' : window.location.href)
 
   }
 
