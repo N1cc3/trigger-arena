@@ -3,47 +3,24 @@ import styles from './Cards.css'
 import Card from './Card'
 
 class Cards extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
-      cards: [
-        {
-          name: 'Test Card 1',
-          trigger: {
-            type: 'Action',
-          },
-          effect: {
-            type: 'Damage',
-            target: 'all',
-            amount: 1,
-          },
-        },
-        {
-          name: 'Test Card 2',
-          trigger: {
-            type: 'Action',
-          },
-          effect: {
-            type: 'Damage',
-            target: 'all',
-            amount: 1,
-          },
-        },
-        {
-          name: 'Test Card 3',
-          trigger: {
-            type: 'Action',
-          },
-          effect: {
-            type: 'Damage',
-            target: 'all',
-            amount: 1,
-          },
-        },
-      ],
+      cards: [],
     }
+
+    this.socket = this.props.socket
+
+    this.socket.on('cards', (cards) => {
+      console.debug(cards)
+      this.setState({
+        cards: cards,
+      })
+    })
+    this.socket.emit('cards')
   }
+
   render() {
     return (
       <div className={styles.cards}>

@@ -19,21 +19,55 @@ const server = http.createServer(app)
 // This creates our socket using the instance of the server
 const io = socketIO(server)
 
-// This is what the socket.io syntax is like, we will work this later
-io.on('connection', socket => {
-  console.log('New client connected')
+const clients = []
 
-  // just like on the client side, we have a socket.on method that takes a callback function
-  socket.on('change color', (color) => {
-    // once we get a 'change color' event from one of our clients, we will send it to the rest of the clients
-    // we make use of the socket.emit method again with the argument given to use from the callback function above
-    console.log('Color Changed to: ', color)
-    io.sockets.emit('change color', color)
+const testCards = [
+  {
+    name: 'Test Card 1',
+    trigger: {
+      type: 'Action',
+    },
+    effect: {
+      type: 'Damage',
+      target: 'all',
+      amount: 1,
+    },
+  },
+  {
+    name: 'Test Card 2',
+    trigger: {
+      type: 'Action',
+    },
+    effect: {
+      type: 'Damage',
+      target: 'self',
+      amount: 2,
+    },
+  },
+  {
+    name: 'Test Card 3',
+    trigger: {
+      type: 'Action',
+    },
+    effect: {
+      type: 'Damage',
+      target: 'all',
+      amount: 3,
+    },
+  },
+]
+
+io.on('connection', socket => {
+  let socketId = socket.id
+  console.log(`New client connected: ${socketId}`)
+  clients.push(socketId)
+  socket.on('cards', () => {
+    console.log(`Client ${socketId} asks for his cards`)
+    io.sockets.connected[socketId].emit('cards', testCards)
   })
 
-  // disconnect is fired when a client leaves the server
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.log(`Client ${socketId} disconnected`)
   })
 })
 

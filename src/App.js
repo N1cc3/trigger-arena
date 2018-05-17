@@ -7,28 +7,15 @@ class App extends Component {
     super()
 
     this.state = {
-      endpoint: 'https://trigger-arena.herokuapp.com',
-      color: 'white'
+      endpoint: window.location.href,
     }
-  }
 
-  send = () => {
-    const socket = socketIOClient(this.state.endpoint);
-    socket.emit('change color', this.state.color) // change 'red' to this.state.color
-  }
-
-  setColor = (color) => {
-    this.setState({ color })
+    this.socket = socketIOClient(this.state.endpoint)
   }
 
   render() {
-    const socket = socketIOClient(this.state.endpoint);
-    socket.on('change color', (col) => {
-      document.body.style.backgroundColor = col
-    })
-
     return (
-      <Cards/>
+      <Cards socket={this.socket} />
     )
   }
 }
