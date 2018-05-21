@@ -1,9 +1,9 @@
 body {
   margin: 0;
   padding: 1vw 1vh;
-  font-family: sans-serif;
-  width: 98vw;
-  height: 98vh;
+  font-family: 'Amaranth', sans-serif;
+  width: 99vw;
+  height: 97vh;
   overflow: hidden;
 
   background-color: gold;

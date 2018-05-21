@@ -1,0 +1,26 @@
+.box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nickInput {
+  width: 60%;
+  font-size: 3em;
+  border-radius: 10px;
+  margin: 10px;
+  font-family: inherit;
+}
+
+.ready {
+  width: 40%;
+  font-size: 3em;
+  border-radius: 10px;
+  margin: 10px;
+  border-color: green;
+  background-color: green;
+  font-family: inherit;
+}

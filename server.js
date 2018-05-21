@@ -63,21 +63,31 @@ const testCards = [
 io.on('connection', socket => {
   let socketId = socket.id
   console.log(`New client connected: ${socketId}`)
-  clients.push(socketId)
+  let playerId = clients.push(socketId) - 1
+
+  io.sockets.connected[socketId].emit('connected', {
+    playerId: playerId,
+  })
+
+  socket.on('change nick', (nick) => {
+    console.log(`Client ${socketId} want to change nick to ${nick}`)
+    io.sockets.emit('change nick', {
+      nick: nick,
+      playerId: playerId,
+    })
+  })
 
   socket.on('use card', (cardId) => {
     console.log(`Client ${socketId} wants to use card ${cardId}`)
-    socket.to(socketId).emit('use card', {
+    io.sockets.connected[socketId].emit('use card', {
       card: cardId,
-      success: true,
     })
   })
 
   socket.on('discard card', (cardId) => {
     console.log(`Client ${socketId} wants to discard card ${cardId}`)
-    socket.to(socketId).emit('discard card', {
+    io.sockets.connected[socketId].emit('discard card', {
       card: cardId,
-      success: true,
     })
   })
 
