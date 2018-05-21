@@ -77,10 +77,10 @@ io.on('connection', socket => {
     })
   })
 
-  socket.on('change nick', (nick) => {
-    console.log(`Client ${socketId} wants to change nick to ${nick}`)
-    io.sockets.emit('change nick', {
-      nick: nick,
+  socket.on('change name', (name) => {
+    console.log(`Client ${socketId} wants to change name to ${name}`)
+    io.sockets.emit('change name', {
+      name: name,
       playerId: playerId,
     })
   })

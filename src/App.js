@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client'
-import Nick from './Nick'
+import Name from './Name'
 import Cards from './Cards'
 import Room from './Room'
 import styles from './App.css'
@@ -13,8 +13,8 @@ const roomView = (socket, onEnter) => {
   return <Room socket={socket} onEnter={onEnter}/>
 }
 
-const nickView = (socket, playerId, onReady) => {
-  return <Nick
+const nameView = (socket, playerId, onReady) => {
+  return <Name
     socket={socket}
     playerId={playerId}
     onReady={onReady}
@@ -37,13 +37,13 @@ class App extends Component {
       this.setState({active: cardsView(this.socket)})
     }
 
-    const goToNick = () => {
-      this.setState({active: nickView(this.socket, this.playerId, goToCards)})
+    const goToName = () => {
+      this.setState({active: nameView(this.socket, this.playerId, goToCards)})
     }
 
     this.socket.on('connected', (res) => {
       this.playerId = res.playerId
-      this.setState({active: roomView(this.socket, goToNick)})
+      this.setState({active: roomView(this.socket, goToName)})
     })
 
     this.state = {
