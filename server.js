@@ -20,6 +20,7 @@ const server = http.createServer(app)
 const io = socketIO(server)
 
 const clients = []
+const rooms = []
 
 const testCards = [
   {
@@ -69,8 +70,15 @@ io.on('connection', socket => {
     playerId: playerId,
   })
 
+  socket.on('enter room', (room) => {
+    console.log(`Client ${socketId} wants to enter room ${room}`)
+    io.sockets.emit('enter room', {
+      room: room,
+    })
+  })
+
   socket.on('change nick', (nick) => {
-    console.log(`Client ${socketId} want to change nick to ${nick}`)
+    console.log(`Client ${socketId} wants to change nick to ${nick}`)
     io.sockets.emit('change nick', {
       nick: nick,
       playerId: playerId,

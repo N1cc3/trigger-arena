@@ -7,7 +7,7 @@
   align-items: center;
 }
 
-.nickInput {
+.roomInput {
   font-size: 3em;
   border-radius: 10px;
   margin: 10px;
@@ -20,7 +20,7 @@
   font-size: 3em;
   border-radius: 10px;
   margin: 10px;
-  border-color: green;
-  background-color: green;
+  border-color: turquoise;
+  background-color: turquoise;
   font-family: inherit;
 }
