@@ -16,6 +16,17 @@ class Game extends Component {
       players.push({id: data.playerId, name: data.playerId})
       this.setState({players: players})
     })
+
+    this.socket.on('change name', (data) => {
+      let players = this.state.players
+      for (let player of players) {
+        if (player.id === data.playerId) {
+          player.name = data.name
+          break;
+        }
+      }
+      this.setState({players: players})
+    })
   }
 
   render() {
