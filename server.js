@@ -85,7 +85,8 @@ io.on('connection', socket => {
   })
 
   socket.on('join game', (gameId) => {
-    console.log(`Client ${socketId} wants to enter room ${gameId}`)
+    gameId = Number(gameId)
+    console.log(`Client ${socketId} wants to join game ${gameId}`)
     let gameExists = games.includes(gameId)
     if (gameExists) socket.join(gameId)
     socket.emit('join game', {

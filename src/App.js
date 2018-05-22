@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client'
 import Name from './Name'
 import Cards from './Cards'
-import Room from './Room'
+import Door from './Door'
 import Menu from './Menu'
 import Game from './Game'
 import styles from './App.css'
@@ -11,8 +11,8 @@ const connectView = () => {
   return <div>Connecting...</div>
 }
 
-const roomView = (socket, onEnter) => {
-  return <Room socket={socket} onEnter={onEnter}/>
+const doorView = (socket, onJoin) => {
+  return <Door socket={socket} onJoin={onJoin}/>
 }
 
 const nameView = (socket, playerId, onReady) => {
@@ -51,8 +51,8 @@ class App extends Component {
       this.setState({active: nameView(this.socket, this.playerId, goToCards)})
     }
 
-    const goToRoom = () => {
-      this.setState({active: roomView(this.socket, goToName)})
+    const goToDoor = () => {
+      this.setState({active: doorView(this.socket, goToName)})
     }
 
     const goToGame = (gameId) => {
@@ -61,7 +61,7 @@ class App extends Component {
 
     this.socket.on('connected', (res) => {
       this.playerId = res.playerId
-      this.setState({active: menuView(this.socket, goToRoom, goToGame)})
+      this.setState({active: menuView(this.socket, goToDoor, goToGame)})
     })
 
     this.state = {

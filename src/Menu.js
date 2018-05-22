@@ -9,10 +9,6 @@ class Menu extends Component {
 
     this.socket = this.props.socket
 
-    this.socket.on('join game', (res) => {
-
-    })
-
     this.socket.on('host game', (res) => {
       if (res.success) this.props.onHost(res.gameId)
     })
