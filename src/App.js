@@ -48,11 +48,11 @@ class App extends Component {
     }
 
     const goToName = () => {
-      this.setState({active: nameView(this.socket, this.playerId, goToCards)})
+      this.setState({active: nameView(this.socket, this.playerId, goToDoor)})
     }
 
     const goToDoor = () => {
-      this.setState({active: doorView(this.socket, goToName)})
+      this.setState({active: doorView(this.socket, goToCards)})
     }
 
     const goToGame = (gameId) => {
@@ -61,7 +61,7 @@ class App extends Component {
 
     this.socket.on('connected', (res) => {
       this.playerId = res.playerId
-      this.setState({active: menuView(this.socket, goToDoor, goToGame)})
+      this.setState({active: menuView(this.socket, goToName, goToGame)})
     })
 
     this.state = {

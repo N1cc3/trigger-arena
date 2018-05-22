@@ -65,6 +65,7 @@ io.on('connection', socket => {
   let socketId = socket.id
   console.log(`New client connected: ${socketId}`)
   let playerId = clients.push(socketId) - 1
+  let playerName = 'New player'
 
   socket.emit('connected', {
     playerId: playerId,
@@ -91,13 +92,14 @@ io.on('connection', socket => {
     if (gameExists) socket.join(gameId)
     io.to(gameId).emit('join game', {
       success: gameExists,
-      gameId: gameId,
       playerId: playerId,
+      name: playerName,
     })
   })
 
   socket.on('change name', (name) => {
     console.log(`Client ${socketId} wants to change name to ${name}`)
+    playerName = name
     io.emit('change name', {
       name: name,
       playerId: playerId,
