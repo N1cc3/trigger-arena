@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styles from './Game.css'
+import Players from './Players'
 
 class Game extends Component {
   constructor(props) {
@@ -33,11 +34,7 @@ class Game extends Component {
     return (
       <div className={styles.game}>
         Welcome to the game: {('0000' + this.props.gameId).slice(-4)}
-        <div>Players:<br/>
-          {this.state.players.map((player) => (
-            <div key={player.id}>{player.name}</div>
-          ))}
-        </div>
+        <Players players={this.state.players}/>
       </div>
     )
   }
