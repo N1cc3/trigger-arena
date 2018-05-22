@@ -4,6 +4,7 @@ import Name from './Name'
 import Cards from './Cards'
 import Room from './Room'
 import Menu from './Menu'
+import Game from './Game'
 import styles from './App.css'
 
 const connectView = () => {
@@ -30,6 +31,10 @@ const menuView = (socket, onJoin, onHost) => {
   return <Menu socket={socket} onJoin={onJoin} onHost={onHost}/>
 }
 
+const gameView = (socket, gameId) => {
+  return <Game socket={socket} gameId={gameId}/>
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -50,9 +55,13 @@ class App extends Component {
       this.setState({active: roomView(this.socket, goToName)})
     }
 
+    const goToGame = (gameId) => {
+      this.setState({active: gameView(this.socket, gameId)})
+    }
+
     this.socket.on('connected', (res) => {
       this.playerId = res.playerId
-      this.setState({active: menuView(this.socket, goToRoom, () => {})})
+      this.setState({active: menuView(this.socket, goToRoom, goToGame)})
     })
 
     this.state = {

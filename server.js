@@ -20,7 +20,7 @@ const server = http.createServer(app)
 const io = socketIO(server)
 
 const clients = []
-const rooms = []
+const games = []
 
 const testCards = [
   {
@@ -70,10 +70,27 @@ io.on('connection', socket => {
     playerId: playerId,
   })
 
-  socket.on('enter room', (room) => {
-    console.log(`Client ${socketId} wants to enter room ${room}`)
-    io.sockets.emit('enter room', {
-      room: room,
+  socket.on('host game', () => {
+    console.log(`Client ${socketId} wants to host a game`)
+    let gameId = Math.floor(Math.random() * 9999);
+    while (games.includes(gameId)) {
+      gameId = Math.floor(Math.random() * 9999);
+    }
+    games.push(gameId)
+    socket.join(gameId)
+    socket.emit('host game', {
+      success: true,
+      gameId: gameId,
+    })
+  })
+
+  socket.on('join game', (gameId) => {
+    console.log(`Client ${socketId} wants to enter room ${gameId}`)
+    let gameExists = games.includes(gameId)
+    if (gameExists) socket.join(gameId)
+    socket.emit('join game', {
+      success: gameExists,
+      gameId: gameId,
     })
   })
 
