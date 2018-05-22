@@ -66,7 +66,7 @@ io.on('connection', socket => {
   console.log(`New client connected: ${socketId}`)
   let playerId = clients.push(socketId) - 1
 
-  io.sockets.connected[socketId].emit('connected', {
+  socket.emit('connected', {
     playerId: playerId,
   })
 
@@ -79,7 +79,7 @@ io.on('connection', socket => {
 
   socket.on('change name', (name) => {
     console.log(`Client ${socketId} wants to change name to ${name}`)
-    io.sockets.emit('change name', {
+    io.emit('change name', {
       name: name,
       playerId: playerId,
     })
@@ -87,21 +87,21 @@ io.on('connection', socket => {
 
   socket.on('use card', (cardId) => {
     console.log(`Client ${socketId} wants to use card ${cardId}`)
-    io.sockets.connected[socketId].emit('use card', {
+    socket.emit('use card', {
       card: cardId,
     })
   })
 
   socket.on('discard card', (cardId) => {
     console.log(`Client ${socketId} wants to discard card ${cardId}`)
-    io.sockets.connected[socketId].emit('discard card', {
+    socket.emit('discard card', {
       card: cardId,
     })
   })
 
   socket.on('cards', () => {
     console.log(`Client ${socketId} asks for his cards`)
-    io.sockets.connected[socketId].emit('cards', testCards)
+    socket.emit('cards', testCards)
   })
 
   socket.on('disconnect', () => {
