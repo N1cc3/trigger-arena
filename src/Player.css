@@ -1,14 +1,15 @@
 .player {
   border-style: solid;
-  border-width: thin;
+  border-width: 0.05em;
   border-color: black;
-  border-radius: 5px;
+  border-radius: 0.2em;
+  padding: 0.1em;
 }
 
 .name {
-
+  padding: 0.1em;
 }
 
 .hp {
-
+  padding: 0.1em;
 }
