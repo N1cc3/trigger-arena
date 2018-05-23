@@ -1,8 +1,8 @@
 .player {
-	border-style: solid;
-	border-width: thin;
-	border-color: black;
-	border-radius: 5px;
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-radius: 5px;
 }
 
 .name {
