@@ -14,7 +14,7 @@ class Game extends Component {
 
     this.socket.on('join game', (data) => {
       let players = this.state.players
-      players.push({id: data.playerId, name: data.name})
+      players.push({id: data.playerId, name: data.name, hp: 10})
       this.setState({players: players})
     })
 

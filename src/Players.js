@@ -15,16 +15,13 @@ class Players extends Component {
   render() {
     return (
 			<div className={styles.players}>
-        <div className={styles.row}>
-          {getRow(this.props.players, 0).map((player) => (
-            <Player key={player.id} name={player.name}/>
-          ))}
-        </div>
-        <div className={styles.row}>
-          {getRow(this.props.players, 1).map((player) => (
-            <Player key={player.id} name={player.name}/>
-          ))}
-        </div>
+        {[0, 1].map((index) => (
+          <div key={index} className={styles.row}>
+            {getRow(this.props.players, index).map((player) => (
+              <Player key={player.id} name={player.name} hp={player.hp}/>
+            ))}
+          </div>
+        ))}
 			</div>
     )
   }
