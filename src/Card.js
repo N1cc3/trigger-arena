@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
 import styles from './Card.css'
 
 class Card extends Component {
@@ -36,4 +37,4 @@ class Card extends Component {
     )
   }
 }
-export default Card
+export default hot(module)(Card)

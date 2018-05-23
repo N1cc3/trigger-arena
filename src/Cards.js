@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
 import styles from './Cards.css'
 import Card from './Card'
 
@@ -31,4 +32,4 @@ class Cards extends Component {
     )
   }
 }
-export default Cards
+export default hot(module)(Cards)

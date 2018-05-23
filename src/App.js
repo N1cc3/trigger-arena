@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
 import socketIOClient from 'socket.io-client'
 import Name from './Name'
 import Cards from './Cards'
@@ -81,4 +82,4 @@ class App extends Component {
     )
   }
 }
-export default App
+export default hot(module)(App)

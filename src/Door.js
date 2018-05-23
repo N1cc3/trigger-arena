@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
 import styles from './Door.css'
 
 class Door extends Component {
@@ -38,4 +39,4 @@ class Door extends Component {
     )
   }
 }
-export default Door
+export default hot(module)(Door)

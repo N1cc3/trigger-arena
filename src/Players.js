@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
 import styles from './Players.css'
 import Player from './Player'
 
@@ -26,4 +27,4 @@ class Players extends Component {
     )
   }
 }
-export default Players
+export default hot(module)(Players)

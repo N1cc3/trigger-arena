@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { hot } from 'react-hot-loader'
 import styles from './Menu.css'
 
 class Menu extends Component {
@@ -38,4 +39,4 @@ class Menu extends Component {
     )
   }
 }
-export default Menu
+export default hot(module)(Menu)
