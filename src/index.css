@@ -5,6 +5,7 @@ body {
   width: 99vw;
   height: 97vh;
   overflow: hidden;
+	-webkit-text-stroke: 1px black;
 
   background-color: gold;
 }
