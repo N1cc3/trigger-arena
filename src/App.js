@@ -69,6 +69,10 @@ class App extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.socket.close()
+  }
+
   render() {
     return (
       <div className={styles.app}>
