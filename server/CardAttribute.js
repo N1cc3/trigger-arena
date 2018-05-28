@@ -1,8 +1,7 @@
 class CardAttribute {
-  constructor(id, displayName, frequency) {
+  constructor(id, displayName) {
     this.id = id
     this.displayName = displayName
-    this.frequency = frequency
   }
 }
 export default CardAttribute

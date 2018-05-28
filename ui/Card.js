@@ -21,13 +21,13 @@ class Card extends Component {
     return (
       <div className={styles.card}>
         <div>
-          {this.props.card.name}
+          {this.props.card.trigger.displayName}
         </div>
         <div>
-          {this.props.card.trigger.type}
+          {this.props.card.effect.displayName}
         </div>
         <div>
-          {this.props.card.effect.type}
+          {this.props.card.target.displayName}
         </div>
         <div className={styles.buttons}>
           <button className={styles.use} onClick={() => this.useCard(this.props.card.id)}>Use</button>

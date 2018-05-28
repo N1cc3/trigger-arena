@@ -1,7 +1,8 @@
 class Card {
-  constructor(trigger, event) {
+  constructor(trigger, effect, target) {
     this.trigger = trigger
-    this.event = event
+    this.effect = effect
+    this.target = target
   }
 }
 export default Card
