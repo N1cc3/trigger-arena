@@ -2,7 +2,7 @@ import express from 'express'
 import http from 'http'
 import SocketIO from 'socket.io'
 import path from 'path'
-import { randomCard } from './server/data.js'
+import { randomCard } from './data.js'
 
 let app = express()
 let server = http.Server(app)
