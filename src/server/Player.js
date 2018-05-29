@@ -1,6 +1,7 @@
-class Game {
+class Player {
   constructor() {
-    this.players = []
+    this.name = 'Unknown Player'
+    this.hp = []
   }
 }
-export default Game
+export default Player
