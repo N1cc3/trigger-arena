@@ -24,7 +24,7 @@ class Game extends Component {
       for (let player of players) {
         if (player.id === data.playerId) {
           player.name = data.name
-          break;
+          break
         }
       }
       this.setState({players: players})
