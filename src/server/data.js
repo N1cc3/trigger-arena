@@ -30,19 +30,19 @@ export const randomizer = (array) => {
   let array2 = []
   for (const e of array) { // OPTIMIZE: Random selection by frequency
     for (let i = 0; i < e.frequency; i++) {
-      array2.push(e.value)
+      array2.push({...e.value, frequency: e.frequency})
     }
   }
   const idx = Math.floor(Math.random() * array2.length)
   const selected = array2[idx]
   const rarity = array2.length / selected.frequency
-  return {selected: selected, rarity: rarity}
+  return {...selected, rarity: rarity}
 }
 
 export const randomCard = () => {
-  return new Card(
-    randomizer(TRIGGER_TYPES).selected,
-    randomizer(EFFECT_TYPES).selected,
-    randomizer(TARGET_TYPES).selected,
-  )
+  const trigger = randomizer(TRIGGER_TYPES)
+  const effect = randomizer(EFFECT_TYPES)
+  const target = randomizer(TARGET_TYPES)
+  const rarity = trigger.rarity * effect.rarity * target.rarity
+  return new Card(trigger, effect, target, rarity)
 }
