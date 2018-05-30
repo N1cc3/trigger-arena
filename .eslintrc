@@ -1,6 +1,8 @@
 {
   "extends": "react-app",
   "rules": {
-    "semi": ["warn", "never"]
+    "no-var": "error",
+    "semi": ["warn", "never"],
+    "prefer-const": "warn",
   }
 }
