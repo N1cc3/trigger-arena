@@ -4,7 +4,7 @@ import styles from './Players.css'
 import Player from './Player'
 
 const getRow = (players, row) => {
-  let firstRowSize = Math.floor(players.length / 2)
+  const firstRowSize = Math.floor(players.length / 2)
   if (row === 0) {
     return players.slice(0, firstRowSize)
   } else {

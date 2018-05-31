@@ -21,7 +21,7 @@ class Door extends Component {
   }
 
   changeGameId(event) {
-    let gameId = event.target.value
+    const gameId = event.target.value
     this.setState({gameId: gameId})
   }
 

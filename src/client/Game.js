@@ -14,14 +14,14 @@ class Game extends Component {
     this.socket = this.props.socket
 
     this.socket.on('join game', (data) => {
-      let players = this.state.players
+      const players = this.state.players
       players.push({id: data.playerId, name: data.name, hp: 10})
       this.setState({players: players})
     })
 
     this.socket.on('change name', (data) => {
-      let players = this.state.players
-      for (let player of players) {
+      const players = this.state.players
+      for (const player of players) {
         if (player.id === data.playerId) {
           player.name = data.name
           break

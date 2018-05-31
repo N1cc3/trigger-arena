@@ -23,7 +23,7 @@ class Name extends Component {
   }
 
   changeName(event) {
-    let name = event.target.value
+    const name = event.target.value
     this.setState({name: name})
   }
 
