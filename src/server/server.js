@@ -2,7 +2,6 @@ import express from 'express'
 import http from 'http'
 import SocketIO from 'socket.io'
 import path from 'path'
-import { randomCard } from './data.js'
 import Game from './Game.js'
 import Player from './Player.js'
 
@@ -42,9 +41,10 @@ io.on('connection', socket => {
   socket.on('join game', (gameId) => {
     gameId = Number(gameId)
     console.log(`Client ${socketId} wants to join game ${gameId}`)
-    const gameExists = games.find(g => g.id === gameId)
-    if (gameExists) {
+    const game = games.find(g => g.id === gameId)
+    if (game) {
       socket.join(gameId)
+      player.handCards = [game.newCard(), game.newCard(), game.newCard()]
       io.to(gameId).emit('join game', player)
     }
   })
@@ -71,11 +71,7 @@ io.on('connection', socket => {
 
   socket.on('cards', () => {
     console.log(`Client ${socketId} asks for his cards`)
-    socket.emit('cards', [
-      randomCard(),
-      randomCard(),
-      randomCard(),
-    ])
+    socket.emit('cards', player.handCards)
   })
 
   socket.on('disconnect', () => {

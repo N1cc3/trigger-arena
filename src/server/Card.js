@@ -4,6 +4,8 @@ class Card {
     this.effect = effect
     this.target = target
     this.rarity = rarity
+
+    this.number = null
   }
 }
 export default Card
