@@ -4,10 +4,10 @@ import SocketIO from 'socket.io'
 import path from 'path'
 import { randomCard } from './data.js'
 
-let app = express()
-let server = http.Server(app)
-let io = new SocketIO(server)
-let port = process.env.PORT || 8080
+const app = express()
+const server = http.Server(app)
+const io = new SocketIO(server)
+const port = process.env.PORT || 8080
 
 app.use(express.static(path.join(__dirname, 'build')))
 app.get('/', function (req, res) {
@@ -18,9 +18,9 @@ const clients = []
 const games = []
 
 io.on('connection', socket => {
-  let socketId = socket.id
+  const socketId = socket.id
   console.log(`New client connected: ${socketId}`)
-  let playerId = clients.push(socketId) - 1
+  const playerId = clients.push(socketId) - 1
   let playerName = 'New player'
 
   socket.emit('connected', {
@@ -44,7 +44,7 @@ io.on('connection', socket => {
   socket.on('join game', (gameId) => {
     gameId = Number(gameId)
     console.log(`Client ${socketId} wants to join game ${gameId}`)
-    let gameExists = games.includes(gameId)
+    const gameExists = games.includes(gameId)
     if (gameExists) socket.join(gameId)
     io.to(gameId).emit('join game', {
       success: gameExists,
