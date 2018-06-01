@@ -1,7 +1,8 @@
 class Player {
-  constructor() {
+  constructor(id) {
+    this.id = id
     this.name = 'Unknown Player'
-    this.hp = []
+    this.hp = 10
   }
 }
 export default Player

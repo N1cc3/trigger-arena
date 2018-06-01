@@ -3,6 +3,8 @@ import http from 'http'
 import SocketIO from 'socket.io'
 import path from 'path'
 import { randomCard } from './data.js'
+import Game from './Game.js'
+import Player from './Player.js'
 
 const app = express()
 const server = http.Server(app)
@@ -21,11 +23,9 @@ io.on('connection', socket => {
   const socketId = socket.id
   console.log(`New client connected: ${socketId}`)
   const playerId = clients.push(socketId) - 1
-  let playerName = 'New player'
+  const player = new Player(playerId)
 
-  socket.emit('connected', {
-    playerId: playerId,
-  })
+  socket.emit('connected', player)
 
   socket.on('host game', () => {
     console.log(`Client ${socketId} wants to host a game`)
@@ -33,33 +33,26 @@ io.on('connection', socket => {
     while (games.includes(gameId)) {
       gameId = Math.floor(Math.random() * 9999)
     }
-    games.push(gameId)
+    const game = new Game(gameId)
+    games.push(game)
     socket.join(gameId)
-    socket.emit('host game', {
-      success: true,
-      gameId: gameId,
-    })
+    socket.emit('host game', game)
   })
 
   socket.on('join game', (gameId) => {
     gameId = Number(gameId)
     console.log(`Client ${socketId} wants to join game ${gameId}`)
-    const gameExists = games.includes(gameId)
-    if (gameExists) socket.join(gameId)
-    io.to(gameId).emit('join game', {
-      success: gameExists,
-      playerId: playerId,
-      name: playerName,
-    })
+    const gameExists = games.find(g => g.id === gameId)
+    if (gameExists) {
+      socket.join(gameId)
+      io.to(gameId).emit('join game', player)
+    }
   })
 
   socket.on('change name', (name) => {
     console.log(`Client ${socketId} wants to change name to ${name}`)
-    playerName = name
-    io.emit('change name', {
-      name: name,
-      playerId: playerId,
-    })
+    player.name = name
+    io.emit('change name', player)
   })
 
   socket.on('use card', (cardId) => {

@@ -14,7 +14,6 @@ class Cards extends Component {
     this.socket = this.props.socket
 
     this.socket.on('cards', (cards) => {
-      console.debug(cards)
       this.setState({
         cards: cards,
       })

@@ -12,8 +12,8 @@ class Door extends Component {
 
     this.socket = this.props.socket
 
-    this.socket.on('join game', (res) => {
-      if (res.success) this.props.onJoin(res.gameId)
+    this.socket.on('join game', (player) => {
+      this.props.onJoin(this.state.gameId)
     })
 
     this.changeGameId = this.changeGameId.bind(this)

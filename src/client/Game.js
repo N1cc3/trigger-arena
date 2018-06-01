@@ -13,21 +13,20 @@ class Game extends Component {
 
     this.socket = this.props.socket
 
-    this.socket.on('join game', (data) => {
+    this.socket.on('join game', (player) => {
+      console.log(player)
       const players = this.state.players
-      players.push({id: data.playerId, name: data.name, hp: 10})
+      players.push(player)
       this.setState({players: players})
     })
 
-    this.socket.on('change name', (data) => {
+    this.socket.on('change name', (player) => {
       const players = this.state.players
-      for (const player of players) {
-        if (player.id === data.playerId) {
-          player.name = data.name
-          break
-        }
+      const p = players.find(p => p.id === player.id)
+      if (p) {
+        p.name = player.name
+        this.setState({players: players})
       }
-      this.setState({players: players})
     })
   }
 

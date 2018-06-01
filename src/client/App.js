@@ -60,8 +60,8 @@ class App extends Component {
       this.setState({active: gameView(this.socket, gameId)})
     }
 
-    this.socket.on('connected', (res) => {
-      this.playerId = res.playerId
+    this.socket.on('connected', (player) => {
+      this.playerId = player.id
       this.setState({active: menuView(this.socket, goToName, goToGame)})
     })
 

@@ -1,5 +1,6 @@
 class Game {
-  constructor() {
+  constructor(id) {
+    this.id = id
     this.players = []
   }
 }

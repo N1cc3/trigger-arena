@@ -12,8 +12,8 @@ class Name extends Component {
 
     this.socket = this.props.socket
 
-    this.socket.on('change name', (res) => {
-      if (res.playerId === this.props.playerId) {
+    this.socket.on('change name', (player) => {
+      if (player.id === this.props.playerId) {
         this.props.onReady()
       }
     })
