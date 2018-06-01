@@ -74,6 +74,11 @@ io.on('connection', socket => {
     socket.emit('cards', player.handCards)
   })
 
+  socket.on('start game', () => {
+    console.log(`Client ${socketId} wants to start the game`)
+    socket.emit('start game')
+  })
+
   socket.on('disconnect', () => {
     console.log(`Client ${socketId} disconnected`)
   })

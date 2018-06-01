@@ -9,6 +9,7 @@ class Game extends Component {
 
     this.state = {
       players: [],
+      started: false,
     }
 
     this.socket = this.props.socket
@@ -27,13 +28,31 @@ class Game extends Component {
         this.setState({players: players})
       }
     })
+
+    this.socket.on('start game', () => {
+      this.setState({started: true})
+    })
+
+    this.start = this.start.bind(this)
+  }
+
+  start() {
+    this.socket.emit('start game')
   }
 
   render() {
+    const startButton = this.state.started ? null : (
+      <button className={styles.start} onClick={this.start}>
+        <span role="img" aria-label="Check Mark">✔</span> Start
+      </button>
+    )
+
     return (
       <div className={styles.game}>
         Welcome to the game: {('0000' + this.props.gameId).slice(-4)}
         <Players players={this.state.players}/>
+
+        {startButton}
       </div>
     )
   }
