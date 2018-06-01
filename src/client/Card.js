@@ -21,16 +21,16 @@ class Card extends Component {
     return (
       <div className={styles.card}>
         <div>
-          Rarity: {Math.round(this.props.card.rarity)}
+          <span role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>
         <div>
-          Trigger: {this.props.card.trigger.displayName}
+          <span role="img" aria-label="Light Bulb">💡</span> Trigger: {this.props.card.trigger.displayName}
         </div>
         <div>
-          Effect: {this.props.card.effect.displayName}
+          <span role="img" aria-label="Lightning">⚡</span> Effect: {this.props.card.effect.displayName}
         </div>
         <div>
-          Target: {this.props.card.target.displayName}
+          <span role="img" aria-label="Person">👤</span> Target: {this.props.card.target.displayName}
         </div>
         <div className={styles.buttons}>
           <button className={styles.use} onClick={() => this.useCard(this.props.id)}>Use</button>
