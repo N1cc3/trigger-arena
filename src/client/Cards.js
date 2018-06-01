@@ -25,7 +25,7 @@ class Cards extends Component {
     return (
       <div className={styles.cards}>
         {this.state.cards.map((card, index) => (
-          <Card key={index} card={card} socket={this.socket} />
+          <Card key={index} id={index} card={card} socket={this.socket} />
         ))}
       </div>
     )

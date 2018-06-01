@@ -33,8 +33,8 @@ class Card extends Component {
           Target: {this.props.card.target.displayName}
         </div>
         <div className={styles.buttons}>
-          <button className={styles.use} onClick={() => this.useCard(this.props.card.id)}>Use</button>
-          <button className={styles.discard} onClick={() => this.discardCard(this.props.card.id)}>Discard</button>
+          <button className={styles.use} onClick={() => this.useCard(this.props.id)}>Use</button>
+          <button className={styles.discard} onClick={() => this.discardCard(this.props.id)}>Discard</button>
         </div>
       </div>
     )
