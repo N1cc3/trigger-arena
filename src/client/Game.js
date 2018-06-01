@@ -14,7 +14,6 @@ class Game extends Component {
     this.socket = this.props.socket
 
     this.socket.on('join game', (player) => {
-      console.log(player)
       const players = this.state.players
       players.push(player)
       this.setState({players: players})
