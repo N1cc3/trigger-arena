@@ -5,13 +5,11 @@
   flex-direction: column;
   justify-content: space-around;
 
-  height: 100%;
-  max-height: 30em;
-  max-width: 20em;
-
+  height: calc(100% - 8px);
   background-color: ghostwhite;
 
-  margin: 2px;
+  margin: 4px;
+  min-width: calc(33% - 8px);
 
   border-style: solid;
   border-color: black;
