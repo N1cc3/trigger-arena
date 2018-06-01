@@ -24,5 +24,5 @@ export const randomizer = (rVals) => {
   const rarity = totalFreq / selected.frequency
   const result = {selected: selected.value, rarity: rarity}
 
-  return result
+  return JSON.parse(JSON.stringify(result)) // Deep clone
 }

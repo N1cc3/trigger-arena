@@ -23,6 +23,7 @@ io.on('connection', socket => {
   console.log(`New client connected: ${socketId}`)
   const playerId = clients.push(socketId) - 1
   const player = new Player(playerId)
+  let game = null
 
   socket.emit('connected', player)
 
@@ -32,7 +33,7 @@ io.on('connection', socket => {
     while (games.includes(gameId)) {
       gameId = Math.floor(Math.random() * 9999)
     }
-    const game = new Game(gameId)
+    game = new Game(gameId)
     games.push(game)
     socket.join(gameId)
     socket.emit('host game', game)
@@ -41,10 +42,10 @@ io.on('connection', socket => {
   socket.on('join game', (gameId) => {
     gameId = Number(gameId)
     console.log(`Client ${socketId} wants to join game ${gameId}`)
-    const game = games.find(g => g.id === gameId)
+    game = games.find(g => g.id === gameId)
     if (game) {
       socket.join(gameId)
-      player.handCards = [game.newCard(), game.newCard(), game.newCard()]
+      game.players.push(player)
       io.to(gameId).emit('join game', player)
     }
   })
@@ -55,18 +56,36 @@ io.on('connection', socket => {
     io.emit('change name', player)
   })
 
-  socket.on('use card', (cardId) => {
-    console.log(`Client ${socketId} wants to use card ${cardId}`)
-    socket.emit('use card', {
-      card: cardId,
-    })
+  const nextTurn = () => {
+    game.nextTurn()
+    socket.emit('cards', player.handCards)
+    io.to(game.id).emit('next turn', game)
+  }
+
+  socket.on('use card', (useIdx) => {
+    console.log(`Client ${socketId} wants to use card ${useIdx}`)
+    console.log(`${game.players.indexOf(player)} === ${game.turnIdx}`)
+    if (game.players.indexOf(player) === game.turnIdx) {
+      player.useIdx = useIdx
+      socket.emit('use card', {
+        card: useIdx,
+      })
+      console.log(`Player is ready: ${player.isReady()}`)
+      if (player.isReady()) nextTurn()
+    }
   })
 
-  socket.on('discard card', (cardId) => {
-    console.log(`Client ${socketId} wants to discard card ${cardId}`)
-    socket.emit('discard card', {
-      card: cardId,
-    })
+  socket.on('discard card', (discardIdx) => {
+    console.log(`Client ${socketId} wants to discard card ${discardIdx}`)
+    console.log(`${game.players.indexOf(player)} === ${game.turnIdx}`)
+    if (game.players.indexOf(player) === game.turnIdx) {
+      player.discardIdx = discardIdx
+      socket.emit('discard card', {
+        card: discardIdx,
+      })
+      console.log(`Player is ready: ${player.isReady()}`)
+      if (player.isReady()) nextTurn()
+    }
   })
 
   socket.on('cards', () => {

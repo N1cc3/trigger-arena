@@ -33,6 +33,10 @@ class Game extends Component {
       this.setState({started: true})
     })
 
+    this.socket.on('next turn', (game) => {
+      this.setState({players: game.players})
+    })
+
     this.start = this.start.bind(this)
   }
 

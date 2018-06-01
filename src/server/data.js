@@ -46,7 +46,7 @@ export const TARGET_TYPES = [
   new RVal(new TargetType('adjacent', 'Adjacent Players'), 3),
 ]
 
-function initVariableValues(rVal) {
+const initVariableValues = (rVal) => {
   if (rVal.selected.variableValues) {
     const variable = randomizer(rVal.selected.variableValues)
     rVal.selected.variableValue = variable.selected
