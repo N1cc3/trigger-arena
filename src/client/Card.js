@@ -30,7 +30,7 @@ class Card extends Component {
           <span role="img" aria-label="Lightning">⚡</span> Effect: {this.props.card.effect.longName}
         </div>
         <div>
-          <span role="img" aria-label="Person">👤</span> Target: {this.props.card.target.longName}
+          <span role="img" aria-label="Target">🎯</span> Target: {this.props.card.target.longName}
         </div>
         <div className={styles.buttons}>
           <button className={styles.use} onClick={() => this.useCard(this.props.id)}>Use</button>

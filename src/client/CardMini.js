@@ -19,7 +19,7 @@ class CardMini extends Component {
           <span role="img" aria-label="Lightning">⚡</span> {this.props.card.effect.shortName}
         </div>
         <div>
-          <span role="img" aria-label="Person">👤</span> {this.props.card.target.shortName}
+          <span role="img" aria-label="Target">🎯</span> {this.props.card.target.shortName}
         </div>
       </div>
     )
