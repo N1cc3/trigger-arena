@@ -7,19 +7,19 @@ class CardMini extends Component {
     return (
       <div className={styles.card}>
         <div>
-          #{Math.round(this.props.card.number)}
+          # {Math.round(this.props.card.number)}
         </div>
         <div>
           <span role="img" aria-label="Gem">💎</span> {Math.round(this.props.card.rarity)}
         </div>
         <div>
-          <span role="img" aria-label="Light Bulb">💡</span> {this.props.card.trigger.displayName}
+          <span role="img" aria-label="Light Bulb">💡</span> {this.props.card.trigger.shortName}
         </div>
         <div>
-          <span role="img" aria-label="Lightning">⚡</span> {this.props.card.effect.displayName}
+          <span role="img" aria-label="Lightning">⚡</span> {this.props.card.effect.shortName}
         </div>
         <div>
-          <span role="img" aria-label="Person">👤</span> {this.props.card.target.displayName}
+          <span role="img" aria-label="Person">👤</span> {this.props.card.target.shortName}
         </div>
       </div>
     )

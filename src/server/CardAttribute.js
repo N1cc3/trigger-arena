@@ -1,7 +1,8 @@
 class CardAttribute {
-  constructor(id, displayName, variableValues) {
+  constructor(id, longName, shortName, variableValues) {
     this.id = id
-    this.displayName = displayName
+    this.longName = longName
+    this.shortName = shortName
     this.variableValues = variableValues
   }
 }

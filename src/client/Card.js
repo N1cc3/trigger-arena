@@ -24,13 +24,13 @@ class Card extends Component {
           <span role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>
         <div>
-          <span role="img" aria-label="Light Bulb">💡</span> Trigger: {this.props.card.trigger.displayName}
+          <span role="img" aria-label="Light Bulb">💡</span> Trigger: {this.props.card.trigger.longName}
         </div>
         <div>
-          <span role="img" aria-label="Lightning">⚡</span> Effect: {this.props.card.effect.displayName}
+          <span role="img" aria-label="Lightning">⚡</span> Effect: {this.props.card.effect.longName}
         </div>
         <div>
-          <span role="img" aria-label="Person">👤</span> Target: {this.props.card.target.displayName}
+          <span role="img" aria-label="Person">👤</span> Target: {this.props.card.target.longName}
         </div>
         <div className={styles.buttons}>
           <button className={styles.use} onClick={() => this.useCard(this.props.id)}>Use</button>

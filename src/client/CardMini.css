@@ -3,6 +3,8 @@
   flex-direction: column;
   justify-content: space-around;
 
+  font-size: 8px;
+
   width: 50px;
   height: 100px;
   background-color: ghostwhite;

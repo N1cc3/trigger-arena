@@ -5,7 +5,7 @@ import CardMini from './CardMini'
 
 class Player extends Component {
   render() {
-    const activeCards = this.props.activeCards ? this.props.activeCards.map((card) => (
+    const activeCards = this.props.cards ? this.props.cards.map((card) => (
       <CardMini card={card}/>
     )) : null
     return (
