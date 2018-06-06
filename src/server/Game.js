@@ -54,8 +54,8 @@ class Game {
           const playerIdx = this.players.indexOf(event.player)
           const target1 = this.players[mod(playerIdx + 1, this.players.length)]
           const target2 = this.players[mod(playerIdx - 1, this.players.length)]
-          targets.push(target1)
-          if (target1 !== target2) targets.push(target2)
+          if (event.player !== target1) targets.push(target1)
+          if (event.player !== target2 && target1 !== target2) targets.push(target2)
           break
         case 'self':
         default:
