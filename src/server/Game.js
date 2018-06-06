@@ -68,38 +68,27 @@ class Game {
           for (const card of player.boardCards) {
             if (card.cooldown > 0) continue
 
-            if (effectId === 'heal'
+            if (
+              (effectId === 'heal'
               && card.trigger.id === 'heals'
               && player === event.player
-              && target !== event.player) {
-              events.push(new Event(player, card))
-              card.cooldown++
-              continue
-            }
-
-            if (effectId === 'heal'
+              && target !== event.player)
+              ||
+              (effectId === 'heal'
               && card.trigger.id === 'isHealed'
-              && target === player) {
-              events.push(new Event(player, card))
-              card.cooldown++
-              continue
-            }
-
-            if (effectId === 'damage'
+              && target === player)
+              ||
+              (effectId === 'damage'
               && card.trigger.id === 'dealsDmg'
               && player === event.player
-              && target !== event.player) {
-              events.push(new Event(player, card))
-              card.cooldown++
-              continue
-            }
-
-            if (effectId === 'damage'
+              && target !== event.player)
+              ||
+              (effectId === 'damage'
               && card.trigger.id === 'takesDmg'
-              && target === player) {
+              && target === player)
+            ) {
               events.push(new Event(player, card))
               card.cooldown++
-              continue
             }
           }
         }
