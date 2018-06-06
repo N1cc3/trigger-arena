@@ -9,7 +9,7 @@ class TargetType extends CardAttribute {}
 
 export const TRIGGER_TYPES = [
   new RVal(new TriggerType('instant', 'Instant', 'Inst'), 8),
-  new RVal(new TriggerType('everyTurn', 'On Every ? Turn', '? turn', [
+  new RVal(new TriggerType('periodic', 'On Every ? Turn', '? turn', [
     new RVal(1, 1),
     new RVal(2, 3),
     new RVal(3, 5),
