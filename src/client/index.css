@@ -5,7 +5,7 @@ body {
   padding: 0;
   font-family: 'Amaranth', sans-serif;
   overflow: hidden;
-  -webkit-text-stroke: 1px black;
+  -webkit-text-stroke: 0.04em black;
 
   background-color: seagreen;
 }
