@@ -19,7 +19,7 @@ class Players extends Component {
         {[0, 1].map((index) => (
           <div key={index} className={styles.row}>
             {getRow(this.props.players, index).map((player) => (
-              <Player key={player.id} name={player.name} hp={player.hp} cards={player.activeCards}/>
+              <Player key={player.id} name={player.name} hp={player.hp} cards={player.boardCards}/>
             ))}
           </div>
         ))}

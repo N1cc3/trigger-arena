@@ -5,14 +5,14 @@ import CardMini from './CardMini'
 
 class Player extends Component {
   render() {
-    const activeCards = this.props.cards ? this.props.cards.map((card) => (
+    const boardCards = this.props.cards ? this.props.cards.map((card) => (
       <CardMini card={card}/>
     )) : null
     return (
 			<div className={styles.player}>
         <div className={styles.name}>{this.props.name}</div>
         <div className={styles.hp}>{this.props.hp}</div>
-        {activeCards}
+        {boardCards}
 			</div>
     )
   }

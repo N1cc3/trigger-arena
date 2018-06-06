@@ -6,6 +6,7 @@ class Card {
     this.rarity = rarity
 
     this.number = null
+    this.cooldown = 0
   }
 }
 export default Card

@@ -7,7 +7,7 @@ class Player {
     this.hp = 10
 
     this.handCards = [randomCard(), randomCard(), randomCard()]
-    this.activeCards = []
+    this.boardCards = []
 
     this.useIdx = null
     this.discardIdx = null
