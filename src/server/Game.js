@@ -127,6 +127,19 @@ class Game {
     return boardCards
   }
 
+  getPeriodicEvents() {
+    const periodicEvents = []
+    for (const player of this.players) {
+      for (const card of player.boardCards) {
+        if (card.cooldown > 0) continue
+        if (card.trigger.id === 'periodic') {
+          periodicEvents.push(new Event(player, card))
+        }
+      }
+    }
+    return periodicEvents
+  }
+
 }
 export default Game
 
