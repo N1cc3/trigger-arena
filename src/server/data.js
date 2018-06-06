@@ -18,7 +18,7 @@ export const TRIGGER_TYPES = [
   ]), 2),
   new RVal(new TriggerType('dealsDmg', 'Deals Damage To Other', 'Dmg other'), 3),
   new RVal(new TriggerType('takesDmg', 'Takes Damage', 'Take dmg'), 3),
-  new RVal(new TriggerType('heals', 'Heals', 'Heal'), 3),
+  new RVal(new TriggerType('heals', 'Heals Other', 'Heal'), 3),
   new RVal(new TriggerType('isHealed', 'Is Healed', 'Healed'), 3),
 ]
 
