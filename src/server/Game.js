@@ -115,6 +115,8 @@ class Game {
     for (const card of this.getBoardCards()) {
       card.cooldown = Math.max(0, card.cooldown - 1)
     }
+
+    return events
   }
 
   getBoardCards() {
