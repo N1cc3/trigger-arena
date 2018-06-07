@@ -8,6 +8,8 @@ class Game {
 
     this.turnIdx = 0
     this.cardCount = 0
+
+    this.started = false
   }
 
   nextTurn() {

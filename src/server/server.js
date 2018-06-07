@@ -43,7 +43,7 @@ io.on('connection', socket => {
     gameId = Number(gameId)
     console.log(`Client ${socketId} wants to join game ${gameId}`)
     game = games.find(g => g.id === gameId)
-    if (game) {
+    if (game && !game.started) {
       socket.join(gameId)
       game.players.push(player)
       io.to(gameId).emit('join game', player)
@@ -91,6 +91,7 @@ io.on('connection', socket => {
 
   socket.on('start game', () => {
     console.log(`Client ${socketId} wants to start the game`)
+    game.started = true
     socket.emit('start game')
   })
 
