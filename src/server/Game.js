@@ -25,7 +25,9 @@ class Game {
       player.boardCards.push(cardToUse)
     }
 
-    const resolvedAfterInstant = this.resolve(events)
+    const instantEvents = this.resolve(events)
+    const periodicEvents = this.resolve(this.getPeriodicEvents())
+    const allEvents = instantEvents.concat(periodicEvents)
 
     // New cards
     player.handCards[player.useIdx] = randomCard()
@@ -34,6 +36,8 @@ class Game {
     player.discardIdx = null
 
     this.turnIdx = mod((this.turnIdx + 1), this.players.length)
+
+    return {card: cardToUse, events: allEvents}
   }
 
   resolve(events) {
