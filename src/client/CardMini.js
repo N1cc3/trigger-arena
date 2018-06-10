@@ -5,7 +5,7 @@ import styles from './CardMini.css'
 class CardMini extends Component {
   render() {
     return (
-      <div className={styles.card}>
+      <div className={styles.card} big={this.props.big}>
         <div>
           # {Math.round(this.props.card.number)}
         </div>

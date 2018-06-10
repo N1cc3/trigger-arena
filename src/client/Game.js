@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Game.css'
 import Players from './Players'
+import CardMini from './CardMini'
 
 class Game extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class Game extends Component {
       players: [],
       started: false,
       turnIdx: 0,
+      instant: null,
     }
 
     this.socket = this.props.socket
@@ -35,8 +37,7 @@ class Game extends Component {
     })
 
     this.socket.on('next turn', (turnResult) => {
-      console.log(turnResult.events)
-      this.setState({players: turnResult.game.players})
+      this.animate(turnResult.events)
     })
 
     this.start = this.start.bind(this)
@@ -46,6 +47,17 @@ class Game extends Component {
     this.socket.emit('start game')
   }
 
+  animate(events) {
+    let i = 0
+    while (events[i]) {
+      const event = events[i++]
+
+      if (event.card.trigger.id === 'instant') {
+        this.setState({instant: event.card})
+      }
+    }
+  }
+
   render() {
     const startButton = this.state.started ? null : (
       <button className={styles.start} onClick={this.start}>
@@ -53,11 +65,18 @@ class Game extends Component {
       </button>
     )
 
+    const instant = this.state.instant ? (
+      <div className={styles.instantLayer}>
+        <CardMini card={this.state.instant} big='true'/>
+      </div>
+    ) : null
+
     return (
       <div className={styles.game}>
         Welcome to the game: {('0000' + this.props.gameId).slice(-4)}
         <Players players={this.state.players}/>
 
+        {instant}
         {startButton}
       </div>
     )
