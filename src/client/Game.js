@@ -67,7 +67,9 @@ class Game extends Component {
 
     const instant = this.state.instant ? (
       <div className={styles.instantLayer}>
-        <CardMini card={this.state.instant} big='true'/>
+        <CardMini card={this.state.instant} instant='true' done={() => {
+          this.setState({instant: null})
+        }}/>
       </div>
     ) : null
 
