@@ -35,13 +35,11 @@
 }
 
 .card[permanentAnim0] {
-  flex-grow: 0;
   opacity: 0;
   transform: scale(0);
 }
 
 .card[permanentAnim1] {
-  flex-grow: 1;
   opacity: 1;
   transform: scale(1);
 }
