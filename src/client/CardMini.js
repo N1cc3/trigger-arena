@@ -6,25 +6,31 @@ import styles from './CardMini.css'
 class CardMini extends Component {
 
   componentDidMount() {
+    const el = ReactDOM.findDOMNode(this)
     if (this.props.instant) {
-      const el = ReactDOM.findDOMNode(this)
       el.setAttribute('instantAnim0', '')
       requestAnimationFrame(() => {
         el.setAttribute('instantAnim1', '')
       })
       el.addEventListener('transitionend', (event) => {
         setTimeout(() => {
+          this.props.onUse()
           this.markUsed()
           el.addEventListener('transitionend', (event) => {
             setTimeout(() => {
               el.setAttribute('instantAnim2', '')
               el.addEventListener('transitionend', (event) => {
-                this.props.done()
+                this.props.onReady()
               }, {once: true})
             }, 200)
           }, {once: true})
         }, 200)
       }, {once: true})
+    } else if (this.props.permanent) {
+      el.setAttribute('permanentAnim0', '')
+      requestAnimationFrame(() => {
+        el.setAttribute('permanentAnim1', '')
+      })
     }
   }
 

@@ -6,7 +6,7 @@ import CardMini from './CardMini'
 class Player extends Component {
   render() {
     const boardCards = this.props.cards ? this.props.cards.map((card) => (
-      <CardMini card={card}/>
+      <CardMini card={card} permanent='true'/>
     )) : null
     return (
 			<div className={styles.player}>
