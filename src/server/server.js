@@ -57,9 +57,9 @@ io.on('connection', socket => {
   })
 
   const nextTurn = () => {
-    const turn = game.nextTurn()
+    const events = game.nextTurn()
     socket.emit('cards', player.handCards)
-    io.to(game.id).emit('next turn', {game: game, ...turn})
+    io.to(game.id).emit('next turn', {game: game, events: events})
   }
 
   socket.on('use card', (useIdx) => {

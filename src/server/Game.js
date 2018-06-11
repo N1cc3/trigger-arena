@@ -15,19 +15,24 @@ class Game {
   nextTurn() {
     const player = this.players[this.turnIdx]
     const cardToUse = player.handCards[player.useIdx]
-    const events = []
 
     // Use card
+    const initialEvents = []
     if (cardToUse.trigger.id === 'instant') {
-      events.push(new Event(player, cardToUse))
+      const targets = this.resolveTargets(cardToUse, player)
+      initialEvents.push(new Event(cardToUse, player, targets))
     } else {
       cardToUse.number = this.cardCount++
       player.boardCards.push(cardToUse)
     }
-
-    const instantEvents = this.resolve(events)
-    const periodicEvents = this.resolve(this.getPeriodicEvents())
+    const instantEvents = this.resolveEvents(initialEvents)
+    const periodicEvents = this.resolveEvents(this.getPeriodicEvents())
     const allEvents = instantEvents.concat(periodicEvents)
+
+    // Cooldown
+    for (const card of this.getBoardCards()) {
+      card.cooldown = Math.max(0, card.cooldown - 1)
+    }
 
     // New cards
     player.handCards[player.useIdx] = randomCard()
@@ -37,72 +42,82 @@ class Game {
 
     this.turnIdx = mod((this.turnIdx + 1), this.players.length)
 
-    return {card: cardToUse, events: allEvents}
+    return allEvents
   }
 
-  resolve(events) {
+  resolveTargets(card, player) {
+    const targets = []
+    switch (card.target.id) {
+      case 'everyone':
+        for (const player of this.players) {
+          targets.push(player)
+        }
+        break
+      case 'random':
+        targets.push(this.players[Math.floor(Math.random() * this.players.length)])
+        break
+      case 'adjacent':
+        const playerIdx = this.players.indexOf(player)
+        const target1 = this.players[mod(playerIdx + 1, this.players.length)]
+        const target2 = this.players[mod(playerIdx - 1, this.players.length)]
+        if (player !== target1) targets.push(target1)
+        if (player !== target2 && target1 !== target2) targets.push(target2)
+        break
+      case 'self':
+      default:
+        targets.push(player)
+        break
+    }
+    return targets
+  }
+
+  resolveCombos(target, effectId, cardOwner) {
+    const events = []
+    for (const player of this.players) {
+      for (const card of player.boardCards) {
+        if (card.cooldown > 0) continue
+        if (
+          (effectId === 'heal'
+          && card.trigger.id === 'heals'
+          && player === cardOwner
+          && target !== cardOwner)
+          ||
+          (effectId === 'heal'
+          && card.trigger.id === 'isHealed'
+          && target === player)
+          ||
+          (effectId === 'damage'
+          && card.trigger.id === 'dealsDmg'
+          && player === cardOwner
+          && target !== cardOwner)
+          ||
+          (effectId === 'damage'
+          && card.trigger.id === 'takesDmg'
+          && target === player)
+        ) {
+          events.push(new Event(card, player, this.resolveTargets(card, player)))
+        }
+      }
+    }
+    return events
+  }
+
+  resolveEvents(events) {
     let i = 0
     while (events[i]) {
       const event = events[i++]
 
-      // Targets
-      const targets = []
-      switch (event.card.target.id) {
-        case 'everyone':
-          for (const player of this.players) {
-            targets.push(player)
-          }
-          break
-        case 'random':
-          targets.push(this.players[Math.floor(Math.random() * this.players.length)])
-          break
-        case 'adjacent':
-          const playerIdx = this.players.indexOf(event.player)
-          const target1 = this.players[mod(playerIdx + 1, this.players.length)]
-          const target2 = this.players[mod(playerIdx - 1, this.players.length)]
-          if (event.player !== target1) targets.push(target1)
-          if (event.player !== target2 && target1 !== target2) targets.push(target2)
-          break
-        case 'self':
-        default:
-          targets.push(event.player)
-          break
-      }
-
-      const addCombos = (target, effectId) => {
-        for (const player of this.players) {
-          for (const card of player.boardCards) {
-            if (card.cooldown > 0) continue
-
-            if (
-              (effectId === 'heal'
-              && card.trigger.id === 'heals'
-              && player === event.player
-              && target !== event.player)
-              ||
-              (effectId === 'heal'
-              && card.trigger.id === 'isHealed'
-              && target === player)
-              ||
-              (effectId === 'damage'
-              && card.trigger.id === 'dealsDmg'
-              && player === event.player
-              && target !== event.player)
-              ||
-              (effectId === 'damage'
-              && card.trigger.id === 'takesDmg'
-              && target === player)
-            ) {
-              events.push(new Event(player, card))
-              card.cooldown++
-            }
-          }
-        }
+      // Cooldown
+      if (event.card.trigger.id === 'periodic') {
+        event.card.cooldown += event.card.trigger.variableValue
+      } else {
+        event.card.cooldown++
       }
 
       // Effect
       const effect = event.card.effect
-      for (const target of targets) {
+      console.log(event)
+      for (const target of event.targets) {
         switch (effect.id) {
           case 'heal':
             target.hp += effect.variableValue
@@ -112,14 +127,14 @@ class Game {
             target.hp -= effect.variableValue
             break
         }
-        addCombos(target, effect.id)
+
+        // Combos
+        const combos = this.resolveCombos(target, effect.id, event.player)
+        for (const comboEvent of combos) {
+          events.push(comboEvent)
+        }
       }
 
-    }
-
-    // Cooldown
-    for (const card of this.getBoardCards()) {
-      card.cooldown = Math.max(0, card.cooldown - 1)
     }
 
     return events
@@ -136,16 +151,16 @@ class Game {
   }
 
   getPeriodicEvents() {
-    const periodicEvents = []
+    const events = []
     for (const player of this.players) {
       for (const card of player.boardCards) {
         if (card.cooldown > 0) continue
         if (card.trigger.id === 'periodic') {
-          periodicEvents.push(new Event(player, card))
+          events.push(new Event(card, player, this.resolveTargets(card, player)))
         }
       }
     }
-    return periodicEvents
+    return events
   }
 
 }
