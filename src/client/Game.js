@@ -10,27 +10,29 @@ class Game extends Component {
 
     this.state = {
       players: [],
-      started: false,
-      turnIdx: 0,
+      cards: [],
       instant: null,
+      turnIdx: 0, // TODO: Highlight current player
+      started: false, // TODO: Can't use cards until started
     }
 
-    this.players = []
+    this.game = null
+    this.events = []
     this.socket = this.props.socket
 
     this.socket.on('join game', (player) => {
-      const players = this.state.players
-      players.push(player)
-      this.setState({players: players})
+      this.setState((prevState) => {
+        prevState.players.push(player)
+        return prevState
+      })
     })
 
     this.socket.on('change name', (player) => {
-      const players = this.state.players
-      const p = players.find(p => p.id === player.id)
-      if (p) {
-        p.name = player.name
-        this.setState({players: players})
-      }
+      this.setState((prevState) => {
+        const p = prevState.players.find(p => p.id === player.id)
+        if (p) p.name = player.name
+        return prevState
+      })
     })
 
     this.socket.on('start game', () => {
@@ -38,35 +40,44 @@ class Game extends Component {
     })
 
     this.socket.on('next turn', (turnResult) => {
-      this.players = turnResult.game.players
-      this.animate(turnResult.events)
+      this.game = turnResult.game
+      this.events = turnResult.events
+      this.useCard(turnResult.usedCard)
     })
 
+    this.useCard = this.useCard.bind(this)
+    this.animateEvents = this.animateEvents.bind(this)
     this.start = this.start.bind(this)
-    this.animate = this.animate.bind(this)
-    this.updatePlayers = this.updatePlayers.bind(this)
+  }
+
+  useCard(card) {
+    card.onUse = () => {} // TODO: Animate card effects
+    card.onReady = () => {
+      this.setState({instant: null})
+      this.animateEvents()
+    }
+
+    if (card.trigger.id === 'instant') {
+      this.setState({instant: card})
+    } else {
+      this.setState((prevState) => {
+        prevState.cards.push(card)
+        return prevState
+      })
+    }
+  }
+
+  animateEvents() {
+    const event = this.events.shift()
+    if (event) {
+
+    } else {
+      this.setState({players: this.game.players, cards: this.game.cards})
+    }
   }
 
   start() {
     this.socket.emit('start game')
-  }
-
-  animate(events) {
-    if (events[0] && events[0].card.trigger.id === 'instant') {
-      this.setState({instant: events[0].card})
-    } else {
-      this.updatePlayers()
-    }
-    let i = 0
-    while (events[i]) {
-      const event = events[i++]
-
-    }
-  }
-
-  updatePlayers() {
-    console.log(this.players)
-    this.setState({players: this.players})
   }
 
   render() {
@@ -78,21 +89,15 @@ class Game extends Component {
 
     const instant = this.state.instant ? (
       <div className={styles.instantLayer}>
-        <CardMini card={this.state.instant} instant='true'
-          onReady={() => {
-            this.setState({instant: null})
-          }}
-          onUse={() => {
-            this.updatePlayers()
-          }}
-        />
+        <CardMini card={this.state.instant}/>
       </div>
     ) : null
 
     return (
       <div className={styles.game}>
         Welcome to the game: {('0000' + this.props.gameId).slice(-4)}
-        <Players players={this.state.players}/>
+
+        <Players players={this.state.players} cards={this.state.cards}/>
 
         {instant}
         {startButton}

@@ -1,8 +1,7 @@
 class Event {
-  constructor(card, player, targets) {
+  constructor(card, targetIdxs) {
     this.card = card
-    this.player = player
-    this.targets = targets
+    this.targetIdxs = targetIdxs
   }
 }
 export default Event

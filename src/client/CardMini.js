@@ -4,34 +4,73 @@ import { hot } from 'react-hot-loader'
 import styles from './CardMini.css'
 
 class CardMini extends Component {
+  constructor(props) {
+    super(props)
+    this.triggered = false
+    this.isInstant = (this.props.card.trigger.id === 'instant')
+  }
 
   componentDidMount() {
     const el = ReactDOM.findDOMNode(this)
-    if (this.props.instant) {
-      el.setAttribute('instantAnim0', '')
+    if (this.isInstant) {
+      el.setAttribute('instantAnim', '0')
       requestAnimationFrame(() => {
-        el.setAttribute('instantAnim1', '')
+        el.setAttribute('instantAnim', '1')
       })
       el.addEventListener('transitionend', (event) => {
         setTimeout(() => {
-          this.props.onUse()
+          this.props.card.onUse()
           this.markUsed()
           el.addEventListener('transitionend', (event) => {
             setTimeout(() => {
-              el.setAttribute('instantAnim2', '')
+              el.setAttribute('instantAnim', '2')
               el.addEventListener('transitionend', (event) => {
-                this.props.onReady()
+                this.props.card.onReady()
               }, {once: true})
             }, 200)
           }, {once: true})
         }, 200)
       }, {once: true})
-    } else if (this.props.permanent) {
-      el.setAttribute('permanentAnim0', '')
+    } else {
+      el.setAttribute('new', '')
       requestAnimationFrame(() => {
-        el.setAttribute('permanentAnim1', '')
+        el.removeAttribute('new')
       })
     }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.isInstant && this.props.card.triggered !== this.triggered) {
+      if (this.props.card.triggered) {
+        this.triggered = true
+        this.trigger()
+      } else {
+        this.triggered = false
+        const el = ReactDOM.findDOMNode(this)
+        el.removeAttribute('triggeredAnim')
+      }
+    }
+  }
+
+  trigger() {
+    const el = ReactDOM.findDOMNode(this)
+    el.setAttribute('triggeredAnim', '0')
+    el.addEventListener('animationend', (event) => {
+      el.setAttribute('triggeredAnim', '1')
+      el.addEventListener('transitionend', (event) => {
+        this.props.card.onUse()
+        this.markUsed()
+        el.addEventListener('transitionend', (event) => {
+          setTimeout(() => {
+            el.setAttribute('triggeredAnim', '2')
+            el.addEventListener('transitionend', (event) => {
+              el.removeAttribute('triggeredAnim')
+              this.props.card.onReady()
+            }, {once: true})
+          }, 200)
+        }, {once: true})
+      }, {once: true})
+    }, {once: true})
   }
 
   markUsed() {

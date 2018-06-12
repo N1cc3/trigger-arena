@@ -30,7 +30,7 @@ io.on('connection', socket => {
   socket.on('host game', () => {
     console.log(`Client ${socketId} wants to host a game`)
     let gameId = Math.floor(Math.random() * 9999)
-    while (games.includes(gameId)) {
+    while (games.map(g => g.id).includes(gameId)) {
       gameId = Math.floor(Math.random() * 9999)
     }
     game = new Game(gameId)
@@ -57,9 +57,10 @@ io.on('connection', socket => {
   })
 
   const nextTurn = () => {
+    const usedCard = player.handCards[player.useIdx]
     const events = game.nextTurn()
     socket.emit('cards', player.handCards)
-    io.to(game.id).emit('next turn', {game: game, events: events})
+    io.to(game.id).emit('next turn', {game: game, events: events, usedCard: usedCard})
   }
 
   socket.on('use card', (useIdx) => {

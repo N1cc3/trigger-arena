@@ -5,8 +5,9 @@ class Card {
     this.target = target
     this.rarity = rarity
 
-    this.number = null
     this.cooldown = 0
+    this.number = null
+    this.ownerIdx = null
   }
 }
 export default Card
