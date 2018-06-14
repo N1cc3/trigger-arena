@@ -32,9 +32,9 @@ class Menu extends Component {
         <button className={styles.join} onClick={this.join}>
           <span role="img" aria-label="Card">🃏</span> Join
         </button>
-      <button className={styles.host} onClick={this.host}>
-        <span role="img" aria-label="House">🏠</span> Host
-      </button>
+        <button className={styles.host} onClick={this.host}>
+          <span role="img" aria-label="House">🏠</span> Host
+        </button>
       </div>
     )
   }
