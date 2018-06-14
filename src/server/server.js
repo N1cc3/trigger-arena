@@ -64,22 +64,22 @@ io.on('connection', socket => {
 
   socket.on('use card', (useIdx) => {
     console.log(`Client ${socketId} wants to use card ${useIdx}`)
-    if (game.players.indexOf(player) === game.turnIdx) {
+    if (game.players.indexOf(player) === game.turnIdx
+        && player.discardIdx !== useIdx
+        && game.started) {
       player.use(useIdx)
-      socket.emit('use card', {
-        card: useIdx,
-      })
+      socket.emit('use card', useIdx)
       if (player.isReady()) nextTurn()
     }
   })
 
   socket.on('discard card', (discardIdx) => {
     console.log(`Client ${socketId} wants to discard card ${discardIdx}`)
-    if (game.players.indexOf(player) === game.turnIdx) {
+    if (game.players.indexOf(player) === game.turnIdx
+        && player.useIdx !== discardIdx
+        && game.started) {
       player.discard(discardIdx)
-      socket.emit('discard card', {
-        card: discardIdx,
-      })
+      socket.emit('discard card', discardIdx)
       if (player.isReady()) nextTurn()
     }
   })

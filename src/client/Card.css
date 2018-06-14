@@ -17,6 +17,14 @@
   border-radius: 10px;
 }
 
+.card[use="true"] {
+  background-color: lightgreen;
+}
+
+.card[discard="true"] {
+  background-color: pink;
+}
+
 .buttons {
   display: flex;
   flex-direction: row;
@@ -25,9 +33,23 @@
 }
 
 .use {
+  font-size: 2em;
+  border-radius: 10px;
+  margin: 10px;
+  font-family: inherit;
+  border-color: green;
   background-color: green;
+  color: lightgreen;
+  width: 40%;
 }
 
 .discard {
+  font-size: 2em;
+  border-radius: 10px;
+  margin: 10px;
+  font-family: inherit;
+  border-color: red;
   background-color: red;
+  color: pink;
+  width: 40%;
 }

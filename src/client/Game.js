@@ -13,7 +13,7 @@ class Game extends Component {
       cards: [],
       instant: null,
       turnIdx: 0, // TODO: Highlight current player
-      started: false, // TODO: Can't use cards until started
+      started: false,
     }
 
     this.game = null

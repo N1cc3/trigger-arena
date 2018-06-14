@@ -19,7 +19,7 @@ class Card extends Component {
 
   render() {
     return (
-      <div className={styles.card}>
+      <div className={styles.card} use={this.props.use ? "true" : "false"} discard={this.props.discard ? "true" : "false"}>
         <div>
           <span role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>

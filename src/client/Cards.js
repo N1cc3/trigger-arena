@@ -9,6 +9,8 @@ class Cards extends Component {
 
     this.state = {
       cards: [],
+      useIdx: null,
+      discardIdx: null,
     }
 
     this.socket = this.props.socket
@@ -16,8 +18,23 @@ class Cards extends Component {
     this.socket.on('cards', (cards) => {
       this.setState({
         cards: cards,
+        useIdx: null,
+        discardIdx: null,
       })
     })
+
+    this.socket.on('use card', (useIdx) => {
+      this.setState({
+        useIdx: useIdx,
+      })
+    })
+
+    this.socket.on('discard card', (discardIdx) => {
+      this.setState({
+        discardIdx: discardIdx,
+      })
+    })
+
     this.socket.emit('cards')
   }
 
@@ -25,7 +42,10 @@ class Cards extends Component {
     return (
       <div className={styles.cards}>
         {this.state.cards.map((card, index) => (
-          <Card key={index} id={index} card={card} socket={this.socket} />
+          <Card key={index} id={index} card={card} socket={this.socket}
+            use={this.state.useIdx === index}
+            discard={this.state.discardIdx === index}
+          />
         ))}
       </div>
     )
