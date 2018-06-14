@@ -22,16 +22,15 @@ class Game {
 
     // Use card
     cardToUse.ownerIdx = playerIdx
-    if (cardToUse.trigger.id === 'instant') {
-      instantTargetIdxs = this.resolveTargetIdxs(cardToUse)
-      events.push(new Event(cardToUse, instantTargetIdxs))
-    } else {
+    instantTargetIdxs = this.resolveTargetIdxs(cardToUse)
+    events.push(new Event(cardToUse, instantTargetIdxs))
+    if (cardToUse.trigger.id !== 'instant') {
       cardToUse.number = this.cardCount++
       this.cards.push(cardToUse)
     }
 
     events = this.resolveEvents(events)
-    events = this.resolveEvents(this.getPeriodicEvents())
+    events = events.concat(this.resolveEvents(this.getPeriodicEvents()))
 
     // Cooldown
     for (const card of this.cards) {
@@ -46,6 +45,41 @@ class Game {
 
     this.turnIdx = mod((this.turnIdx + 1), this.players.length)
 
+    return events
+  }
+
+  resolveEvents(events) {
+    let i = 0
+    while (events[i]) {
+      const event = events[i++]
+
+      // Cooldown
+      const trigger = event.card.trigger
+      if (trigger.id === 'periodic') {
+        event.card.cooldown = trigger.variableValue
+      } else if (trigger.id !== 'instant') {
+        event.card.cooldown = 1
+      }
+
+      // Effect
+      const effect = event.card.effect
+      for (const targetIdx of event.targetIdxs) {
+        const target = this.players[targetIdx]
+        switch (effect.id) {
+          case 'heal':
+            target.hp += effect.variableValue
+            break
+          case 'damage':
+          default:
+            target.hp -= effect.variableValue
+            break
+        }
+
+        // Combos
+        const combos = this.resolveCombos(targetIdx, effect.id, event.card.ownerIdx)
+        events = events.concat(combos)
+      }
+    }
     return events
   }
 
@@ -97,41 +131,8 @@ class Game {
         && card.trigger.id === 'takesDmg'
         && targetIdx === card.ownerIdx)
       ) {
+        card.cooldown = 1
         events.push(new Event(card, this.resolveTargetIdxs(card)))
-      }
-    }
-    return events
-  }
-
-  resolveEvents(events) {
-    let i = 0
-    while (events[i]) {
-      const event = events[i++]
-
-      // Cooldown
-      if (event.card.trigger.id === 'periodic') {
-        event.card.cooldown += event.card.trigger.variableValue
-      } else {
-        event.card.cooldown++
-      }
-
-      // Effect
-      const effect = event.card.effect
-      for (const targetIdx of event.targetIdxs) {
-        const target = this.players[targetIdx]
-        switch (effect.id) {
-          case 'heal':
-            target.hp += effect.variableValue
-            break
-          case 'damage':
-          default:
-            target.hp -= effect.variableValue
-            break
-        }
-
-        // Combos
-        const combos = this.resolveCombos(targetIdx, effect.id, event.card.ownerIdx)
-        events = events.concat(combos)
       }
     }
     return events

@@ -20,16 +20,15 @@ class CardMini extends Component {
       el.addEventListener('transitionend', (event) => {
         setTimeout(() => {
           this.props.card.onUse()
-          this.markUsed()
           el.addEventListener('transitionend', (event) => {
             setTimeout(() => {
               el.setAttribute('instantAnim', '2')
               el.addEventListener('transitionend', (event) => {
                 this.props.card.onReady()
               }, {once: true})
-            }, 200)
+            }, 500)
           }, {once: true})
-        }, 200)
+        }, 500)
       }, {once: true})
     } else {
       el.setAttribute('new', '')
@@ -40,31 +39,22 @@ class CardMini extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!this.isInstant && this.props.card.triggered !== this.triggered) {
-      if (this.props.card.triggered) {
-        this.triggered = true
-        this.trigger()
-      } else {
-        this.triggered = false
-        const el = ReactDOM.findDOMNode(this)
-        el.removeAttribute('triggeredAnim')
-      }
-    }
+    if (this.props.card.triggered === false) this.triggered = false
+    if (this.props.card.triggered && this.triggered === false) this.trigger()
   }
 
   trigger() {
+    this.triggered = true
     const el = ReactDOM.findDOMNode(this)
     el.setAttribute('triggeredAnim', '0')
     el.addEventListener('animationend', (event) => {
       el.setAttribute('triggeredAnim', '1')
       el.addEventListener('transitionend', (event) => {
         this.props.card.onUse()
-        this.markUsed()
         el.addEventListener('transitionend', (event) => {
           setTimeout(() => {
-            el.setAttribute('triggeredAnim', '2')
+            el.removeAttribute('triggeredAnim')
             el.addEventListener('transitionend', (event) => {
-              el.removeAttribute('triggeredAnim')
               this.props.card.onReady()
             }, {once: true})
           }, 200)
@@ -73,19 +63,9 @@ class CardMini extends Component {
     }, {once: true})
   }
 
-  markUsed() {
-    const el = ReactDOM.findDOMNode(this)
-    el.setAttribute('used', '')
-  }
-
-  markUnused() {
-    const el = ReactDOM.findDOMNode(this)
-    el.removeAttribute('used')
-  }
-
   render() {
     return (
-      <div className={styles.card}>
+      <div className={styles.card} used={(this.props.card.cooldown > 0).toString()}>
         <div>
           # {Math.round(this.props.card.number)}
         </div>

@@ -42,37 +42,72 @@ class Game extends Component {
     this.socket.on('next turn', (turnResult) => {
       this.game = turnResult.game
       this.events = turnResult.events
-      this.useCard(turnResult.usedCard)
+      this.animateEvents(true)
     })
 
-    this.useCard = this.useCard.bind(this)
     this.animateEvents = this.animateEvents.bind(this)
     this.start = this.start.bind(this)
   }
 
-  useCard(card) {
-    card.onUse = () => {} // TODO: Animate card effects
-    card.onReady = () => {
-      this.setState({instant: null})
-      this.animateEvents()
-    }
+  animateEvents(first = false) {
+    const event = this.events.shift()
 
-    if (card.trigger.id === 'instant') {
-      this.setState({instant: card})
-    } else {
+    if (first) { // Animate used card
+
+      const card = event.card
+      card.onUse = () => {
+        this.setState((prevState) => {
+          if (card.trigger.id === 'instant') {
+            prevState.instant.cooldown++
+          } else {
+            prevState.cards.find(c => c.number === card.number).cooldown = this.game.cards.find(c => c.number === card.number).cooldown
+          }
+          applyEffect(card.effect, prevState.players, event.targetIdxs)
+          return prevState
+        })
+      }
+      card.onReady = () => {
+        this.setState({instant: null})
+        this.animateEvents()
+      }
+
+      if (card.trigger.id === 'instant') {
+        this.setState({instant: card})
+      } else {
+        this.setState((prevState) => {
+          prevState.cards.push(card)
+          return prevState
+        })
+      }
+
+    } else if (event) { // Animate combo or periodic card
+
       this.setState((prevState) => {
-        prevState.cards.push(card)
+        const card = prevState.cards.find(c => c.number === event.card.number)
+        card.triggered = true
+        card.onUse = () => {
+          this.setState((prevState) => {
+            applyEffect(card.effect, prevState.players, event.targetIdxs)
+            card.cooldown++
+            return prevState
+          })
+        }
+        card.onReady = () => {
+          this.animateEvents()
+        }
         return prevState
       })
-    }
-  }
 
-  animateEvents() {
-    const event = this.events.shift()
-    if (event) {
+    } else { // Event animations complete
 
-    } else {
-      this.setState({players: this.game.players, cards: this.game.cards})
+      this.setState((prevState) => {
+        for (const card of prevState.cards) {
+          card.triggered = false
+          card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown
+        }
+        return prevState
+      })
+
     }
   }
 
@@ -106,3 +141,18 @@ class Game extends Component {
   }
 }
 export default hot(module)(Game)
+
+const applyEffect = (effect, players, targetIdxs) => {
+  for (const targetIdx of targetIdxs) {
+    const target = players[targetIdx]
+    switch (effect.id) {
+      case 'heal':
+        target.hp += effect.variableValue
+        break
+      case 'damage':
+      default:
+        target.hp -= effect.variableValue
+        break
+    }
+  }
+}

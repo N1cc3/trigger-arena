@@ -60,10 +60,6 @@
   transform: scale(2);
 }
 
-.card[triggeredAnim="2"] {
-  transform: scale(1);
-}
-
-.card[used] {
+.card[used="true"] {
   filter: invert(1);
 }
