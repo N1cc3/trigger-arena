@@ -12,6 +12,11 @@
   margin: 0.1em;
 }
 
+.player[highlight="true"] {
+  border-color: yellow;
+  box-shadow: 0 0 10px yellow;
+}
+
 .name {
   padding: 0.1em;
 }

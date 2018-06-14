@@ -12,7 +12,7 @@ class Game extends Component {
       players: [],
       cards: [],
       instant: null,
-      turnIdx: 0, // TODO: Highlight current player
+      turnIdx: 0,
       started: false,
     }
 
@@ -105,6 +105,7 @@ class Game extends Component {
           card.triggered = false
           card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown
         }
+        prevState.turnIdx = this.game.turnIdx
         return prevState
       })
 
@@ -132,7 +133,7 @@ class Game extends Component {
       <div className={styles.game}>
         Welcome to the game: {('0000' + this.props.gameId).slice(-4)}
 
-        <Players players={this.state.players} cards={this.state.cards}/>
+        <Players players={this.state.players} cards={this.state.cards} turnIdx={this.state.turnIdx}/>
 
         {instant}
         {startButton}

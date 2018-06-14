@@ -9,7 +9,7 @@ class Player extends Component {
       <CardMini key={card.number} card={card}/>
     )) : null
     return (
-			<div className={styles.player}>
+			<div className={styles.player} highlight={this.props.highlight ? "true" : "false"}>
         <div className={styles.name}>{this.props.player.name}</div>
         <div className={styles.hp}>{this.props.player.hp}</div>
         {boardCards}
