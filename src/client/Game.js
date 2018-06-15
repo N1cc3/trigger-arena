@@ -42,7 +42,7 @@ class Game extends Component {
     this.socket.on('next turn', (turnResult) => {
       this.game = turnResult.game
       this.events = turnResult.events
-      this.animateEvents(true)
+      this.animateEvents(this.events.length > 0)
     })
 
     this.animateEvents = this.animateEvents.bind(this)
