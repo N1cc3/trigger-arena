@@ -14,9 +14,9 @@ class CardMini extends Component {
     const el = ReactDOM.findDOMNode(this)
     if (this.isInstant) {
       el.setAttribute('instantAnim', '0')
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         el.setAttribute('instantAnim', '1')
-      })
+      }, 50)
       el.addEventListener('transitionend', (event) => {
         setTimeout(() => {
           this.props.card.onUse()
