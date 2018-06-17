@@ -43,16 +43,22 @@
 }
 
 @keyframes shake {
-  from {
-    transform: rotate(10deg);
+  0% {
+    transform: rotate(0deg);
   }
-  to {
-    transform: rotate(-10deg);
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }
 
 .card[triggeredAnim="0"] {
-  animation: shake 0.1s ease-in-out 0.1s 3 alternate;
+  animation: shake 0.2s linear 3;
   transform: scale(1);
 }
 
