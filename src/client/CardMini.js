@@ -9,6 +9,20 @@ class CardMini extends Component {
     this.triggered = false
     this.isInstant = (this.props.card.trigger.id === 'instant')
     this.isPeriodic = (this.props.card.trigger.id === 'periodic')
+    const r = this.props.card.rarity
+    if (r < 200) {
+      this.rarity = 'common'
+    } else if (r < 500) {
+      this.rarity = 'uncommon'
+    } else if (r < 1000) {
+      this.rarity = 'rare'
+    } else if (r < 5000) {
+      this.rarity = 'epic'
+    } else if (r < 10000) {
+      this.rarity = 'legendary'
+    } else {
+      this.rarity = 'mythic'
+    }
   }
 
   componentDidMount() {
@@ -70,8 +84,13 @@ class CardMini extends Component {
   }
 
   render() {
+    const cooldown = this.props.card.cooldown > 0 ?
+      <div className={styles.cooldown}>
+        {this.isPeriodic ? this.props.card.cooldown : '⌛'}
+      </div>
+    : null
     return (
-      <div className={styles.card} used={(this.props.card.cooldown > 0).toString()} periodic={this.isPeriodic.toString()}>
+      <div className={styles.card} used={(this.props.card.cooldown > 0).toString()} periodic={this.isPeriodic.toString()} rarity={this.rarity}>
         <div>
           # {Math.round(this.props.card.number)}
         </div>
@@ -87,6 +106,7 @@ class CardMini extends Component {
         <div>
           <span role="img" aria-label="Target">🎯</span> {this.props.card.target.shortName}
         </div>
+        {cooldown}
       </div>
     )
   }

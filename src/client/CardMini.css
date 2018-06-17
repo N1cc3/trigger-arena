@@ -5,15 +5,16 @@
 
   font-size: 12px;
 
-  width: 70px;
-  height: 120px;
+  width: 80px;
+  height: 132px;
   background-color: ghostwhite;
 
+  padding: 2px;
   margin: 2px;
 
   border-style: solid;
   border-color: black;
-  border-width: 1px;
+  border-width: 2px;
   border-radius: 5px;
 
   opacity: 1;
@@ -22,8 +23,33 @@
   transition: all 1.2s ease;
 }
 
+.card[rarity="common"] {
+  border-color: black;
+}
+
+.card[rarity="uncommon"] {
+  border-color: lawngreen;
+}
+
+.card[rarity="rare"] {
+  border-color: blue;
+}
+
+.card[rarity="epic"] {
+  border-color: purple;
+}
+
+.card[rarity="legendary"] {
+  border-color: gold;
+}
+
+.card[rarity="mythic"] {
+  border-color: gold;
+  box-shadow: 0 0 100px gold;
+}
+
 .card[periodic="true"] {
-  background-color: greenyellow;
+  background-color: #bbeebb;
 }
 
 .card[instantAnim="0"] {
@@ -75,5 +101,24 @@
 }
 
 .card[used="true"] {
-  filter: invert(1);
+  background-color: darkgrey;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+.cooldown {
+  width: calc(100% - 4px);
+  position: absolute;
+  font-size: 70px;
+  color: black;
+  text-align: center;
+  opacity: 0.2;
+  animation: fadeIn 1.2s linear 1;
 }
