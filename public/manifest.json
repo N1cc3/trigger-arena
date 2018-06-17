@@ -1,6 +1,6 @@
 {
-  "short_name": "Trigger Arena",
-  "name": "Create React App Sample",
+  "short_name": "TA",
+  "name": "Trigger Arena",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,7 +9,8 @@
     }
   ],
   "start_url": "./index.html",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "theme_color": "#2e8b57",
+  "background_color": "#2e8b57"
 }
