@@ -60,7 +60,7 @@ class Game extends Component {
           if (card.trigger.id === 'instant') {
             prevState.instant.cooldown++
           } else {
-            prevState.cards.find(c => c.number === card.number).cooldown = this.game.cards.find(c => c.number === card.number).cooldown
+            prevState.cards.find(c => c.number === card.number).cooldown = this.game.cards.find(c => c.number === card.number).cooldown + 1
           }
           applyEffect(card.effect, prevState.players, event.targetIdxs)
           return prevState
@@ -88,7 +88,7 @@ class Game extends Component {
         card.onUse = () => {
           this.setState((prevState) => {
             applyEffect(card.effect, prevState.players, event.targetIdxs)
-            card.cooldown++
+            card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown + 1
             return prevState
           })
         }
