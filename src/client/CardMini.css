@@ -19,7 +19,7 @@
   opacity: 1;
   transform: scale(1);
 
-  transition: all 0.8s ease;
+  transition: all 1.2s ease;
 }
 
 .card[instantAnim="0"] {
