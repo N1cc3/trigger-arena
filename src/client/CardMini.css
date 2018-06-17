@@ -57,6 +57,10 @@
   }
 }
 
+.card[triggeredAnim] {
+  z-index: 1;
+}
+
 .card[triggeredAnim="0"] {
   animation: shake 0.2s linear 3;
   transform: scale(1);
