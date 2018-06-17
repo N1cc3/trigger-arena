@@ -1,7 +1,7 @@
 .player {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: stretch;
 
   border-style: solid;
   border-width: 0.05em;
@@ -18,10 +18,37 @@
   box-shadow: 0 0 10px yellow;
 }
 
+.stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .name {
   padding: 0.1em;
+  color: white;
+  -webkit-text-stroke-width: 2px;
+  font-size: 1.5em;
+  text-transform: capitalize;
 }
 
 .hp {
+  width: 80px;
+  height: 80px;
   padding: 0.1em;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
