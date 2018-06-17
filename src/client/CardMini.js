@@ -34,6 +34,9 @@ class CardMini extends Component {
       el.setAttribute('new', '')
       requestAnimationFrame(() => {
         el.removeAttribute('new')
+        el.addEventListener('transitionend', (event) => {
+          this.props.card.onReady()
+        }, {once: true})
       })
     }
   }
