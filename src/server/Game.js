@@ -18,18 +18,21 @@ class Game {
     const cardToUse = player.handCards[player.useIdx]
     const playerIdx = this.turnIdx
     let events = []
-    let instantTargetIdxs = []
 
     // Use card
     cardToUse.ownerIdx = playerIdx
-    instantTargetIdxs = this.resolveTargetIdxs(cardToUse)
+    const instantTargetIdxs = this.resolveTargetIdxs(cardToUse)
     events.push(new Event(cardToUse, instantTargetIdxs))
-    if (cardToUse.trigger.id !== 'instant') {
+    if (cardToUse.trigger.id === 'instant') {
+      events = this.resolveEvents(events)
+    } else {
       cardToUse.number = this.cardCount++
       this.cards.push(cardToUse)
+      if (cardToUse.trigger.id === 'periodic') {
+        cardToUse.cooldown = cardToUse.trigger.variableValue // Start with cooldown
+      }
     }
 
-    events = this.resolveEvents(events)
     events = events.concat(this.resolveEvents(this.getPeriodicEvents()))
 
     // Cooldown
