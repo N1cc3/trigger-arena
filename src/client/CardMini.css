@@ -61,7 +61,7 @@
   }
 }
 
-.card[triggeredAnim] {
+.card[onTop] {
   z-index: 1;
 }
 

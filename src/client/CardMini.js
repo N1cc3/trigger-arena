@@ -51,6 +51,7 @@ class CardMini extends Component {
     this.triggered = true
     const el = ReactDOM.findDOMNode(this)
     el.setAttribute('triggeredAnim', '0')
+    el.setAttribute('onTop', '')
     el.addEventListener('animationend', (event) => {
       el.setAttribute('triggeredAnim', '1')
       el.addEventListener('transitionend', (event) => {
@@ -59,6 +60,7 @@ class CardMini extends Component {
           setTimeout(() => {
             el.removeAttribute('triggeredAnim')
             el.addEventListener('transitionend', (event) => {
+              el.removeAttribute('onTop')
               this.props.card.onReady()
             }, {once: true})
           }, 200)
