@@ -1,6 +1,25 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Card.css'
+import { Howl } from 'howler'
+import buttonDownSoundSrc from './sounds/buttonDown.mp3'
+import buttonUpSoundSrc from './sounds/buttonUp.mp3'
+
+const buttonDownSound = new Howl({
+  src: [buttonDownSoundSrc]
+})
+
+const buttonUpSound = new Howl({
+  src: [buttonUpSoundSrc]
+})
+
+const buttonDown = () => {
+  buttonDownSound.play()
+}
+
+const buttonUp = () => {
+  buttonUpSound.play()
+}
 
 class Card extends Component {
   constructor(props) {
@@ -33,7 +52,7 @@ class Card extends Component {
           <span role="img" aria-label="Target">🎯</span> Target: {this.props.card.target.longName}
         </div>
         <div className={styles.buttons}>
-          <button className={styles.use} onClick={() => this.useCard(this.props.id)}>Use</button>
+          <button className={styles.use} onClick={() => this.useCard(this.props.id)} onTouchStart={buttonDown} onTouchEnd={buttonUp}>Use</button>
           <button className={styles.discard} onClick={() => this.discardCard(this.props.id)}>Discard</button>
         </div>
       </div>
