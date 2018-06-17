@@ -95,7 +95,7 @@ class CardMini extends Component {
           # {Math.round(this.props.card.number)}
         </div>
         <div>
-          <span role="img" aria-label="Gem">💎</span> {Math.round(this.props.card.rarity)}
+          <span role="img" aria-label="Gem" className={styles.rarityGem} rarity={this.rarity}>💎</span> {Math.round(this.props.card.rarity)}
         </div>
         <div>
           <span role="img" aria-label="Light Bulb">💡</span> {this.props.card.trigger.shortName}

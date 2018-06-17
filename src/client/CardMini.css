@@ -31,21 +31,41 @@
   border-color: lawngreen;
 }
 
+.rarityGem[rarity="uncommon"] {
+  box-shadow: 0px 0px 14px 1px lawngreen, inset 0px 0px 18px -3px lawngreen;
+}
+
 .card[rarity="rare"] {
   border-color: blue;
+}
+
+.rarityGem[rarity="rare"] {
+  box-shadow: 0px 0px 14px 1px blue, inset 0px 0px 18px -3px blue;
 }
 
 .card[rarity="epic"] {
   border-color: purple;
 }
 
+.rarityGem[rarity="epic"] {
+  box-shadow: 0px 0px 14px 1px purple, inset 0px 0px 18px -3px purple;
+}
+
 .card[rarity="legendary"] {
   border-color: gold;
+}
+
+.rarityGem[rarity="legendary"] {
+  box-shadow: 0px 0px 14px 1px gold, inset 0px 0px 18px -3px gold;
 }
 
 .card[rarity="mythic"] {
   border-color: gold;
   box-shadow: 0 0 100px gold;
+}
+
+.rarityGem[rarity="mythic"] {
+  box-shadow: 0px 0px 14px 1px gold, inset 0px 0px 18px -3px gold;
 }
 
 .card[periodic="true"] {
