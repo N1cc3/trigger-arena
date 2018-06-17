@@ -8,6 +8,7 @@ class CardMini extends Component {
     super(props)
     this.triggered = false
     this.isInstant = (this.props.card.trigger.id === 'instant')
+    this.isPeriodic = (this.props.card.trigger.id === 'periodic')
   }
 
   componentDidMount() {
@@ -68,7 +69,7 @@ class CardMini extends Component {
 
   render() {
     return (
-      <div className={styles.card} used={(this.props.card.cooldown > 0).toString()}>
+      <div className={styles.card} used={(this.props.card.cooldown > 0).toString()} periodic={this.isPeriodic.toString()}>
         <div>
           # {Math.round(this.props.card.number)}
         </div>
