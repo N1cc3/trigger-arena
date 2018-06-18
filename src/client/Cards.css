@@ -44,6 +44,6 @@
 .yourTurn {
   font-size: 8em;
   color: white;
-  background: radial-gradient(gold 0%, transparent 50%);
+  background: radial-gradient(closest-side, gold, transparent);
   animation: popup 2s linear 1;
 }
