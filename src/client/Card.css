@@ -34,22 +34,14 @@
 
 .use {
   font-size: 2em;
-  border-radius: 10px;
   margin: 10px;
-  font-family: inherit;
-  border-color: green;
-  background-color: green;
   color: lightgreen;
   width: 40%;
 }
 
 .discard {
   font-size: 1.2em;
-  border-radius: 10px;
   margin: 10px;
-  font-family: inherit;
-  border-color: red;
-  background-color: red;
   color: pink;
   width: 40%;
 }

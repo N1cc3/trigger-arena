@@ -10,16 +10,12 @@
 .start {
   padding: 0.5em;
   font-size: 3rem;
-  border-radius: 10px;
   margin: 10px;
-  font-family: inherit;
-  border-color: green;
-  background-color: green;
   color: lightgreen;
 
   position: absolute;
-  left: 50vw;
-  top: 50vh;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
   opacity: 0.7;
 }

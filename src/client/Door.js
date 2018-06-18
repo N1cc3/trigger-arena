@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Door.css'
+import Button from './comp/Button'
 
 class Door extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class Door extends Component {
     return (
       <form className={styles.box} onSubmit={this.ready}>
         <input className={styles.gameIdInput} type="text" name="code" pattern="([0-9][0-9][0-9][0-9])" maxLength="4" inputMode="numeric" required autoFocus placeholder="Game ID" onChange={this.changeGameId}/>
-        <input className={styles.ready} type="submit" value="Enter"/>
+        <Button className={styles.ready} color="turquoise">Enter</Button>
       </form>
     )
   }

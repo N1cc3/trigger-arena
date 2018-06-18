@@ -1,44 +1,31 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Card.css'
-import { Howl } from 'howler'
-import buttonDownSoundSrc from './sounds/buttonDown.mp3'
-import buttonUpSoundSrc from './sounds/buttonUp.mp3'
-
-const buttonDownSound = new Howl({
-  src: [buttonDownSoundSrc]
-})
-
-const buttonUpSound = new Howl({
-  src: [buttonUpSoundSrc]
-})
-
-const buttonDown = () => {
-  buttonDownSound.play()
-}
-
-const buttonUp = () => {
-  buttonUpSound.play()
-}
+import Button from './comp/Button'
 
 class Card extends Component {
   constructor(props) {
     super(props)
 
     this.socket = this.props.socket
+
+    this.useCard = this.useCard.bind(this)
+    this.discardCard = this.discardCard.bind(this)
   }
 
-  useCard(id) {
-    this.socket.emit('use card', id)
+  useCard() {
+    this.socket.emit('use card', this.props.id)
   }
 
-  discardCard(id) {
-    this.socket.emit('discard card', id)
+  discardCard() {
+    this.socket.emit('discard card', this.props.id)
   }
 
   render() {
     return (
-      <div className={styles.card} use={this.props.use ? "true" : "false"} discard={this.props.discard ? "true" : "false"}>
+      <div className={styles.card}
+        use={this.props.use ? "true" : "false"}
+        discard={this.props.discard ? "true" : "false"}>
         <div>
           <span role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>
@@ -52,8 +39,14 @@ class Card extends Component {
           <span role="img" aria-label="Target">🎯</span> Target: {this.props.card.target.longName}
         </div>
         <div className={styles.buttons}>
-          <button className={styles.use} onClick={() => this.useCard(this.props.id)} onTouchStart={buttonDown} onTouchEnd={buttonUp}>Use</button>
-          <button className={styles.discard} onClick={() => this.discardCard(this.props.id)}>Discard</button>
+          <Button className={styles.use} color="green"
+            onClick={this.useCard}>
+            Use
+          </Button>
+          <Button className={styles.discard} color="red"
+            onClick={this.discardCard}>
+            Discard
+          </Button>
         </div>
       </div>
     )

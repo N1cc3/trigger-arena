@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Menu.css'
+import Button from './comp/Button'
 
 class Menu extends Component {
   constructor(props) {
@@ -29,12 +30,12 @@ class Menu extends Component {
   render() {
     return (
       <div className={styles.box}>
-        <button className={styles.join} onClick={this.join}>
+        <Button className={[styles.button, styles.join].join(' ')} color="green" onClick={this.join}>
           <span role="img" aria-label="Card">🃏</span> Join
-        </button>
-        <button className={styles.host} onClick={this.host}>
+        </Button>
+        <Button className={[styles.button, styles.host].join(' ')} color="darkturquoise" onClick={this.host}>
           <span role="img" aria-label="House">🏠</span> Host
-        </button>
+        </Button>
       </div>
     )
   }

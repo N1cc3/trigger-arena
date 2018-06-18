@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader'
 import styles from './Game.css'
 import Players from './Players'
 import CardMini from './CardMini'
+import Button from './comp/Button'
 
 class Game extends Component {
   constructor(props) {
@@ -119,9 +120,9 @@ class Game extends Component {
 
   render() {
     const startButton = this.state.started ? null : (
-      <button className={styles.start} onClick={this.start}>
+      <Button className={styles.start} color="green" onClick={this.start}>
         <span role="img" aria-label="Check Mark">✔</span> Start
-      </button>
+      </Button>
     )
 
     const instant = this.state.instant ? (

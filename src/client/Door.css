@@ -18,9 +18,5 @@
 .ready {
   padding: 0.1em;
   font-size: 3em;
-  border-radius: 10px;
   margin: 10px;
-  border-color: turquoise;
-  background-color: turquoise;
-  font-family: inherit;
 }

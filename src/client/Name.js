@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Name.css'
+import Button from './comp/Button'
 
 class Name extends Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class Name extends Component {
       <form className={styles.box} onSubmit={this.ready}>
         <input className={styles.nameInput} type="text" name="name" maxLength="10" required autoFocus autoComplete="on" placeholder="Your name"
         onChange={this.changeName}/>
-        <input type="submit" value="Ready" className={styles.ready}/>
+        <Button className={styles.ready} color="green">Ready</Button>
       </form>
     )
   }
