@@ -11,6 +11,7 @@ class Game {
     this.cardCount = 0
 
     this.started = false
+    this.animating = false
   }
 
   nextTurn() {

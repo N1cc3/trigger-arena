@@ -108,6 +108,7 @@ class Game extends Component {
         prevState.turnIdx = this.game.turnIdx
         return prevState
       })
+      this.socket.emit('next turn')
 
     }
   }
