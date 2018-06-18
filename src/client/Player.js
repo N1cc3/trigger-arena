@@ -21,7 +21,19 @@ const randomSkull = () => {
 class Player extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      hp: this.props.player.hp,
+      hpDiff: null,
+    }
     this.skull = randomSkull()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const newHp = this.props.player.hp
+    if (this.state.hp !== newHp) {
+      const hpDiff = newHp - this.state.hp
+      this.setState({hp: newHp, hpDiff: hpDiff})
+    }
   }
 
   render() {
@@ -29,16 +41,29 @@ class Player extends Component {
       <CardMini key={card.number} card={card}/>
     )) : null
 
+    const hpDiff = this.state.hpDiff
+    const backgroundColor = `rgba(${hpDiff < 0 ? 255 : 0}, ${hpDiff > 0 ? 255 : 0}, 0, ${0.2 * Math.abs(hpDiff)})`
+    const hpDiffStyle = {
+      color: hpDiff > 0 ? 'green' : 'red',
+      fontSize: `${1.5 + 0.5 * Math.abs(hpDiff)}em`,
+      background: `radial-gradient(circle closest-side, ${backgroundColor}, transparent)`
+    }
+    const hpDiffElem = hpDiff ? <div className={styles.hpDiff} style={hpDiffStyle}
+      onAnimationEnd={() => this.setState({hpDiff: null})}>
+      {hpDiff}
+    </div> : null
+
     const hp = this.props.player.hp
     const hpStyle = {
       backgroundImage: `url(${hp > 0 ? heart : this.skull})`
     }
     const hpElement = <div className={styles.hp} style={hpStyle}>
       {hp > 0 ? hp : null}
+      {hpDiffElem}
     </div>
 
     return (
-			<div className={styles.player} highlight={this.props.highlight ? "true" : "false"}>
+			<div className={styles.player} highlight={this.props.highlight ? 'true' : 'false'}>
         <div className={styles.stats}>
           <div className={styles.name}>{this.props.player.name}</div>
           {hpElement}

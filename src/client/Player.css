@@ -47,6 +47,25 @@
   background-position: center;
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-50%) scale(2);
+  }
+}
+
+.hpDiff {
+  position: absolute;
+  z-index: 2;
+  opacity: 1;
+  transform: translateY(0), scale(1);
+  animation: fadeOut 2s ease-out;
+}
+
 .cards {
   display: flex;
   flex-direction: row;
