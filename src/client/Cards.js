@@ -11,6 +11,7 @@ class Cards extends Component {
       cards: [],
       useIdx: null,
       discardIdx: null,
+      yourTurn: false,
     }
 
     this.socket = this.props.socket
@@ -35,10 +36,26 @@ class Cards extends Component {
       })
     })
 
+    this.socket.on('your turn', () => {
+      this.setState({
+        yourTurn: true,
+      })
+    })
+
     this.socket.emit('cards')
+
+    this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
+  }
+
+  yourTurnAnimEnd() {
+    this.setState({yourTurn: false})
   }
 
   render() {
+    const yourTurn = this.state.yourTurn ? <div className={styles.yourTurnLayer}><div className={styles.yourTurn} onAnimationEnd={this.yourTurnAnimEnd}>
+      Your Turn!
+    </div></div> : null
+
     return (
       <div className={styles.cards}>
         {this.state.cards.map((card, index) => (
@@ -47,6 +64,7 @@ class Cards extends Component {
             discard={this.state.discardIdx === index}
           />
         ))}
+        {yourTurn}
       </div>
     )
   }
