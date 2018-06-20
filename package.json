@@ -1,6 +1,6 @@
 {
-  "name": "react-app",
-  "version": "0.1.0",
+  "name": "trigger-arena",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.6",
