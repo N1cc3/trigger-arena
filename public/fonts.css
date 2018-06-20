@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'BloodThirst';
+  src: url('fonts/BloodThirst.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FromCartoonBlocks';
+  src: url('fonts/FromCartoonBlocks.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'GrindAndDeath';
+  src: url('fonts/GrindAndDeath.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'RemachineScript';
+  src: url('fonts/RemachineScript.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'RiseNShine';
+  src: url('fonts/RiseNShine.ttf') format('truetype');
+}
