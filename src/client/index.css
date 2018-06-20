@@ -6,6 +6,8 @@ body {
   font-family: 'Amaranth', sans-serif;
   overflow: hidden;
   -webkit-text-stroke: 0.04em black;
+  user-select: none;
+  -webkit-user-drag: none;
 
   background-color: seagreen;
 }
