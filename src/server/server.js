@@ -3,16 +3,17 @@ import http from 'http'
 import SocketIO from 'socket.io'
 import path from 'path'
 import enforce from 'express-sslify'
+import compression from 'compression'
 import Game from './Game.js'
 import Player from './Player.js'
 
 const app = express()
-app.use(enforce.HTTPS({ trustProtoHeader: true }))
-
 const server = http.Server(app)
 const io = new SocketIO(server)
 const port = process.env.PORT || 8080
 
+app.use(enforce.HTTPS({ trustProtoHeader: true }))
+app.use(compression())
 app.use(express.static(path.join(__dirname)))
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'))
