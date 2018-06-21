@@ -56,12 +56,15 @@
   background-position: center;
 }
 
-@keyframes fadeOut {
-  from {
+@keyframes hpDiff {
+  0% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-  to {
+  50% {
+    opacity: 1;
+  }
+  100% {
     opacity: 0;
     transform: translateY(-50%) scale(2);
   }
@@ -72,7 +75,7 @@
   z-index: 2;
   opacity: 1;
   transform: translateY(0), scale(1);
-  animation: fadeOut 2s ease-out;
+  animation: hpDiff 2s ease-out;
 }
 
 .cards {

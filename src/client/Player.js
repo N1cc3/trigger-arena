@@ -50,7 +50,7 @@ class Player extends Component {
     }
     const hpDiffElem = hpDiff ? <div className={styles.hpDiff} style={hpDiffStyle}
       onAnimationEnd={() => this.setState({hpDiff: null})}>
-      {hpDiff}
+      {Math.abs(hpDiff)}
     </div> : null
 
     const hp = this.props.player.hp
@@ -63,7 +63,7 @@ class Player extends Component {
     </div>
 
     return (
-			<div className={styles.player} highlight={this.props.highlight.toString()} dead={(hp <= 0).toString()}>
+			<div className={styles.player} highlight={this.props.highlight.toString()} dead={this.props.player.dead.toString()}>
         <div className={styles.stats}>
           <div className={styles.name}>{this.props.player.name}</div>
           {hpElement}
