@@ -47,3 +47,38 @@
   background: radial-gradient(closest-side, gold, transparent);
   animation: popup 2s linear 1;
 }
+
+@keyframes youDied {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes youDiedWaves {
+  from {
+    color: black;
+  }
+  to {
+    color: darkred;
+  }
+}
+
+.youDied {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "BloodThirst";
+  color: darkred;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 8em;
+
+  animation: youDied 3s forwards, youDiedWaves 4s ease-in-out infinite alternate;
+}

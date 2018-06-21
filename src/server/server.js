@@ -64,6 +64,11 @@ io.on('connection', socket => {
     const events = game.nextTurn()
     socket.emit('cards', player.handCards)
     game.animating = true
+    for (const p of game.players) {
+      if (p.dead) {
+        io.to(clients[p.id]).emit('you died')
+      }
+    }
     io.to(game.id).emit('next turn', {game: game, events: events})
   }
 

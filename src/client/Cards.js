@@ -12,6 +12,7 @@ class Cards extends Component {
       useIdx: null,
       discardIdx: null,
       yourTurn: false,
+      dead: false,
     }
 
     this.socket = this.props.socket
@@ -42,6 +43,12 @@ class Cards extends Component {
       })
     })
 
+    this.socket.on('you died', () => {
+      this.setState({
+        dead: true,
+      })
+    })
+
     this.socket.emit('cards')
 
     this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
@@ -56,6 +63,10 @@ class Cards extends Component {
       Your Turn!
     </div></div> : null
 
+    const youDied = this.state.dead ? (
+      <div className={styles.youDied}>You died!</div>
+    ) : null
+
     return (
       <div className={styles.cards}>
         {this.state.cards.map((card, index) => (
@@ -65,6 +76,7 @@ class Cards extends Component {
           />
         ))}
         {yourTurn}
+        {youDied}
       </div>
     )
   }
