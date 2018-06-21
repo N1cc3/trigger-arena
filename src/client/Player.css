@@ -10,12 +10,18 @@
   padding: 0.1em;
   margin: 0.1em;
 
+  background-color: limegreen;
+
   transition: all 0.8s ease;
 }
 
 .player[highlight="true"] {
   border-color: yellow;
   box-shadow: 0 0 10px yellow;
+}
+
+.player[dead="true"] {
+  filter: brightness(0.5);
 }
 
 .stats {

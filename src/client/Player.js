@@ -63,7 +63,7 @@ class Player extends Component {
     </div>
 
     return (
-			<div className={styles.player} highlight={this.props.highlight ? 'true' : 'false'}>
+			<div className={styles.player} highlight={this.props.highlight.toString()} dead={(hp <= 0).toString()}>
         <div className={styles.stats}>
           <div className={styles.name}>{this.props.player.name}</div>
           {hpElement}
