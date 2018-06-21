@@ -2,6 +2,10 @@
   border-radius: 10px;
   border-width: 2px;
   border-style: outset;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button[pressed="true"] {
