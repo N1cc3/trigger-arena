@@ -7,6 +7,10 @@
   flex-direction: column;
 }
 
+.gameId {
+
+}
+
 .start {
   padding: 0.5em;
   font-size: 3rem;
@@ -28,4 +32,33 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@keyframes gameOver {
+  0% {
+    opacity: 0;
+    background-color: rgba(255,255,255,0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    background-color: rgba(255,255,255,1);
+  }
+}
+
+.gameOver {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  font-family: "FromCartoonBlocks";
+  font-size: 8rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  animation: gameOver 5s forwards;
 }
