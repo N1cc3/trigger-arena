@@ -15,6 +15,8 @@ class Game extends Component {
       instant: null,
       turnIdx: 0,
       started: false,
+      gameOver: false,
+      winner: null,
     }
 
     this.game = null
@@ -106,10 +108,18 @@ class Game extends Component {
           card.triggered = false
           card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown
         }
+        for (const player of prevState.players) {
+          player.dead = this.game.players.find(p => p.id === player.id).dead
+        }
         prevState.turnIdx = this.game.turnIdx
+        prevState.gameOver = this.game.gameOver
+        prevState.winner = this.game.winner
         return prevState
       })
-      this.socket.emit('next turn')
+
+      if (!this.state.gameOver) {
+        this.socket.emit('next turn')
+      }
 
     }
   }
@@ -119,6 +129,10 @@ class Game extends Component {
   }
 
   render() {
+    const gameId = !this.state.started ? (
+      <div className={styles.gameId}>Game ID: {('0000' + this.props.gameId).slice(-4)}</div>
+    ) : null
+
     const startButton = this.state.started ? null : (
       <Button className={styles.start} color="green" onClick={this.start}>
         <span role="img" aria-label="Check Mark">✔</span> Start
@@ -131,14 +145,22 @@ class Game extends Component {
       </div>
     ) : null
 
+    const gameOver = this.state.gameOver ? (
+      <div className={styles.gameOver}>
+        Game Over!
+        {this.state.winner ? <div>Winner: {this.state.winner.name}</div> : <div>Draw!</div>}
+      </div>
+    ) : null
+
     return (
       <div className={styles.game}>
-        Welcome to the game: {('0000' + this.props.gameId).slice(-4)}
+        {gameId}
 
         <Players players={this.state.players} cards={this.state.cards} turnIdx={this.state.turnIdx}/>
 
         {instant}
         {startButton}
+        {gameOver}
       </div>
     )
   }

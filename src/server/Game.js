@@ -12,6 +12,9 @@ class Game {
 
     this.started = false
     this.animating = false
+
+    this.gameOver = false
+    this.winner = null
   }
 
   nextTurn() {
@@ -36,18 +39,40 @@ class Game {
 
     events = events.concat(this.resolveEvents(this.getPeriodicEvents()))
 
-    // Cooldown
-    for (const card of this.cards) {
-      card.cooldown = Math.max(0, card.cooldown - 1)
+    // Dead players
+    for (const p of this.players) {
+      if (p.hp <= 0) p.dead = true
     }
 
-    // New cards
-    player.handCards[player.useIdx] = randomCard()
-    player.handCards[player.discardIdx] = randomCard()
-    player.useIdx = null
-    player.discardIdx = null
+    // Win conditions
+    if (this.players.filter(p => !p.dead).length === 1) {
+      this.gameOver = true
+      this.winner = this.players.find(p => !p.dead)
+    } else if (this.players.filter(p => !p.dead).length === 0) {
+      this.gameOver = true
+    }
 
-    this.turnIdx = mod((this.turnIdx + 1), this.players.length)
+    if (!this.gameOver) {
+
+      // Cooldown
+      for (const card of this.cards) {
+        if (!this.players[card.ownerIdx].dead) card.cooldown = Math.max(0, card.cooldown - 1)
+      }
+
+      // New cards
+      if (!player.dead) {
+        player.handCards[player.useIdx] = randomCard()
+        player.handCards[player.discardIdx] = randomCard()
+      }
+      player.useIdx = null
+      player.discardIdx = null
+
+      this.turnIdx = mod((this.turnIdx + 1), this.players.length)
+      while (this.players[this.turnIdx].dead) {
+        this.turnIdx = mod((this.turnIdx + 1), this.players.length)
+      }
+
+    }
 
     return events
   }
@@ -56,6 +81,8 @@ class Game {
     let i = 0
     while (events[i]) {
       const event = events[i++]
+
+      if (this.players[event.card.ownerIdx].dead) continue
 
       // Cooldown
       const trigger = event.card.trigger
@@ -109,13 +136,15 @@ class Game {
         targetIdxs.push(playerIdx)
         break
     }
-    return targetIdxs
+    const targetIdxsAlive = targetIdxs.filter(idx => !this.players[idx].dead)
+    return targetIdxsAlive
   }
 
   resolveCombos(targetIdx, effectId, ownerIdx) {
     const events = []
     for (const card of this.cards) {
       if (card.cooldown > 0) continue
+      if (this.players[targetIdx].dead) continue
       if (
         (effectId === 'heal'
         && card.trigger.id === 'heals'
