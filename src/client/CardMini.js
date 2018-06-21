@@ -47,12 +47,12 @@ class CardMini extends Component {
       }, {once: true})
     } else {
       el.setAttribute('new', '')
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         el.removeAttribute('new')
         el.addEventListener('transitionend', (event) => {
           this.props.card.onReady()
         }, {once: true})
-      })
+      }, 50)
     }
   }
 
