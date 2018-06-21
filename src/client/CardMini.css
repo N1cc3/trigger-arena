@@ -20,6 +20,9 @@
   opacity: 1;
   transform: scale(1);
 
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+
   transition: all 1.2s ease;
 }
 
@@ -76,59 +79,89 @@
   background-color: #bbeebb;
 }
 
-.card[instantAnim="0"] {
-  opacity: 0;
-  transform: scale(0);
-}
-
-.card[instantAnim="1"] {
-  transform: scale(2);
-  opacity: 1;
-}
-
-.card[instantAnim="2"] {
-  transform: scale(4) rotate(30deg);
-  opacity: 0;
-}
-
-.card[new] {
-  opacity: 0;
-  transform: scale(0);
-}
-
-@keyframes shake {
+@keyframes instant {
   0% {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: scale(0);
   }
-  25% {
-    transform: rotate(5deg);
+  20% {
+    opacity: 1;
+    transform: scale(2);
   }
-  75% {
-    transform: rotate(-5deg);
+  80% {
+    opacity: 1;
+    transform: scale(2);
   }
   100% {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: scale(4) rotate(30deg);
   }
 }
 
-.card[onTop] {
+.card[instant="true"] {
+  animation-name: instant;
+  animation-duration: 5s;
   z-index: 1;
 }
 
-.card[triggeredAnim="0"] {
-  animation: shake 0.2s linear 3;
-  transform: scale(1);
+@keyframes new {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.card[triggeredAnim="1"] {
-  transform: scale(2);
+.card[new="true"] {
+  animation: new 0.8s ease-out;
+}
+
+@keyframes triggered {
+  0% {
+    transform: rotate(0deg);
+  }
+  0.5% {
+    transform: rotate(5deg);
+  }
+  1.5% {
+    transform: rotate(-5deg);
+  }
+  2.5% {
+    transform: rotate(5deg);
+  }
+  3.5% {
+    transform: rotate(-5deg);
+  }
+  4.5% {
+    transform: rotate(5deg);
+  }
+  5% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: scale(2);
+  }
+  80% {
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card[triggered="true"] {
+  animation: triggered 5s linear;
+  z-index: 1;
 }
 
 .card[used="true"] {
   background-color: darkgrey;
 }
 
-@keyframes fadeIn {
+@keyframes cooldown {
   from {
     opacity: 0;
   }
@@ -144,5 +177,5 @@
   color: black;
   text-align: center;
   opacity: 0.2;
-  animation: fadeIn 1.2s linear 1;
+  animation: cooldown 1.2s linear forwards;
 }

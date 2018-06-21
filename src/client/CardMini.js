@@ -6,6 +6,11 @@ import styles from './CardMini.css'
 class CardMini extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      new: true,
+    }
+
     this.triggered = false
     this.isInstant = (this.props.card.trigger.id === 'instant')
     this.isPeriodic = (this.props.card.trigger.id === 'periodic')
@@ -26,33 +31,19 @@ class CardMini extends Component {
   }
 
   componentDidMount() {
-    const el = ReactDOM.findDOMNode(this)
     if (this.isInstant) {
-      el.setAttribute('instantAnim', '0')
+      this.setState({new: false})
       setTimeout(() => {
-        el.setAttribute('instantAnim', '1')
-      }, 50)
-      el.addEventListener('transitionend', (event) => {
-        setTimeout(() => {
-          this.props.card.onUse()
-          el.addEventListener('transitionend', (event) => {
-            setTimeout(() => {
-              el.setAttribute('instantAnim', '2')
-              el.addEventListener('transitionend', (event) => {
-                this.props.card.onReady()
-              }, {once: true})
-            }, 500)
-          }, {once: true})
-        }, 500)
-      }, {once: true})
+        this.props.card.onUse()
+      }, 1500)
+      setTimeout(() => {
+        this.props.card.onReady()
+      }, 5000)
     } else {
-      el.setAttribute('new', '')
       setTimeout(() => {
-        el.removeAttribute('new')
-        el.addEventListener('transitionend', (event) => {
-          this.props.card.onReady()
-        }, {once: true})
-      }, 50)
+        this.setState({new: false})
+        this.props.card.onReady()
+      }, 800)
     }
   }
 
@@ -64,23 +55,14 @@ class CardMini extends Component {
   trigger() {
     this.triggered = true
     const el = ReactDOM.findDOMNode(this)
-    el.setAttribute('triggeredAnim', '0')
-    el.setAttribute('onTop', '')
-    el.addEventListener('animationend', (event) => {
-      el.setAttribute('triggeredAnim', '1')
-      el.addEventListener('transitionend', (event) => {
-        this.props.card.onUse()
-        el.addEventListener('transitionend', (event) => {
-          setTimeout(() => {
-            el.removeAttribute('triggeredAnim')
-            el.addEventListener('transitionend', (event) => {
-              el.removeAttribute('onTop')
-              this.props.card.onReady()
-            }, {once: true})
-          }, 200)
-        }, {once: true})
-      }, {once: true})
-    }, {once: true})
+    el.setAttribute('triggered', 'true')
+    setTimeout(() => {
+      this.props.card.onUse()
+    }, 1500)
+    setTimeout(() => {
+      el.removeAttribute('triggered')
+      this.props.card.onReady()
+    }, 5000)
   }
 
   render() {
@@ -89,8 +71,14 @@ class CardMini extends Component {
         {this.isPeriodic ? this.props.card.cooldown : '⌛'}
       </div>
     : null
+
     return (
-      <div className={styles.card} used={(this.props.card.cooldown > 0).toString()} periodic={this.isPeriodic.toString()} rarity={this.rarity}>
+      <div className={styles.card}
+        instant={this.isInstant.toString()}
+        used={(this.props.card.cooldown > 0).toString()}
+        periodic={this.isPeriodic.toString()}
+        rarity={this.rarity}
+        new={this.state.new.toString()}>
         <div>
           # {Math.round(this.props.card.number)}
         </div>
