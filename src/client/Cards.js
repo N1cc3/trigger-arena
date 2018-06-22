@@ -4,9 +4,14 @@ import styles from './Cards.css'
 import Card from './Card'
 import { Howl } from 'howler'
 import deathSrc from './sounds/death.mp3'
+import yourTurnSrc from './sounds/yourTurn.mp3'
 
 const death = new Howl({
   src: [deathSrc],
+})
+
+const yourTurn = new Howl({
+  src: [yourTurnSrc],
 })
 
 class Cards extends Component {
@@ -47,6 +52,7 @@ class Cards extends Component {
       this.setState({
         yourTurn: true,
       })
+      yourTurn.play()
     })
 
     this.socket.on('you died', () => {
