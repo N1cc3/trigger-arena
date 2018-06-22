@@ -7,6 +7,25 @@ import Door from './Door'
 import Menu from './Menu'
 import Game from './Game'
 import styles from './App.css'
+import { Howl } from 'howler'
+import menuMusicSrc from './sounds/menuMusic.mp3'
+import gameOverMusicSrc from './sounds/gameOverMusic.mp3'
+
+const menuMusic = new Howl({
+  src: [menuMusicSrc],
+  loop: true,
+})
+
+const gameOverMusic = new Howl({
+  src: [gameOverMusicSrc],
+  loop: true,
+})
+
+const onGameOver = () => {
+  menuMusic.fade(1, 0, 2000)
+  gameOverMusic.play()
+  gameOverMusic.fade(0, 1, 2000)
+}
 
 const connectView = () => {
   return <div>Connecting...</div>
@@ -33,7 +52,7 @@ const menuView = (socket, onJoin, onHost) => {
 }
 
 const gameView = (socket, gameId) => {
-  return <Game socket={socket} gameId={gameId}/>
+  return <Game socket={socket} gameId={gameId} onGameOver={onGameOver}/>
 }
 
 class App extends Component {
@@ -57,6 +76,8 @@ class App extends Component {
     }
 
     const goToGame = (gameId) => {
+      menuMusic.play()
+      menuMusic.fade(0, 1, 2000)
       this.setState({active: gameView(this.socket, gameId)})
     }
 

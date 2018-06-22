@@ -124,7 +124,9 @@ class Game extends Component {
         return prevState
       })
 
-      if (!this.state.gameOver) {
+      if (this.state.gameOver) {
+        this.props.onGameOver()
+      } else {
         this.socket.emit('next turn')
       }
 
