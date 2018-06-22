@@ -142,7 +142,7 @@ class Game extends Component {
     ) : null
 
     const startButton = this.state.started ? null : (
-      <Button className={styles.start} color="green" onClick={this.start}>
+      <Button className={styles.start} color="green" onClick={this.start} tabIndex="1">
         <span role="img" aria-label="Check Mark">✔</span> Start
       </Button>
     )
