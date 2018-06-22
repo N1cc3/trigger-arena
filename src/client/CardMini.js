@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { hot } from 'react-hot-loader'
 import styles from './CardMini.css'
+import { Howl } from 'howler'
+import foomSrc from './sounds/foom.mp3'
+
+const foom = new Howl({
+  src: [foomSrc],
+})
 
 class CardMini extends Component {
   constructor(props) {
@@ -36,6 +42,9 @@ class CardMini extends Component {
       setTimeout(() => {
         this.props.card.onUse()
       }, 1500)
+      setTimeout(() => {
+        foom.play()
+      }, 4000)
       setTimeout(() => {
         this.props.card.onReady()
       }, 5000)
