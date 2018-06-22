@@ -7,6 +7,8 @@ import Button from './comp/Button'
 import { Howl } from 'howler'
 import playerJoinSrc from './sounds/playerJoin.mp3'
 import gameStartSrc from './sounds/gameStart.mp3'
+import damageSrc from './sounds/damage.mp3'
+import healSrc from './sounds/heal.mp3'
 
 const playerJoin = new Howl({
   src: [playerJoinSrc],
@@ -14,6 +16,14 @@ const playerJoin = new Howl({
 
 const gameStart = new Howl({
   src: [gameStartSrc],
+})
+
+const damage = new Howl({
+  src: [damageSrc],
+})
+
+const heal = new Howl({
+  src: [healSrc],
 })
 
 class Game extends Component {
@@ -187,10 +197,12 @@ const applyEffect = (effect, players, targetIdxs) => {
     switch (effect.id) {
       case 'heal':
         target.hp += effect.variableValue
+        heal.play()
         break
       case 'damage':
       default:
         target.hp -= effect.variableValue
+        damage.play()
         break
     }
   }
