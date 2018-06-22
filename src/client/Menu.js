@@ -30,12 +30,16 @@ class Menu extends Component {
   render() {
     return (
       <div className={styles.box}>
-        <Button className={[styles.button, styles.join].join(' ')} color="green" onClick={this.join} tabIndex="1">
-          <span role="img" aria-label="Card">🃏</span> Join
-        </Button>
-        <Button className={[styles.button, styles.host].join(' ')} color="darkturquoise" onClick={this.host} tabIndex="2">
-          <span role="img" aria-label="House">🏠</span> Host
-        </Button>
+        <div className={styles.title}>Trigger Arena</div>
+        <div className={styles.buttons}>
+          <Button className={[styles.button, styles.join].join(' ')} color="green" onClick={this.join} tabIndex="1">
+            <span role="img" aria-label="Card">🃏</span> Join
+          </Button>
+          <Button className={[styles.button, styles.host].join(' ')} color="darkturquoise" onClick={this.host} tabIndex="2">
+            <span role="img" aria-label="House">🏠</span> Host
+          </Button>
+        </div>
+        <div className={styles.author}>By Nicce</div>
       </div>
     )
   }

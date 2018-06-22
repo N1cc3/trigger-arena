@@ -3,6 +3,20 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.title {
+  font-family: "GrindAndDeath";
+  font-size: 14vmin;
+  white-space: nowrap;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 }
@@ -20,4 +34,11 @@
 .host {
   padding: 0.2em;
   color: paleturquoise;
+}
+
+.author {
+  font-family: "GrindAndDeath";
+  font-size: 3rem;
+  padding-right: 1%;
+  align-self: flex-end;
 }
