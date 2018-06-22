@@ -60,10 +60,8 @@ class Game {
       }
 
       // New cards
-      if (!player.dead) {
-        player.handCards[player.useIdx] = randomCard()
-        player.handCards[player.discardIdx] = randomCard()
-      }
+      player.handCards[player.useIdx] = randomCard()
+      player.handCards[player.discardIdx] = randomCard()
       player.useIdx = null
       player.discardIdx = null
 
