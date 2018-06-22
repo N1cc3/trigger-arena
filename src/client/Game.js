@@ -4,6 +4,12 @@ import styles from './Game.css'
 import Players from './Players'
 import CardMini from './CardMini'
 import Button from './comp/Button'
+import { Howl } from 'howler'
+import playerJoinSrc from './sounds/playerJoin.mp3'
+
+const playerJoin = new Howl({
+  src: [playerJoinSrc],
+})
 
 class Game extends Component {
   constructor(props) {
@@ -28,6 +34,7 @@ class Game extends Component {
         prevState.players.push(player)
         return prevState
       })
+      playerJoin.play()
     })
 
     this.socket.on('change name', (player) => {
