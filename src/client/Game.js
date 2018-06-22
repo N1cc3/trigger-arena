@@ -6,9 +6,14 @@ import CardMini from './CardMini'
 import Button from './comp/Button'
 import { Howl } from 'howler'
 import playerJoinSrc from './sounds/playerJoin.mp3'
+import gameStartSrc from './sounds/gameStart.mp3'
 
 const playerJoin = new Howl({
   src: [playerJoinSrc],
+})
+
+const gameStart = new Howl({
+  src: [gameStartSrc],
 })
 
 class Game extends Component {
@@ -47,6 +52,7 @@ class Game extends Component {
 
     this.socket.on('start game', () => {
       this.setState({started: true})
+      gameStart.play()
     })
 
     this.socket.on('next turn', (turnResult) => {
