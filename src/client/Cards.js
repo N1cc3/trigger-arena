@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Cards.css'
 import Card from './Card'
+import { Howl } from 'howler'
+import deathSrc from './sounds/death.mp3'
+
+const death = new Howl({
+  src: [deathSrc],
+})
 
 class Cards extends Component {
   constructor(props) {
@@ -47,6 +53,7 @@ class Cards extends Component {
       this.setState({
         dead: true,
       })
+      death.play()
     })
 
     this.socket.emit('cards')
