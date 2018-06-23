@@ -32,6 +32,7 @@ class Game extends Component {
 
     this.state = {
       players: [],
+      deadPlayers: [],
       cards: [],
       instant: null,
       turnIdx: 0,
@@ -131,12 +132,11 @@ class Game extends Component {
           card.triggered = false
           card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown
         }
-        for (const player of prevState.players) {
-          player.dead = this.game.players.find(p => p.id === player.id).dead
-        }
         prevState.turnIdx = this.game.turnIdx
         prevState.gameOver = this.game.gameOver
         prevState.winner = this.game.winner
+        prevState.players = this.game.players
+        prevState.deadPlayers = this.game.deadPlayers
         return prevState
       })
 
@@ -180,7 +180,10 @@ class Game extends Component {
       <div className={styles.game}>
         {gameId}
 
-        <Players players={this.state.players} cards={this.state.cards} turnIdx={this.state.turnIdx}/>
+        <Players players={this.state.players}
+          deadPlayers={this.state.deadPlayers}
+          cards={this.state.cards}
+          turnIdx={this.state.turnIdx}/>
 
         {instant}
         {startButton}

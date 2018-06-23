@@ -20,15 +20,25 @@ class Players extends Component {
       cards[i] = this.props.cards.filter(c => c.ownerIdx === i)
       if (i === this.props.turnIdx) highlightId = this.props.players[i].id
     }
+
+    const deadPlayers = this.props.deadPlayers.length > 0 ? (
+      <div className={styles.deadPlayers}>
+        {this.props.deadPlayers.map((player) => (
+          <Player key={player.id} player={player} cards={[]} highlight={false} dead={true}/>
+        ))}
+      </div>
+    ) : null
+
     return (
 			<div className={styles.players}>
         {[0, 1].map((index) => (
           <div key={index} className={styles.row}>
             {getRow(this.props.players, index).map((player) => (
-              <Player key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]} highlight={player.id === highlightId}/>
+              <Player key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]} highlight={player.id === highlightId} dead={false}/>
             ))}
           </div>
         ))}
+        {deadPlayers}
 			</div>
     )
   }

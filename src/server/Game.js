@@ -5,6 +5,7 @@ class Game {
   constructor(id) {
     this.id = id
     this.players = []
+    this.deadPlayers = []
     this.cards = []
 
     this.turnIdx = 0
@@ -41,7 +42,10 @@ class Game {
 
     // Dead players
     for (const p of this.players) {
-      if (p.hp <= 0) p.dead = true
+      if (p.hp <= 0) {
+        p.dead = true
+        this.deadPlayers.push(this.players.splice(this.players.indexOf(p), 1)[0])
+      }
     }
 
     // Win conditions
@@ -56,7 +60,7 @@ class Game {
 
       // Cooldown
       for (const card of this.cards) {
-        if (!this.players[card.ownerIdx].dead) card.cooldown = Math.max(0, card.cooldown - 1)
+        if (this.players[card.ownerIdx] && !this.players[card.ownerIdx].dead) card.cooldown = Math.max(0, card.cooldown - 1)
       }
 
       // New cards
