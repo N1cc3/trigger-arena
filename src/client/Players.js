@@ -8,7 +8,7 @@ const getRow = (players, row) => {
   if (row === 0) {
     return players.slice(0, firstRowSize)
   } else {
-    return players.slice(firstRowSize)
+    return players.slice(firstRowSize).reverse()
   }
 }
 
