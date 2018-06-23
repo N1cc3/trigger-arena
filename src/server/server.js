@@ -114,6 +114,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     console.log(`Client ${socketId} disconnected`)
+    player.hp = -Infinity
   })
 })
 
