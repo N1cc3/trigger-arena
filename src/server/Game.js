@@ -134,7 +134,7 @@ class Game {
           targetIdx1 = mod(targetIdx1 + 1, this.players.length)
         }
         let targetIdx2 = mod(playerIdx - 1, this.players.length)
-        while (this.players[targetIdx1].dead) {
+        while (this.players[targetIdx2].dead) {
           targetIdx2 = mod(targetIdx2 - 1, this.players.length)
         }
         if (playerIdx !== targetIdx1) targetIdxs.push(targetIdx1)
