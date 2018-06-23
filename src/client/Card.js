@@ -22,12 +22,29 @@ class Card extends Component {
   }
 
   render() {
+    const r = this.props.card.rarity
+    let rarity = ''
+    if (r < 200) {
+      rarity = 'common'
+    } else if (r < 500) {
+      rarity = 'uncommon'
+    } else if (r < 1000) {
+      rarity = 'rare'
+    } else if (r < 5000) {
+      rarity = 'epic'
+    } else if (r < 10000) {
+      rarity = 'legendary'
+    } else {
+      rarity = 'mythic'
+    }
+
     return (
       <div className={styles.card}
+        rarity={rarity}
         use={this.props.use ? "true" : "false"}
         discard={this.props.discard ? "true" : "false"}>
         <div>
-          <span role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
+          <span className={styles.rarityGem} rarity={rarity} role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>
         <div>
           <span role="img" aria-label="Light Bulb">💡</span> Trigger: {this.props.card.trigger.longName}

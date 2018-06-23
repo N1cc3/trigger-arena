@@ -13,7 +13,7 @@
 
   border-style: solid;
   border-color: black;
-  border-width: 1px;
+  border-width: 1%;
   border-radius: 10px;
 }
 
@@ -23,6 +23,59 @@
 
 .card[discard="true"] {
   background-color: pink;
+}
+
+.card[rarity="common"] {
+  border-color: black;
+}
+
+.rarityGem {
+  border-radius: 100%;
+}
+
+.card[rarity="uncommon"] {
+  border-color: lawngreen;
+}
+
+.rarityGem[rarity="uncommon"] {
+  box-shadow: 0px 0px 10px 0px lawngreen, inset 0px 0px 14px -2px lawngreen;
+}
+
+.card[rarity="rare"] {
+  border-color: blue;
+}
+
+.rarityGem[rarity="rare"] {
+  box-shadow: 0px 0px 10px 0px blue, inset 0px 0px 14px -2px blue;
+}
+
+.card[rarity="epic"] {
+  border-color: purple;
+}
+
+.rarityGem[rarity="epic"] {
+  box-shadow: 0px 0px 10px 0px purple, inset 0px 0px 14px -2px purple;
+}
+
+.card[rarity="legendary"] {
+  border-color: gold;
+}
+
+.rarityGem[rarity="legendary"] {
+  box-shadow: 0px 0px 10px 0px gold, inset 0px 0px 14px -2px gold;
+}
+
+.card[rarity="mythic"] {
+  border-color: gold;
+  box-shadow: 0 0 100px gold;
+}
+
+.rarityGem[rarity="mythic"] {
+  box-shadow: 0px 0px 10px 0px gold, inset 0px 0px 14px -2px gold;
+}
+
+.card[periodic="true"] {
+  background-color: #bbeebb;
 }
 
 .buttons {
