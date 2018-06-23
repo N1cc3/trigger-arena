@@ -40,18 +40,18 @@ class CardMini extends Component {
     if (this.isInstant) {
       this.setState({new: false})
       setTimeout(() => {
-        this.props.card.onUse()
+        if (this.props.card.onUse) this.props.card.onUse()
       }, 1500)
       setTimeout(() => {
         foom.play()
       }, 4000)
       setTimeout(() => {
-        this.props.card.onReady()
+        if (this.props.card.onReady) this.props.card.onReady()
       }, 5000)
     } else {
       setTimeout(() => {
         this.setState({new: false})
-        this.props.card.onReady()
+        if (this.props.card.onReady) this.props.card.onReady()
       }, 800)
     }
   }
