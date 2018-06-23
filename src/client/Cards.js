@@ -59,12 +59,17 @@ class Cards extends Component {
       this.setState({
         dead: true,
       })
-      death.play()
     })
 
     this.socket.emit('cards')
 
     this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.dead !== this.state.dead && this.state.dead === true) {
+      death.play()
+    }
   }
 
   yourTurnAnimEnd() {
