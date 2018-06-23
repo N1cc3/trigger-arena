@@ -8,7 +8,7 @@ class EffectType extends CardAttribute {}
 class TargetType extends CardAttribute {}
 
 export const TRIGGER_TYPES = [
-  new RVal(new TriggerType('instant', 'Instant', 'Inst'), 12),
+  new RVal(new TriggerType('instant', 'Instant', 'Instant'), 12),
   new RVal(new TriggerType('periodic', 'On Every ? Turn', '? turn', [
     new RVal(1, 1),
     new RVal(2, 3),
@@ -18,7 +18,7 @@ export const TRIGGER_TYPES = [
   ]), 2),
   new RVal(new TriggerType('dealsDmg', 'Deals Damage To Other', 'Dmg other'), 3),
   new RVal(new TriggerType('takesDmg', 'Takes Damage', 'Take dmg'), 3),
-  new RVal(new TriggerType('heals', 'Heals Other', 'Heal'), 3),
+  new RVal(new TriggerType('heals', 'Heals Other', 'Heal other'), 3),
   new RVal(new TriggerType('isHealed', 'Is Healed', 'Healed'), 3),
 ]
 
