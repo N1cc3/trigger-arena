@@ -4,7 +4,7 @@ class Player {
   constructor(id) {
     this.id = id
     this.name = 'Unknown Player'
-    this.hp = 1
+    this.hp = 10
     this.dead = false
 
     this.handCards = [randomCard(), randomCard(), randomCard()]
