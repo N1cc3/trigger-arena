@@ -67,11 +67,11 @@ class CardMini extends Component {
     el.setAttribute('triggered', 'true')
     setTimeout(() => {
       this.props.card.onUse()
-    }, 1500)
+    }, 800)
     setTimeout(() => {
       el.removeAttribute('triggered')
       this.props.card.onReady()
-    }, 5000)
+    }, 3000)
   }
 
   render() {
