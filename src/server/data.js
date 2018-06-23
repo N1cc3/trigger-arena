@@ -31,11 +31,9 @@ export const EFFECT_TYPES = [
     new RVal(5, 1),
   ]), 6),
   new RVal(new EffectType('heal', 'Heal ?', 'Heal ?', [
-    new RVal(1, 9),
-    new RVal(2, 7),
-    new RVal(3, 5),
-    new RVal(4, 3),
-    new RVal(5, 1),
+    new RVal(1, 5),
+    new RVal(2, 3),
+    new RVal(3, 1),
   ]), 4),
 ]
 
