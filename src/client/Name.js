@@ -38,7 +38,7 @@ class Name extends Component {
       <form className={styles.box} onSubmit={this.ready}>
         <input className={styles.nameInput} type="text" name="name" maxLength="10" required autoFocus autoComplete="on" placeholder="Your name"
         onChange={this.changeName}/>
-        <Button className={styles.ready} color="green">Ready</Button>
+        <Button className={styles.ready} color="green" onClick={this.ready}>Ready</Button>
       </form>
     )
   }
