@@ -32,7 +32,6 @@ class Game extends Component {
 
     this.state = {
       players: [],
-      deadPlayers: [],
       cards: [],
       instant: null,
       turnIdx: 0,
@@ -128,15 +127,14 @@ class Game extends Component {
     } else { // Event animations complete
 
       this.setState((prevState) => {
+        prevState.cards = this.game.cards
         for (const card of prevState.cards) {
           card.triggered = false
-          card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown
         }
         prevState.turnIdx = this.game.turnIdx
         prevState.gameOver = this.game.gameOver
         prevState.winner = this.game.winner
         prevState.players = this.game.players
-        prevState.deadPlayers = this.game.deadPlayers
         return prevState
       })
 
@@ -180,8 +178,8 @@ class Game extends Component {
       <div className={styles.game}>
         {gameId}
 
-        <Players players={this.state.players}
-          deadPlayers={this.state.deadPlayers}
+        <Players players={this.state.players.filter(p => !p.dead)}
+          deadPlayers={this.state.players.filter(p => p.dead)}
           cards={this.state.cards}
           turnIdx={this.state.turnIdx}/>
 

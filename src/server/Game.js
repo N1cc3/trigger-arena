@@ -5,7 +5,6 @@ class Game {
   constructor(id) {
     this.id = id
     this.players = []
-    this.deadPlayers = []
     this.cards = []
 
     this.turnIdx = 0
@@ -44,7 +43,6 @@ class Game {
     for (const p of this.players) {
       if (p.hp <= 0) {
         p.dead = true
-        this.deadPlayers.push(this.players.splice(this.players.indexOf(p), 1)[0])
       }
     }
 
@@ -121,14 +119,24 @@ class Game {
     const targetIdxs = []
     switch (card.target.id) {
       case 'everyone':
-        for (let i = 0; i < this.players.length; i++) targetIdxs.push(i)
+        for (let i = 0; i < this.players.length; i++) if (!this.players[i].dead) targetIdxs.push(i)
         break
       case 'random':
-        targetIdxs.push(Math.floor(Math.random() * this.players.length))
+        let targetIdx = Math.floor(Math.random() * this.players.length)
+        while (this.players[targetIdx].dead) {
+          targetIdx = Math.floor(Math.random() * this.players.length)
+        }
+        targetIdxs.push(targetIdx)
         break
       case 'adjacent':
-        const targetIdx1 = mod(playerIdx + 1, this.players.length)
-        const targetIdx2 = mod(playerIdx - 1, this.players.length)
+        let targetIdx1 = mod(playerIdx + 1, this.players.length)
+        while (this.players[targetIdx1].dead) {
+          targetIdx1 = mod(targetIdx1 + 1, this.players.length)
+        }
+        let targetIdx2 = mod(playerIdx - 1, this.players.length)
+        while (this.players[targetIdx1].dead) {
+          targetIdx2 = mod(targetIdx2 - 1, this.players.length)
+        }
         if (playerIdx !== targetIdx1) targetIdxs.push(targetIdx1)
         if (playerIdx !== targetIdx2
           && targetIdx1 !== targetIdx2) targetIdxs.push(targetIdx2)
@@ -138,8 +146,7 @@ class Game {
         targetIdxs.push(playerIdx)
         break
     }
-    const targetIdxsAlive = targetIdxs.filter(idx => !this.players[idx].dead)
-    return targetIdxsAlive
+    return targetIdxs
   }
 
   resolveCombos(targetIdx, effectId, ownerIdx) {
@@ -177,6 +184,7 @@ class Game {
     const events = []
     for (const card of this.cards) {
       if (card.cooldown > 0) continue
+      if (this.players[card.ownerIdx].dead) continue
       if (card.trigger.id === 'periodic') {
         events.push(new Event(card, this.resolveTargetIdxs(card)))
       }
