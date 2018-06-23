@@ -178,8 +178,7 @@ class Game extends Component {
       <div className={styles.game}>
         {gameId}
 
-        <Players players={this.state.players.filter(p => !p.dead)}
-          deadPlayers={this.state.players.filter(p => p.dead)}
+        <Players players={this.state.players}
           cards={this.state.cards}
           turnIdx={this.state.turnIdx}/>
 

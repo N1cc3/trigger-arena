@@ -21,24 +21,26 @@ class Players extends Component {
       if (i === this.props.turnIdx) highlightId = this.props.players[i].id
     }
 
-    const deadPlayers = this.props.deadPlayers.length > 0 ? (
+    const deadPlayers = this.props.players.filter(p => p.dead)
+    const deadPlayersElem = deadPlayers.length > 0 ? (
       <div className={styles.deadPlayers}>
-        {this.props.deadPlayers.map((player) => (
+        {deadPlayers.map((player) => (
           <Player key={player.id} player={player} cards={[]} highlight={false} dead={true}/>
         ))}
       </div>
     ) : null
 
+    const livePlayers = this.props.players.filter(p => !p.dead)
     return (
 			<div className={styles.players}>
         {[0, 1].map((index) => (
           <div key={index} className={styles.row}>
-            {getRow(this.props.players, index).map((player) => (
+            {getRow(livePlayers, index).map((player) => (
               <Player key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]} highlight={player.id === highlightId} dead={false}/>
             ))}
           </div>
         ))}
-        {deadPlayers}
+        {deadPlayersElem}
 			</div>
     )
   }
