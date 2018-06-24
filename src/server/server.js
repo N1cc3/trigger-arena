@@ -60,34 +60,18 @@ io.on('connection', socket => {
     io.emit('change name', player)
   })
 
-  const nextTurn = () => {
-    const events = game.nextTurn()
-    socket.emit('cards', player.handCards)
-    game.animating = true
-    io.to(game.id).emit('next turn', {game: game, events: events})
-  }
-
-  socket.on('use card', (useIdx) => {
-    console.log(`Client ${socketId} wants to use card ${useIdx}`)
+  socket.on('player action', (data) => {
     if (game.players.indexOf(player) === game.turnIdx
-        && player.discardIdx !== useIdx
-        && game.started
-        && !game.animating) {
-      player.use(useIdx)
-      socket.emit('use card', useIdx)
-      if (player.isReady()) nextTurn()
-    }
-  })
+        && data.useIdx !== null && data.discardIdx !== null
+        && data.useIdx !== data.discardIdx
+        && game.started && !game.animating) {
+      player.use(data.useIdx)
+      player.discard(data.discardIdx)
 
-  socket.on('discard card', (discardIdx) => {
-    console.log(`Client ${socketId} wants to discard card ${discardIdx}`)
-    if (game.players.indexOf(player) === game.turnIdx
-        && player.useIdx !== discardIdx
-        && game.started
-        && !game.animating) {
-      player.discard(discardIdx)
-      socket.emit('discard card', discardIdx)
-      if (player.isReady()) nextTurn()
+      const events = game.nextTurn()
+      socket.emit('cards', player.handCards)
+      game.animating = true
+      io.to(game.id).emit('next turn', {game: game, events: events})
     }
   })
 
@@ -110,6 +94,7 @@ io.on('connection', socket => {
     console.log(`Client ${socketId} wants to start the game`)
     game.started = true
     socket.emit('start game')
+    io.to(clients[game.players[game.turnIdx].id]).emit('your turn')
   })
 
   socket.on('disconnect', () => {

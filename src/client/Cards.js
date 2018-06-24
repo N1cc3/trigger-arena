@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Cards.css'
 import Card from './Card'
+import Button from './comp/Button'
 import { Howl } from 'howler'
 import deathSrc from './sounds/death.mp3'
 import yourTurnSrc from './sounds/yourTurn.mp3'
@@ -23,6 +24,7 @@ class Cards extends Component {
       useIdx: null,
       discardIdx: null,
       yourTurn: false,
+      yourTurnNotification: false,
       dead: false,
     }
 
@@ -33,18 +35,7 @@ class Cards extends Component {
         cards: cards,
         useIdx: null,
         discardIdx: null,
-      })
-    })
-
-    this.socket.on('use card', (useIdx) => {
-      this.setState({
-        useIdx: useIdx,
-      })
-    })
-
-    this.socket.on('discard card', (discardIdx) => {
-      this.setState({
-        discardIdx: discardIdx,
+        yourTurn: false,
       })
     })
 
@@ -64,20 +55,38 @@ class Cards extends Component {
     this.socket.emit('cards')
 
     this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
+    this.ready = this.ready.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.dead !== this.state.dead && this.state.dead === true) {
       death.play()
     }
+    if (prevState.yourTurn !== this.state.yourTurn && this.state.yourTurn === true) {
+      this.setState({yourTurnNotification: true})
+    }
+    if (this.state.useIdx !== null
+      && prevState.useIdx !== this.state.useIdx
+      && this.state.discardIdx === this.state.useIdx) {
+      this.setState({discardIdx: null})
+    }
+    if (this.state.discardIdx !== null
+      && prevState.discardIdx !== this.state.discardIdx
+      && this.state.discardIdx === this.state.useIdx) {
+      this.setState({useIdx: null})
+    }
   }
 
   yourTurnAnimEnd() {
-    this.setState({yourTurn: false})
+    this.setState({yourTurnNotification: false})
+  }
+
+  ready() {
+    this.socket.emit('player action', {useIdx: this.state.useIdx, discardIdx: this.state.discardIdx})
   }
 
   render() {
-    const yourTurn = this.state.yourTurn ? <div className={styles.yourTurnLayer}><div className={styles.yourTurn} onAnimationEnd={this.yourTurnAnimEnd}>
+    const yourTurnNotification = this.state.yourTurnNotification ? <div className={styles.yourTurnLayer}><div className={styles.yourTurn} onAnimationEnd={this.yourTurnAnimEnd}>
       Your Turn!
     </div></div> : null
 
@@ -85,16 +94,27 @@ class Cards extends Component {
       <div className={styles.youDied}>You died!</div>
     ) : null
 
+    const readyBtn = this.state.useIdx !== null && this.state.discardIdx !== null && this.state.yourTurn === true ? (
+      <div className={styles.readyBtnLayer}>
+        <Button className={styles.readyBtn} color="lightgreen" onClick={this.ready}>
+          <span role="img" aria-label="Check Mark">✔</span>
+        </Button>
+      </div>
+    ) : null
+
     return (
       <div className={styles.cards}>
         {this.state.cards.map((card, index) => (
-          <Card key={index} id={index} card={card} socket={this.socket}
+          <Card key={index} card={card}
             use={this.state.useIdx === index}
             discard={this.state.discardIdx === index}
+            onUse={() => this.setState({useIdx: index})}
+            onDiscard={() => this.setState({discardIdx: index})}
           />
         ))}
-        {yourTurn}
+        {yourTurnNotification}
         {youDied}
+        {readyBtn}
       </div>
     )
   }

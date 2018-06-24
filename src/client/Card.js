@@ -4,23 +4,6 @@ import styles from './Card.css'
 import Button from './comp/Button'
 
 class Card extends Component {
-  constructor(props) {
-    super(props)
-
-    this.socket = this.props.socket
-
-    this.useCard = this.useCard.bind(this)
-    this.discardCard = this.discardCard.bind(this)
-  }
-
-  useCard() {
-    this.socket.emit('use card', this.props.id)
-  }
-
-  discardCard() {
-    this.socket.emit('discard card', this.props.id)
-  }
-
   render() {
     const r = this.props.card.rarity
     let rarity = ''
@@ -41,8 +24,8 @@ class Card extends Component {
     return (
       <div className={styles.card}
         rarity={rarity}
-        use={this.props.use ? "true" : "false"}
-        discard={this.props.discard ? "true" : "false"}>
+        use={this.props.use.toString()}
+        discard={this.props.discard.toString()}>
         <div>
           <span className={styles.rarityGem} rarity={rarity} role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>
@@ -57,11 +40,11 @@ class Card extends Component {
         </div>
         <div className={styles.buttons}>
           <Button className={styles.use} color="green"
-            onClick={this.useCard}>
+            onClick={this.props.onUse}>
             Use
           </Button>
           <Button className={styles.discard} color="red"
-            onClick={this.discardCard}>
+            onClick={this.props.onDiscard}>
             Discard
           </Button>
         </div>
