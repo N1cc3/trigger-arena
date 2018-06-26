@@ -1,9 +1,22 @@
-import React, { Component } from 'react'
-import { hot } from 'react-hot-loader'
-import styles from './Card.css'
-import Button from './comp/Button'
+// @flow
 
-class Card extends Component {
+import { hot } from 'react-hot-loader'
+import * as React from 'react'
+import styles from './CardC.css'
+import Button from './comp/Button'
+import Card from "../server/Card"
+
+type RarityName = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'
+
+type Props = {
+  card: Card,
+  onUse: () => void,
+  onDiscard: () => void,
+  use: boolean,
+  discard: boolean,
+}
+
+class CardC extends React.Component<Props> {
   constructor(props) {
     super(props)
 
@@ -22,29 +35,15 @@ class Card extends Component {
   }
 
   render() {
-    const r = this.props.card.rarity
-    let rarity = ''
-    if (r < 200) {
-      rarity = 'common'
-    } else if (r < 500) {
-      rarity = 'uncommon'
-    } else if (r < 1000) {
-      rarity = 'rare'
-    } else if (r < 5000) {
-      rarity = 'epic'
-    } else if (r < 10000) {
-      rarity = 'legendary'
-    } else {
-      rarity = 'mythic'
-    }
+    const rarityName: RarityName = getRarityName(this.props.card.rarity)
 
     return (
       <div className={styles.card}
-        rarity={rarity}
-        use={this.props.use ? "true" : "false"}
-        discard={this.props.discard ? "true" : "false"}>
+        rarity={rarityName}
+        use={this.props.use.toString()}
+        discard={this.props.discard.toString()}>
         <div>
-          <span className={styles.rarityGem} rarity={rarity} role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
+          <span className={styles.rarityGem} rarity={rarityName} role="img" aria-label="Gem">💎</span> Rarity: {Math.round(this.props.card.rarity)}
         </div>
         <div>
           <span role="img" aria-label="Light Bulb">💡</span> Trigger: {this.props.card.trigger.longName}
@@ -69,4 +68,20 @@ class Card extends Component {
     )
   }
 }
-export default hot(module)(Card)
+export default hot(module)(CardC)
+
+const getRarityName: (number) => RarityName = (r) => {
+  if (r < 200) {
+    return 'common'
+  } else if (r < 500) {
+    return 'uncommon'
+  } else if (r < 1000) {
+    return 'rare'
+  } else if (r < 5000) {
+    return 'epic'
+  } else if (r < 10000) {
+    return 'legendary'
+  } else {
+    return 'mythic'
+  }
+}
