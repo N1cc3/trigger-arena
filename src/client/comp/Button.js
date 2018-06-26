@@ -53,8 +53,9 @@ class Button extends React.Component<Props, State> {
     }
     return (
       <div className={[styles.button, this.props.className].join(' ')} style={style}
-        onTouchStart={() => this.buttonDown} onMouseDown={() => this.buttonDown}
-        onTouchEnd={() => this.buttonUp} onMouseUp={() => this.buttonUp}
+        onTouchStart={this.buttonDown} onMouseDown={this.buttonDown}
+        onTouchEnd={this.buttonUp} onMouseUp={this.buttonUp}
+        onMouseLeave={this.state.pressed ? this.buttonUp : null}
         onClick={this.props.onClick} pressed={this.state.pressed.toString()}>
         {this.props.children}
       </div>
