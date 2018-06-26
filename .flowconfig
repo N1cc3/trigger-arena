@@ -1,0 +1,15 @@
+[ignore]
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+module.name_mapper.extension='mp3' -> '<PROJECT_ROOT>/flow-stubs/mp3-stub.js'
+
+[strict]
+
+[version]
+0.75.0

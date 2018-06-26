@@ -3,6 +3,7 @@
     "react",
     "es2015",
     "stage-2",
-    "env"
+    "env",
+    "flow"
   ]
 }
