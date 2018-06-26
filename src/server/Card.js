@@ -1,5 +1,21 @@
+// @flow
+
+import CardAttribute from './CardAttribute'
+
 class Card {
-  constructor(trigger, effect, target, rarity) {
+  trigger: CardAttribute
+  effect: CardAttribute
+  target: CardAttribute
+  rarity: number
+
+  cooldown: number
+  number: ?number
+  ownerIdx: ?number
+
+  constructor(trigger: CardAttribute,
+              effect: CardAttribute,
+              target: CardAttribute,
+              rarity: number) {
     this.trigger = trigger
     this.effect = effect
     this.target = target
