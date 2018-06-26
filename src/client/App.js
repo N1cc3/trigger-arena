@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
+// @flow
+
 import { hot } from 'react-hot-loader'
+import * as React from 'react'
 import socketIOClient from 'socket.io-client'
 import Name from './Name'
 import Cards from './Cards'
@@ -55,44 +57,52 @@ const gameView = (socket, gameId) => {
   return <Game socket={socket} gameId={gameId} onGameOver={onGameOver}/>
 }
 
-class App extends Component {
+type Props = {
+  socket: socketIOClient,
+}
+
+type State = {
+  playerId: ?number,
+  active: React.Node,
+}
+
+class App extends React.Component<Props, State> {
   constructor(props) {
     super(props)
 
-    this.socket = socketIOClient(process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://trigger-arena.herokuapp.com')
-
-    this.playerId = null
+    this.state = {
+      playerId: null,
+      active: connectView(),
+    }
 
     const goToCards = () => {
-      this.setState({active: cardsView(this.socket)})
+      this.setState({active: cardsView(this.props.socket)})
     }
 
     const goToName = () => {
-      this.setState({active: nameView(this.socket, this.playerId, goToDoor)})
+      this.setState({active: nameView(this.props.socket, this.state.playerId, goToDoor)})
     }
 
     const goToDoor = () => {
-      this.setState({active: doorView(this.socket, goToCards)})
+      this.setState({active: doorView(this.props.socket, goToCards)})
     }
 
-    const goToGame = (gameId) => {
+    const goToGame = (gameId: Number) => {
       menuMusic.play()
       menuMusic.fade(0, 1, 2000)
-      this.setState({active: gameView(this.socket, gameId)})
+      this.setState({active: gameView(this.props.socket, gameId)})
     }
 
-    this.socket.on('connected', (player) => {
-      this.playerId = player.id
-      this.setState({active: menuView(this.socket, goToName, goToGame)})
+    this.props.socket.on('connected', (player) => {
+      this.setState({
+        playerId: player.id,
+        active: menuView(this.props.socket, goToName, goToGame),
+      })
     })
-
-    this.state = {
-      active: connectView(),
-    }
   }
 
   componentWillUnmount() {
-    this.socket.close()
+    this.props.socket.close()
   }
 
   render() {
