@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+// @flow
+
+import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Button.css'
 import { Howl } from 'howler'
@@ -13,22 +15,34 @@ const buttonUpSound = new Howl({
   src: [buttonUpSoundSrc]
 })
 
-class Button extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      pressed: false,
-    }
+type Props = {
+  className?: string,
+  color?: string,
+  onClick?: (e: SyntheticEvent<HTMLDivElement>) => void,
+  children?: React.Node
+}
+
+type State = {
+  pressed: boolean,
+}
+
+class Button extends React.Component<Props, State> {
+  state = {
+    pressed: false,
+  }
+
+  constructor(props, state) {
+    super(props, state)
     this.buttonDown = this.buttonDown.bind(this)
     this.buttonUp = this.buttonUp.bind(this)
   }
 
-  buttonDown() {
+  buttonDown = () => {
     buttonDownSound.play()
     this.setState({pressed: true})
   }
 
-  buttonUp() {
+  buttonUp = () => {
     buttonUpSound.play()
     this.setState({pressed: false})
   }
