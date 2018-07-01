@@ -36,14 +36,12 @@ class Button extends React.Component<Props, State> {
     this.buttonUp = this.buttonUp.bind(this)
   }
 
-  buttonDown: () => void
-  buttonDown() {
+  buttonDown: () => void = () => {
     buttonDownSound.play()
     this.setState({pressed: true})
   }
 
-  buttonUp: () => void
-  buttonUp() {
+  buttonUp: () => void = () => {
     buttonUpSound.play()
     this.setState({pressed: false})
   }
