@@ -8,6 +8,8 @@ class CardAttribute {
   shortName: string
   variableValues: ?Array<RVal>
 
+  variableValue: ?number
+
   constructor(id: number,
               longName: string,
               shortName: string,
