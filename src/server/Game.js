@@ -1,9 +1,25 @@
+// @flow
+
 import { randomCard } from './data.js'
 import Event from './Event'
+import Player from './Player'
+import Card from './Card'
 
 class Game {
-  constructor(id) {
+  id: number
+
+  players: Array<Player>
+  cards: Array<Card>
+  turnIdx: number
+  cardCount: number
+  started: boolean
+  animating: boolean
+  gameOver: boolean
+  winner: ?Player
+
+  constructor(id: number) {
     this.id = id
+
     this.players = []
     this.cards = []
 
@@ -12,19 +28,17 @@ class Game {
 
     this.started = false
     this.animating = false
-
     this.gameOver = false
     this.winner = null
   }
 
-  nextTurn() {
-    const player = this.players[this.turnIdx]
-    const cardToUse = player.handCards[player.useIdx]
-    const playerIdx = this.turnIdx
-    let events = []
+  nextTurn: () => Array<Event> = () => {
+    const player: Player = this.players[this.turnIdx]
+    const cardToUse: Card = player.handCards[player.useIdx ? player.useIdx : 0]
+    let events: Array<Event> = []
 
     // Use card
-    cardToUse.ownerIdx = playerIdx
+    cardToUse.ownerIdx = this.turnIdx
     const instantTargetIdxs = this.resolveTargetIdxs(cardToUse)
     events.push(new Event(cardToUse, instantTargetIdxs))
     if (cardToUse.trigger.id === 'instant') {
@@ -58,14 +72,21 @@ class Game {
 
       // Cooldown
       for (const card of this.cards) {
-        if (this.players[card.ownerIdx] && !this.players[card.ownerIdx].dead) card.cooldown = Math.max(0, card.cooldown - 1)
+        if (card.ownerIdx != null && this.players[card.ownerIdx]
+          && !this.players[card.ownerIdx].dead) card.cooldown = Math.max(0, card.cooldown - 1)
       }
 
       // New cards
-      player.handCards[player.useIdx] = randomCard()
-      player.handCards[player.discardIdx] = randomCard()
-      player.useIdx = null
-      player.discardIdx = null
+      const useIdx = player.useIdx
+      if (useIdx != null) {
+        player.handCards[useIdx] = randomCard()
+        player.useIdx = null
+      }
+      const discardIdx = player.discardIdx
+      if (discardIdx != null) {
+        player.handCards[discardIdx] = randomCard()
+        player.discardIdx = null
+      }
 
       this.turnIdx = mod((this.turnIdx + 1), this.players.length)
       while (this.players[this.turnIdx].dead) {
@@ -77,12 +98,12 @@ class Game {
     return events
   }
 
-  resolveEvents(events) {
+  resolveEvents: (Array<Event>) => Array<Event> = (events) => {
     let i = 0
     while (events[i]) {
       const event = events[i++]
 
-      if (this.players[event.card.ownerIdx].dead) continue
+      if (event.card.ownerIdx == null || this.players[event.card.ownerIdx].dead) continue
 
       // Cooldown
       const trigger = event.card.trigger
@@ -95,26 +116,31 @@ class Game {
       // Effect
       const effect = event.card.effect
       for (const targetIdx of event.targetIdxs) {
+        const value = effect.variableValue
+        if (value == null) continue
         const target = this.players[targetIdx]
         switch (effect.id) {
           case 'heal':
-            target.hp += effect.variableValue
+            target.hp += value
             break
           case 'damage':
           default:
-            target.hp -= effect.variableValue
+            target.hp -= value
             break
         }
 
         // Combos
-        const combos = this.resolveCombos(targetIdx, effect.id, event.card.ownerIdx)
+        const ownerIdx = event.card.ownerIdx
+        if (ownerIdx == null) continue
+        const combos = this.resolveCombos(targetIdx, effect.id, ownerIdx)
         events = events.concat(combos)
       }
     }
     return events
   }
 
-  resolveTargetIdxs(card) {
+  resolveTargetIdxs: (Card) => Array<number> = (card) => {
+    if (card.ownerIdx == null) return []
     const playerIdx = card.ownerIdx
     const targetIdxs = []
     switch (card.target.id) {
@@ -149,29 +175,29 @@ class Game {
     return targetIdxs
   }
 
-  resolveCombos(targetIdx, effectId, ownerIdx) {
+  resolveCombos: (number, string, number) => Array<Event> = (targetIdx, effectId, ownerIdx) => {
     const events = []
     for (const card of this.cards) {
       if (card.cooldown > 0) continue
       if (this.players[targetIdx].dead) continue
       if (
         (effectId === 'heal'
-        && card.trigger.id === 'heals'
-        && card.ownerIdx === ownerIdx
-        && targetIdx !== ownerIdx)
+          && card.trigger.id === 'heals'
+          && card.ownerIdx === ownerIdx
+          && targetIdx !== ownerIdx)
         ||
         (effectId === 'heal'
-        && card.trigger.id === 'isHealed'
-        && targetIdx === card.ownerIdx)
+          && card.trigger.id === 'isHealed'
+          && targetIdx === card.ownerIdx)
         ||
         (effectId === 'damage'
-        && card.trigger.id === 'dealsDmg'
-        && card.ownerIdx === ownerIdx
-        && targetIdx !== ownerIdx)
+          && card.trigger.id === 'dealsDmg'
+          && card.ownerIdx === ownerIdx
+          && targetIdx !== ownerIdx)
         ||
         (effectId === 'damage'
-        && card.trigger.id === 'takesDmg'
-        && targetIdx === card.ownerIdx)
+          && card.trigger.id === 'takesDmg'
+          && targetIdx === card.ownerIdx)
       ) {
         card.cooldown = 1
         events.push(new Event(card, this.resolveTargetIdxs(card)))
@@ -180,11 +206,11 @@ class Game {
     return events
   }
 
-  getPeriodicEvents() {
+  getPeriodicEvents: () => Array<Event> = () => {
     const events = []
     for (const card of this.cards) {
       if (card.cooldown > 0) continue
-      if (this.players[card.ownerIdx].dead) continue
+      if (card.ownerIdx == null || this.players[card.ownerIdx].dead) continue
       if (card.trigger.id === 'periodic') {
         events.push(new Event(card, this.resolveTargetIdxs(card)))
       }
@@ -193,8 +219,9 @@ class Game {
   }
 
 }
+
 export default Game
 
-const mod = (n, m) => {
+const mod: (number, number) => number = (n, m) => {
   return ((n % m) + m) % m
 }

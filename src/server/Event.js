@@ -1,5 +1,12 @@
+// @flow
+
+import Card from './Card'
+
 class Event {
-  constructor(card, targetIdxs) {
+  card: Card
+  targetIdxs: Array<number>
+
+  constructor(card: Card, targetIdxs: Array<number>) {
     this.card = card
     this.targetIdxs = targetIdxs
   }
