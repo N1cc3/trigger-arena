@@ -3,14 +3,14 @@
 import RVal from './RVal'
 
 class CardAttribute {
-  id: number
+  id: string
   longName: string
   shortName: string
   variableValues: ?Array<RVal>
 
   variableValue: ?number
 
-  constructor(id: number,
+  constructor(id: string,
               longName: string,
               shortName: string,
               variableValues: ?Array<RVal>) {

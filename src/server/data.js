@@ -1,13 +1,20 @@
+// @flow
+
 import CardAttribute from './CardAttribute'
 import Card from './Card'
 import RVal from './RVal'
 import { randomizer } from './RVal'
 
-class TriggerType extends CardAttribute {}
-class EffectType extends CardAttribute {}
-class TargetType extends CardAttribute {}
+class TriggerType extends CardAttribute {
+}
 
-export const TRIGGER_TYPES = [
+class EffectType extends CardAttribute {
+}
+
+class TargetType extends CardAttribute {
+}
+
+export const TRIGGER_TYPES: Array<RVal> = [
   new RVal(new TriggerType('instant', 'Instant', 'Instant'), 12),
   new RVal(new TriggerType('periodic', 'On Every ? Turn', '? turn', [
     new RVal(1, 1),
@@ -22,7 +29,7 @@ export const TRIGGER_TYPES = [
   new RVal(new TriggerType('isHealed', 'Is Healed', 'Healed'), 3),
 ]
 
-export const EFFECT_TYPES = [
+export const EFFECT_TYPES: Array<RVal> = [
   new RVal(new EffectType('damage', 'Deal ? damage', '? dmg', [
     new RVal(1, 9),
     new RVal(2, 7),
@@ -37,14 +44,14 @@ export const EFFECT_TYPES = [
   ]), 4),
 ]
 
-export const TARGET_TYPES = [
+export const TARGET_TYPES: Array<RVal> = [
   new RVal(new TargetType('everyone', 'Everyone', 'All'), 1),
   new RVal(new TargetType('self', 'Self', 'Self'), 5),
   new RVal(new TargetType('random', 'Random Player', 'Random'), 5),
   new RVal(new TargetType('adjacent', 'Adjacent Players', 'Adjacent'), 3),
 ]
 
-const initVariableValues = (rVal) => {
+const initVariableValues: ({ selected: any, rarity: number }) => void = (rVal) => {
   if (rVal.selected.variableValues) {
     const variable = randomizer(rVal.selected.variableValues)
     rVal.selected.variableValue = variable.selected
@@ -54,7 +61,7 @@ const initVariableValues = (rVal) => {
   }
 }
 
-export const randomCard = () => {
+export const randomCard: () => Card = () => {
   const trigger = randomizer(TRIGGER_TYPES)
   initVariableValues(trigger)
   const effect = randomizer(EFFECT_TYPES)

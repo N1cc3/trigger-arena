@@ -4,14 +4,15 @@ export default class RVal {
   value: any
   frequency: number
 
+  selected: any
+
   constructor(value: any, frequency: number) {
     this.value = value
     this.frequency = frequency
   }
 }
 
-export const randomizer: (Array<RVal>) =>
-    Array<{selected: any, rarity: number}> = (rVals) => {
+export const randomizer: (Array<RVal>) => { selected: any, rarity: number } = (rVals) => {
   let totalFreq = 0
   for (const rVal of rVals) {
     totalFreq += rVal.frequency
@@ -28,7 +29,7 @@ export const randomizer: (Array<RVal>) =>
   }
 
   if (selected == null) {
-    throw Error("Randomizer error.")
+    throw Error('Randomizer error.')
   }
 
   const rarity = totalFreq / selected.frequency

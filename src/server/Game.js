@@ -46,7 +46,7 @@ class Game {
     } else {
       cardToUse.number = this.cardCount++
       this.cards.push(cardToUse)
-      if (cardToUse.trigger.id === 'periodic') {
+      if (cardToUse.trigger.id === 'periodic' && cardToUse.trigger.variableValue != null) {
         cardToUse.cooldown = cardToUse.trigger.variableValue // Start with cooldown
       }
     }
@@ -107,7 +107,7 @@ class Game {
 
       // Cooldown
       const trigger = event.card.trigger
-      if (trigger.id === 'periodic') {
+      if (trigger.id === 'periodic' && trigger.variableValue != null) {
         event.card.cooldown = trigger.variableValue
       } else if (trigger.id !== 'instant') {
         event.card.cooldown = 1
