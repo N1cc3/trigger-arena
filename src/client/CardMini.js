@@ -1,15 +1,38 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+// @flow
+
 import { hot } from 'react-hot-loader'
+import * as React from 'react'
+import ReactDOM from 'react-dom'
 import styles from './CardMini.css'
 import { Howl } from 'howler'
 import foomSrc from './sounds/foom.mp3'
+import Card from '../server/Card'
 
 const foom = new Howl({
   src: [foomSrc],
 })
 
-class CardMini extends Component {
+type RarityName = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'
+
+type CardMiniType = Card & {
+  onUse: () => void,
+  onReady: () => void,
+  triggered: boolean,
+}
+
+type Props = {
+  card: CardMiniType,
+}
+
+type State = {
+  new: boolean,
+}
+
+class CardMini extends React.Component<Props, State> {
+  triggered: boolean
+  isInstant: boolean
+  isPeriodic: boolean
+
   constructor(props) {
     super(props)
 
@@ -20,20 +43,6 @@ class CardMini extends Component {
     this.triggered = false
     this.isInstant = (this.props.card.trigger.id === 'instant')
     this.isPeriodic = (this.props.card.trigger.id === 'periodic')
-    const r = this.props.card.rarity
-    if (r < 200) {
-      this.rarity = 'common'
-    } else if (r < 500) {
-      this.rarity = 'uncommon'
-    } else if (r < 1000) {
-      this.rarity = 'rare'
-    } else if (r < 5000) {
-      this.rarity = 'epic'
-    } else if (r < 10000) {
-      this.rarity = 'legendary'
-    } else {
-      this.rarity = 'mythic'
-    }
   }
 
   componentDidMount() {
@@ -56,7 +65,7 @@ class CardMini extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     if (this.props.card.triggered === false) this.triggered = false
     if (this.props.card.triggered && this.triggered === false) this.trigger()
   }
@@ -64,17 +73,21 @@ class CardMini extends Component {
   trigger() {
     this.triggered = true
     const el = ReactDOM.findDOMNode(this)
-    el.setAttribute('triggered', 'true')
-    setTimeout(() => {
-      this.props.card.onUse()
-    }, 800)
-    setTimeout(() => {
-      el.removeAttribute('triggered')
-      this.props.card.onReady()
-    }, 3000)
+    if (el instanceof Element) {
+      el.setAttribute('triggered', 'true')
+      setTimeout(() => {
+        this.props.card.onUse()
+      }, 800)
+      setTimeout(() => {
+        el.removeAttribute('triggered')
+        this.props.card.onReady()
+      }, 3000)
+    }
   }
 
   render() {
+    const rarityName: RarityName = getRarityName(this.props.card.rarity)
+
     const cooldown = this.props.card.cooldown > 0 ?
       <div className={styles.cooldown}>
         {this.isPeriodic ? this.props.card.cooldown : '⌛'}
@@ -86,13 +99,13 @@ class CardMini extends Component {
         instant={this.isInstant.toString()}
         used={(this.props.card.cooldown > 0).toString()}
         periodic={this.isPeriodic.toString()}
-        rarity={this.rarity}
+        rarity={rarityName}
         new={this.state.new.toString()}>
         <div>
-          # {Math.round(this.props.card.number)}
+          # {this.props.card.number}
         </div>
         <div>
-          <span role="img" aria-label="Gem" className={styles.rarityGem} rarity={this.rarity}>💎</span> {Math.round(this.props.card.rarity)}
+          <span role="img" aria-label="Gem" className={styles.rarityGem} rarity={rarityName}>💎</span> {Math.round(this.props.card.rarity)}
         </div>
         <div>
           <span role="img" aria-label="Light Bulb">💡</span> {this.props.card.trigger.shortName}
@@ -110,3 +123,19 @@ class CardMini extends Component {
 
 }
 export default hot(module)(CardMini)
+
+const getRarityName: (number) => RarityName = (r) => {
+  if (r < 200) {
+    return 'common'
+  } else if (r < 500) {
+    return 'uncommon'
+  } else if (r < 1000) {
+    return 'rare'
+  } else if (r < 5000) {
+    return 'epic'
+  } else if (r < 10000) {
+    return 'legendary'
+  } else {
+    return 'mythic'
+  }
+}

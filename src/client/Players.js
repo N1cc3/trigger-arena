@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import styles from './Players.css'
-import Player from './Player'
+import PlayerC from './PlayerC'
 
 const getRow = (players, row) => {
   const firstRowSize = Math.ceil(players.length / 2)
@@ -25,7 +25,7 @@ class Players extends Component {
     const deadPlayersElem = deadPlayers.length > 0 ? (
       <div className={styles.deadPlayers}>
         {deadPlayers.map((player) => (
-          <Player key={player.id} player={player} cards={[]} highlight={false} dead={true}/>
+          <PlayerC key={player.id} player={player} cards={[]} highlight={false} dead={true}/>
         ))}
       </div>
     ) : null
@@ -36,7 +36,7 @@ class Players extends Component {
         {[0, 1].map((index) => (
           <div key={index} className={styles.row}>
             {getRow(livePlayers, index).map((player) => (
-              <Player key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]} highlight={player.id === highlightId} dead={false}/>
+              <PlayerC key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]} highlight={player.id === highlightId} dead={false}/>
             ))}
           </div>
         ))}

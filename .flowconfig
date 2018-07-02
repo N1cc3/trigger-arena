@@ -1,0 +1,17 @@
+[ignore]
+
+[include]
+
+[libs]
+
+[lints]
+
+;suppress inspection for section "DuplicateKeyInSection" // Multiple extensions allowed
+[options]
+module.name_mapper.extension='mp3' -> '<PROJECT_ROOT>/flow-stubs/mp3-stub.js'
+module.name_mapper.extension='png' -> '<PROJECT_ROOT>/flow-stubs/png-stub.js'
+
+[strict]
+
+[version]
+0.75.0

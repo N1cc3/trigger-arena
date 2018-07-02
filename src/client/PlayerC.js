@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
+// @flow
+
 import { hot } from 'react-hot-loader'
+import * as React from 'react'
 import styles from './Player.css'
 import CardMini from './CardMini'
 
@@ -12,13 +14,29 @@ import skull4 from './img/skull4.png'
 import skull5 from './img/skull5.png'
 import skull6 from './img/skull6.png'
 import skull7 from './img/skull7.png'
+import Player from '../server/Player'
+import Card from '../server/Card'
 
 const skulls = [skull0, skull1, skull2, skull3, skull4, skull5, skull6, skull7]
 const randomSkull = () => {
   return skulls[Math.floor(Math.random() * skulls.length)]
 }
 
-class Player extends Component {
+type Props = {
+  player: Player,
+  cards: Array<Card>,
+  highlight: boolean,
+  dead: boolean,
+}
+
+type State = {
+  hp: number,
+  hpDiff: ?number,
+}
+
+class PlayerC extends React.Component<Props, State> {
+  skull: string
+
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +46,7 @@ class Player extends Component {
     this.skull = randomSkull()
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     const newHp = this.props.player.hp
     if (this.state.hp !== newHp) {
       const hpDiff = newHp - this.state.hp
@@ -42,13 +60,13 @@ class Player extends Component {
     )) : null
 
     const hpDiff = this.state.hpDiff
-    const backgroundColor = `rgba(${hpDiff < 0 ? 255 : 0}, ${hpDiff > 0 ? 255 : 0}, 0, ${0.2 * Math.abs(hpDiff)})`
+    const backgroundColor = hpDiff != null ? `rgba(${hpDiff < 0 ? 255 : 0}, ${hpDiff > 0 ? 255 : 0}, 0, ${0.2 * Math.abs(hpDiff)})` : 'none'
     const hpDiffStyle = {
-      color: hpDiff > 0 ? 'green' : 'red',
-      fontSize: `${1.5 + 0.5 * Math.abs(hpDiff)}em`,
+      color: hpDiff != null && hpDiff > 0 ? 'green' : 'red',
+      fontSize: hpDiff != null ? `${1.5 + 0.5 * Math.abs(hpDiff)}em` : '0',
       background: `radial-gradient(circle closest-side, ${backgroundColor}, transparent)`
     }
-    const hpDiffElem = hpDiff ? <div className={styles.hpDiff} style={hpDiffStyle}
+    const hpDiffElem = hpDiff != null ? <div className={styles.hpDiff} style={hpDiffStyle}
       onAnimationEnd={() => this.setState({hpDiff: null})}>
       {Math.abs(hpDiff)}
     </div> : null
@@ -75,4 +93,4 @@ class Player extends Component {
     )
   }
 }
-export default hot(module)(Player)
+export default hot(module)(PlayerC)
