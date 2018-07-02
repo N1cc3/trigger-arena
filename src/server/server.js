@@ -1,3 +1,5 @@
+// @flow
+
 import express from 'express'
 import http from 'http'
 import SocketIO from 'socket.io'
@@ -8,7 +10,7 @@ import Game from './Game.js'
 import Player from './Player.js'
 
 const app = express()
-const server = http.Server(app)
+const server = http.createServer(app)
 const io = new SocketIO(server)
 const port = process.env.PORT || 8080
 
@@ -19,21 +21,21 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'))
 })
 
-const clients = []
-const games = []
+const clients: Array<string> = []
+const games: Array<Game> = []
 
 io.on('connection', socket => {
-  const socketId = socket.id
+  const socketId: string = socket.id
   console.log(`New client connected: ${socketId}`)
-  const playerId = clients.push(socketId) - 1
-  const player = new Player(playerId)
-  let game = null
+  const playerId: number = clients.push(socketId) - 1
+  const player: Player = new Player(playerId)
+  let game: ?Game = null
 
   socket.emit('connected', player)
 
   socket.on('host game', () => {
     console.log(`Client ${socketId} wants to host a game`)
-    let gameId = Math.floor(Math.random() * 9999)
+    let gameId: number = Math.floor(Math.random() * 9999)
     while (games.map(g => g.id).includes(gameId)) {
       gameId = Math.floor(Math.random() * 9999)
     }
@@ -92,6 +94,7 @@ io.on('connection', socket => {
   })
 
   socket.on('next turn', () => {
+    if (game == null) return
     game.animating = false
     for (const p of game.players) {
       if (p.dead) {
@@ -107,6 +110,7 @@ io.on('connection', socket => {
   })
 
   socket.on('start game', () => {
+    if (game == null) return
     console.log(`Client ${socketId} wants to start the game`)
     game.started = true
     socket.emit('start game')
