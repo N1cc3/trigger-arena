@@ -1,11 +1,14 @@
-import React, { Component } from 'react'
+// @flow
+
 import { hot } from 'react-hot-loader'
+import * as React from 'react'
 import styles from './Cards.css'
 import Card from './CardC'
 import Button from './comp/Button'
 import { Howl } from 'howler'
 import deathSrc from './sounds/death.mp3'
 import yourTurnSrc from './sounds/yourTurn.mp3'
+import socketIOClient from 'socket.io-client'
 
 const death = new Howl({
   src: [deathSrc],
@@ -15,7 +18,22 @@ const yourTurn = new Howl({
   src: [yourTurnSrc],
 })
 
-class Cards extends Component {
+type Props = {
+  socket: socketIOClient,
+}
+
+type State = {
+  cards: Array<Card>,
+  useIdx: ?number,
+  discardIdx: ?number,
+  yourTurn: boolean,
+  yourTurnNotification: boolean,
+  dead: boolean,
+}
+
+class Cards extends React.Component<Props, State> {
+  socket: socketIOClient
+
   constructor(props) {
     super(props)
 
@@ -63,8 +81,6 @@ class Cards extends Component {
     })
 
     this.socket.emit('cards')
-
-    this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -73,8 +89,12 @@ class Cards extends Component {
     }
   }
 
-  yourTurnAnimEnd() {
-    this.setState({yourTurn: false})
+  yourTurnAnimEnd: () => void = () => {
+    this.setState({yourTurnNotification: false})
+  }
+
+  ready: () => void = () => {
+    this.socket.emit('player action', {useIdx: this.state.useIdx, discardIdx: this.state.discardIdx})
   }
 
   render() {
