@@ -1,9 +1,13 @@
-import React, { Component } from 'react'
+// @flow
+
 import { hot } from 'react-hot-loader'
+import * as React from 'react'
 import styles from './Players.css'
 import PlayerC from './PlayerC'
+import Player from '../server/Player'
+import Card from '../server/Card'
 
-const getRow = (players, row) => {
+const getRow: (Array<Player>, number) => Array<Player> = (players, row) => {
   const firstRowSize = Math.ceil(players.length / 2)
   if (row === 0) {
     return players.slice(0, firstRowSize)
@@ -12,7 +16,13 @@ const getRow = (players, row) => {
   }
 }
 
-class Players extends Component {
+type Props = {
+  players: Array<Player>,
+  cards: Array<Card>,
+  turnIdx: number,
+}
+
+class Players extends React.Component<Props> {
   render() {
     const cards = []
     let highlightId = null
