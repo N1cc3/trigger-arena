@@ -7,7 +7,7 @@ import Name from './Name'
 import Cards from './Cards'
 import Door from './Door'
 import Menu from './Menu'
-import Game from './Game'
+import GameC from './GameC'
 import styles from './App.css'
 import { Howl } from 'howler'
 import menuMusicSrc from './sounds/menuMusic.mp3'
@@ -54,7 +54,7 @@ const menuView = (socket, onJoin, onHost) => {
 }
 
 const gameView = (socket, gameId) => {
-  return <Game socket={socket} gameId={gameId} onGameOver={onGameOver}/>
+  return <GameC socket={socket} gameId={gameId} onGameOver={onGameOver}/>
 }
 
 type Props = {

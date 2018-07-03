@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
+// @flow
+
 import { hot } from 'react-hot-loader'
-import styles from './Game.css'
+import * as React from 'react'
+import styles from './GameC.css'
 import Players from './Players'
 import CardMini from './CardMini'
 import Button from './comp/Button'
@@ -9,6 +11,12 @@ import playerJoinSrc from './sounds/playerJoin.mp3'
 import gameStartSrc from './sounds/gameStart.mp3'
 import damageSrc from './sounds/damage.mp3'
 import healSrc from './sounds/heal.mp3'
+import socketIOClient from 'socket.io-client'
+import Player from '../server/Player'
+import Game from '../server/Game'
+import Event from '../server/Event'
+import CardAttribute from '../server/CardAttribute'
+import ClientCard from './ClientCard'
 
 const playerJoin = new Howl({
   src: [playerJoinSrc],
@@ -26,7 +34,26 @@ const heal = new Howl({
   src: [healSrc],
 })
 
-class Game extends Component {
+type Props = {
+  socket: socketIOClient,
+  gameId: number,
+  onGameOver: () => void,
+}
+
+type State = {
+  players: Array<Player>,
+  cards: Array<ClientCard>,
+  instant: ?ClientCard,
+  turnIdx: number,
+  started: boolean,
+  gameOver: boolean,
+  winner: ?Player,
+}
+
+class GameC extends React.Component<Props, State> {
+  game: ?Game
+  events: Array<Event>
+
   constructor(props) {
     super(props)
 
@@ -42,9 +69,8 @@ class Game extends Component {
 
     this.game = null
     this.events = []
-    this.socket = this.props.socket
 
-    this.socket.on('join game', (player) => {
+    this.props.socket.on('join game', (player) => {
       this.setState((prevState) => {
         prevState.players.push(player)
         return prevState
@@ -52,41 +78,40 @@ class Game extends Component {
       playerJoin.play()
     })
 
-    this.socket.on('change name', (player) => {
+    this.props.socket.on('change name', (player) => {
       this.setState((prevState) => {
-        const p = prevState.players.find(p => p.id === player.id)
+        const p: ?Player = prevState.players.find(p => p.id === player.id)
         if (p) p.name = player.name
         return prevState
       })
     })
 
-    this.socket.on('start game', () => {
+    this.props.socket.on('start game', () => {
       this.setState({started: true})
       gameStart.play()
     })
 
-    this.socket.on('next turn', (turnResult) => {
+    this.props.socket.on('next turn', (turnResult) => {
       this.game = turnResult.game
       this.events = turnResult.events
       this.animateEvents(this.events.length > 0)
     })
-
-    this.animateEvents = this.animateEvents.bind(this)
-    this.start = this.start.bind(this)
   }
 
-  animateEvents(first = false) {
-    const event = this.events.shift()
+  animateEvents = (first: boolean = false) => {
+    const event: Event = this.events.shift()
 
     if (first) { // Animate used card
 
-      const card = event.card
+      const card: ClientCard = new ClientCard(event.card.trigger, event.card.effect, event.card.effect, event.card.rarity)
       card.onUse = () => {
         this.setState((prevState) => {
           if (card.trigger.id === 'instant') {
-            prevState.instant.cooldown++
+            if (prevState.instant != null) prevState.instant.cooldown++
           } else {
-            prevState.cards.find(c => c.number === card.number).cooldown = this.game.cards.find(c => c.number === card.number).cooldown + 1
+            const card1 = prevState.cards.find(c => c.number === card.number)
+            const card2 = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
+            if (card1 != null && card2 != null) card1.cooldown = card2.cooldown + 1
           }
           applyEffect(card.effect, prevState.players, event.targetIdxs)
           return prevState
@@ -96,6 +121,7 @@ class Game extends Component {
         this.setState({instant: null})
         this.animateEvents()
       }
+      card.triggered = false
 
       if (card.trigger.id === 'instant') {
         this.setState({instant: card})
@@ -109,12 +135,14 @@ class Game extends Component {
     } else if (event) { // Animate combo or periodic card
 
       this.setState((prevState) => {
-        const card = prevState.cards.find(c => c.number === event.card.number)
+        const card: ?ClientCard = prevState.cards.find(c => c.number === event.card.number)
+        if (card == null) return prevState
         card.triggered = true
         card.onUse = () => {
           this.setState((prevState) => {
             applyEffect(card.effect, prevState.players, event.targetIdxs)
-            card.cooldown = this.game.cards.find(c => c.number === card.number).cooldown + 1
+            const card2 = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
+            if (card2 != null) card.cooldown = card2.cooldown + 1
             return prevState
           })
         }
@@ -127,27 +155,30 @@ class Game extends Component {
     } else { // Event animations complete
 
       this.setState((prevState) => {
-        prevState.cards = this.game.cards
-        for (const card of prevState.cards) {
-          card.triggered = false
+        const game = this.game
+        if (game != null) {
+          prevState.cards = game.cards.map(c => new ClientCard(c.trigger, c.effect, c.effect, c.rarity))
+          for (const card of prevState.cards) {
+            card.triggered = false
+          }
+          prevState.turnIdx = game.turnIdx
+          prevState.gameOver = game.gameOver
+          prevState.winner = game.winner
+          prevState.players = game.players
         }
-        prevState.turnIdx = this.game.turnIdx
-        prevState.gameOver = this.game.gameOver
-        prevState.winner = this.game.winner
-        prevState.players = this.game.players
         return prevState
       })
 
       if (this.state.gameOver) {
         this.props.onGameOver()
       }
-      this.socket.emit('next turn')
+      this.props.socket.emit('next turn')
 
     }
   }
 
-  start() {
-    this.socket.emit('start game')
+  start: () => void = () => {
+    this.props.socket.emit('start game')
   }
 
   render() {
@@ -179,8 +210,8 @@ class Game extends Component {
         {gameId}
 
         <Players players={this.state.players}
-          cards={this.state.cards}
-          turnIdx={this.state.turnIdx}/>
+                 cards={this.state.cards}
+                 turnIdx={this.state.turnIdx}/>
 
         {instant}
         {startButton}
@@ -189,19 +220,22 @@ class Game extends Component {
     )
   }
 }
-export default hot(module)(Game)
 
-const applyEffect = (effect, players, targetIdxs) => {
+export default hot(module)(GameC)
+
+const applyEffect: (CardAttribute, Array<Player>, Array<number>) => void = (effect, players, targetIdxs) => {
   for (const targetIdx of targetIdxs) {
+    const value = effect.variableValue
+    if (value == null) continue
     const target = players[targetIdx]
     switch (effect.id) {
       case 'heal':
-        target.hp += effect.variableValue
+        target.hp += value
         heal.play()
         break
       case 'damage':
       default:
-        target.hp -= effect.variableValue
+        target.hp -= value
         damage.play()
         break
     }

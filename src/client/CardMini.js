@@ -14,7 +14,7 @@ const foom = new Howl({
 
 type RarityName = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'
 
-type CardMiniType = Card & {
+export type CardMiniType = Card & {
   onUse: () => void,
   onReady: () => void,
   triggered: boolean,
