@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 import styles from './CardMini.css'
 import { Howl } from 'howler'
 import foomSrc from './sounds/foom.mp3'
-import Card from '../server/Card'
+import ClientCard from './ClientCard'
 
 const foom = new Howl({
   src: [foomSrc],
@@ -14,14 +14,8 @@ const foom = new Howl({
 
 type RarityName = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'
 
-export type CardMiniType = Card & {
-  onUse: () => void,
-  onReady: () => void,
-  triggered: boolean,
-}
-
 type Props = {
-  card: CardMiniType,
+  card: ClientCard,
 }
 
 type State = {
