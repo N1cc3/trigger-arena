@@ -1,30 +1,33 @@
-import React, { Component } from 'react'
+// @flow
+
 import { hot } from 'react-hot-loader'
+import * as React from 'react'
 import styles from './Menu.css'
 import Button from './comp/Button'
+import socketIOClient from 'socket.io-client'
+import Game from '../server/Game'
 
-class Menu extends Component {
+type Props = {
+  socket: socketIOClient,
+  onHost: (Game) => void,
+  onJoin: () => void,
+}
+
+class Menu extends React.Component<Props> {
   constructor(props) {
     super(props)
 
-    this.state = {}
-
-    this.socket = this.props.socket
-
-    this.socket.on('host game', (game) => {
+    this.props.socket.on('host game', (game) => {
       this.props.onHost(game.id)
     })
-
-    this.join = this.join.bind(this)
-    this.host = this.host.bind(this)
   }
 
-  join() {
+  join: () => void = () => {
     this.props.onJoin()
   }
 
-  host() {
-    this.socket.emit('host game')
+  host: () => void = () => {
+    this.props.socket.emit('host game')
   }
 
   render() {
