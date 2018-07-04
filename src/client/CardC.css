@@ -1,3 +1,4 @@
+/*noinspection ALL*/
 .card {
   flex-grow: 1;
 
@@ -13,7 +14,7 @@
 
   border-style: solid;
   border-color: black;
-  border-width: 1%;
+  border-width: 3px;
   border-radius: 10px;
 }
 
@@ -38,7 +39,7 @@
 }
 
 .rarityGem[rarity="uncommon"] {
-  box-shadow: 0px 0px 10px 0px lawngreen, inset 0px 0px 14px -2px lawngreen;
+  box-shadow: 0 0 10px 0 lawngreen, inset 0 0 14px -2px lawngreen;
 }
 
 .card[rarity="rare"] {
@@ -46,7 +47,7 @@
 }
 
 .rarityGem[rarity="rare"] {
-  box-shadow: 0px 0px 10px 0px blue, inset 0px 0px 14px -2px blue;
+  box-shadow: 0 0 10px 0 blue, inset 0 0 14px -2px blue;
 }
 
 .card[rarity="epic"] {
@@ -54,7 +55,7 @@
 }
 
 .rarityGem[rarity="epic"] {
-  box-shadow: 0px 0px 10px 0px purple, inset 0px 0px 14px -2px purple;
+  box-shadow: 0 0 10px 0 purple, inset 0 0 14px -2px purple;
 }
 
 .card[rarity="legendary"] {
@@ -62,7 +63,7 @@
 }
 
 .rarityGem[rarity="legendary"] {
-  box-shadow: 0px 0px 10px 0px gold, inset 0px 0px 14px -2px gold;
+  box-shadow: 0 0 10px 0 gold, inset 0 0 14px -2px gold;
 }
 
 .card[rarity="mythic"] {
@@ -71,7 +72,7 @@
 }
 
 .rarityGem[rarity="mythic"] {
-  box-shadow: 0px 0px 10px 0px gold, inset 0px 0px 14px -2px gold;
+  box-shadow: 0 0 10px 0 gold, inset 0 0 14px -2px gold;
 }
 
 .card[periodic="true"] {

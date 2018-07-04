@@ -20,4 +20,5 @@ class CardAttribute {
     this.variableValues = variableValues
   }
 }
+
 export default CardAttribute

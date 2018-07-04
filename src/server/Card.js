@@ -26,4 +26,5 @@ class Card {
     this.ownerIdx = null
   }
 }
+
 export default Card

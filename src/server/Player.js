@@ -27,6 +27,10 @@ class Player {
     this.discardIdx = null
   }
 
+  isReady() {
+    return (this.useIdx != null && this.discardIdx != null)
+  }
+
   use(cardIdx: CardIdx) {
     if (cardIdx === this.discardIdx) this.discardIdx = null
     this.useIdx = cardIdx
@@ -38,4 +42,5 @@ class Player {
   }
 
 }
+
 export default Player

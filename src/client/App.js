@@ -46,7 +46,7 @@ const nameView = (socket, playerId, onReady) => {
 }
 
 const cardsView = (socket) => {
-  return <Cards socket={socket} />
+  return <Cards socket={socket}/>
 }
 
 const menuView = (socket, onJoin, onHost) => {
@@ -113,4 +113,5 @@ class App extends React.Component<Props, State> {
     )
   }
 }
+
 export default hot(module)(App)

@@ -2,6 +2,7 @@
 
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
+import socketIOClient from 'socket.io-client'
 import styles from './GameC.css'
 import Players from './Players'
 import CardMini from './CardMini'
@@ -11,7 +12,6 @@ import playerJoinSrc from './sounds/playerJoin.mp3'
 import gameStartSrc from './sounds/gameStart.mp3'
 import damageSrc from './sounds/damage.mp3'
 import healSrc from './sounds/heal.mp3'
-import socketIOClient from 'socket.io-client'
 import Player from '../server/Player'
 import Game from '../server/Game'
 import Event from '../server/Event'
@@ -109,8 +109,8 @@ class GameC extends React.Component<Props, State> {
           if (card.trigger.id === 'instant') {
             if (prevState.instant != null) prevState.instant.cooldown++
           } else {
-            const card1 = prevState.cards.find(c => c.number === card.number)
-            const card2 = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
+            const card1: ?ClientCard = prevState.cards.find(c => c.number === card.number)
+            const card2: ?ClientCard = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
             if (card1 != null && card2 != null) card1.cooldown = card2.cooldown + 1
           }
           applyEffect(card.effect, prevState.players, event.targetIdxs)
@@ -122,6 +122,8 @@ class GameC extends React.Component<Props, State> {
         this.animateEvents()
       }
       card.triggered = false
+      card.number = event.card.number
+      card.ownerIdx = event.card.ownerIdx
 
       if (card.trigger.id === 'instant') {
         this.setState({instant: card})
@@ -141,7 +143,7 @@ class GameC extends React.Component<Props, State> {
         card.onUse = () => {
           this.setState((prevState) => {
             applyEffect(card.effect, prevState.players, event.targetIdxs)
-            const card2 = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
+            const card2: ?ClientCard = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
             if (card2 != null) card.cooldown = card2.cooldown + 1
             return prevState
           })
@@ -155,9 +157,15 @@ class GameC extends React.Component<Props, State> {
     } else { // Event animations complete
 
       this.setState((prevState) => {
-        const game = this.game
+        const game: ?Game = this.game
         if (game != null) {
-          prevState.cards = game.cards.map(c => new ClientCard(c.trigger, c.effect, c.effect, c.rarity))
+          prevState.cards = game.cards.map(c => {
+            const clientCard = new ClientCard(c.trigger, c.effect, c.effect, c.rarity)
+            clientCard.ownerIdx = c.ownerIdx
+            clientCard.cooldown = c.cooldown
+            clientCard.number = c.number
+            return clientCard
+          })
           for (const card of prevState.cards) {
             card.triggered = false
           }

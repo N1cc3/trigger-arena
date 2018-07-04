@@ -11,4 +11,5 @@ class Event {
     this.targetIdxs = targetIdxs
   }
 }
+
 export default Event

@@ -8,8 +8,14 @@
 
 ;suppress inspection for section "DuplicateKeyInSection" // Multiple extensions allowed
 [options]
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+
 module.name_mapper.extension='mp3' -> '<PROJECT_ROOT>/flow-stubs/mp3-stub.js'
 module.name_mapper.extension='png' -> '<PROJECT_ROOT>/flow-stubs/png-stub.js'
+
+module.file_ext=.js
+module.file_ext=.mp3
 
 [strict]
 

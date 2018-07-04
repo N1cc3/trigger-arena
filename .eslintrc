@@ -3,6 +3,6 @@
   "rules": {
     "no-var": "error",
     "semi": ["warn", "never"],
-    "prefer-const": "warn",
+    "prefer-const": "warn"
   }
 }

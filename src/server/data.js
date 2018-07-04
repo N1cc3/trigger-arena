@@ -2,8 +2,7 @@
 
 import CardAttribute from './CardAttribute'
 import Card from './Card'
-import RVal from './RVal'
-import { randomizer } from './RVal'
+import RVal, { randomizer } from './RVal'
 
 class TriggerType extends CardAttribute {
 }

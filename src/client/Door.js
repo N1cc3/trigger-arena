@@ -16,8 +16,6 @@ type State = {
 }
 
 class Door extends React.Component<Props, State> {
-  socket: socketIOClient
-
   constructor(props) {
     super(props)
 
@@ -25,9 +23,7 @@ class Door extends React.Component<Props, State> {
       gameId: '',
     }
 
-    this.socket = this.props.socket
-
-    this.socket.on('join game', (player) => {
+    this.props.socket.on('join game', () => {
       this.props.onJoin(this.state.gameId)
     })
   }
@@ -37,9 +33,9 @@ class Door extends React.Component<Props, State> {
     this.setState({gameId: gameId})
   }
 
-  ready(e) {
+  ready: (SyntheticEvent<HTMLButtonElement>) => void = (e) => {
     e.preventDefault()
-    this.socket.emit('join game', this.state.gameId)
+    this.props.socket.emit('join game', this.state.gameId)
   }
 
   render() {

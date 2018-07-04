@@ -2,9 +2,9 @@
 
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
+import socketIOClient from 'socket.io-client'
 import styles from './Name.css'
 import Button from './comp/Button'
-import socketIOClient from 'socket.io-client'
 
 type Props = {
   socket: socketIOClient,
@@ -36,7 +36,8 @@ class Name extends React.Component<Props, State> {
     this.setState({name: name})
   }
 
-  ready: () => void = () => {
+  ready: (SyntheticEvent<HTMLButtonElement>) => void = (e) => {
+    e.preventDefault()
     this.props.socket.emit('change name', this.state.name)
   }
 
@@ -51,4 +52,5 @@ class Name extends React.Component<Props, State> {
     )
   }
 }
+
 export default hot(module)(Name)

@@ -8,7 +8,7 @@
 }
 
 .title {
-  font-family: "GrindAndDeath";
+  font-family: "GrindAndDeath", cursive;
   font-size: 14vmin;
   white-space: nowrap;
 }
@@ -37,7 +37,7 @@
 }
 
 .author {
-  font-family: "GrindAndDeath";
+  font-family: "GrindAndDeath", cursive;
   font-size: 3rem;
   padding-right: 1%;
   align-self: flex-end;

@@ -14,7 +14,7 @@ const server = http.createServer(app)
 const io = new SocketIO(server)
 const port = process.env.PORT || 8080
 
-app.use(enforce.HTTPS({ trustProtoHeader: true }))
+app.use(enforce.HTTPS({trustProtoHeader: true}))
 app.use(compression())
 app.use(express.static(path.join(__dirname)))
 app.get('/', function (req, res) {
@@ -63,6 +63,7 @@ io.on('connection', socket => {
   })
 
   const nextTurn = () => {
+    if (game == null) return
     const events = game.nextTurn()
     socket.emit('cards', player.handCards)
     game.animating = true
@@ -70,11 +71,12 @@ io.on('connection', socket => {
   }
 
   socket.on('use card', (useIdx) => {
+    if (game == null) return
     console.log(`Client ${socketId} wants to use card ${useIdx}`)
     if (game.players.indexOf(player) === game.turnIdx
-        && player.discardIdx !== useIdx
-        && game.started
-        && !game.animating) {
+      && player.discardIdx !== useIdx
+      && game.started
+      && !game.animating) {
       player.use(useIdx)
       socket.emit('use card', useIdx)
       if (player.isReady()) nextTurn()
@@ -82,11 +84,12 @@ io.on('connection', socket => {
   })
 
   socket.on('discard card', (discardIdx) => {
+    if (game == null) return
     console.log(`Client ${socketId} wants to discard card ${discardIdx}`)
     if (game.players.indexOf(player) === game.turnIdx
-        && player.useIdx !== discardIdx
-        && game.started
-        && !game.animating) {
+      && player.useIdx !== discardIdx
+      && game.started
+      && !game.animating) {
       player.discard(discardIdx)
       socket.emit('discard card', discardIdx)
       if (player.isReady()) nextTurn()

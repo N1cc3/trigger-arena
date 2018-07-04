@@ -1,3 +1,4 @@
+/*noinspection ALL*/
 .player {
   display: flex;
   flex-direction: column;
@@ -39,12 +40,12 @@
   text-transform: capitalize;
 }
 
+/*noinspection ALL*/
 .hp {
   width: 80px;
   height: 80px;
-  padding: 0.1em;
-  padding-bottom: 0.2em;
-  font-family: RiseNShine;
+  padding: 0.1em 0.1em 0.2em;
+  font-family: RiseNShine, monospace;
   font-size: 0.8em;
 
   display: flex;
@@ -74,7 +75,7 @@
   position: absolute;
   z-index: 2;
   opacity: 1;
-  transform: translateY(0), scale(1);
+  transform: translateY(0) scale(1);
   animation: hpDiff 2s ease-out;
 }
 

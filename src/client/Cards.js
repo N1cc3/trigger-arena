@@ -2,13 +2,12 @@
 
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
+import socketIOClient from 'socket.io-client'
 import styles from './Cards.css'
-import Card from './CardC'
-import Button from './comp/Button'
+import CardC from './CardC'
 import { Howl } from 'howler'
 import deathSrc from './sounds/death.mp3'
 import yourTurnSrc from './sounds/yourTurn.mp3'
-import socketIOClient from 'socket.io-client'
 
 const death = new Howl({
   src: [deathSrc],
@@ -23,7 +22,7 @@ type Props = {
 }
 
 type State = {
-  cards: Array<Card>,
+  cards: Array<CardC>,
   useIdx: ?number,
   discardIdx: ?number,
   yourTurn: boolean,
@@ -42,12 +41,11 @@ class Cards extends React.Component<Props, State> {
       useIdx: null,
       discardIdx: null,
       yourTurn: false,
+      yourTurnNotification: false,
       dead: false,
     }
 
-    this.socket = this.props.socket
-
-    this.socket.on('cards', (cards) => {
+    this.props.socket.on('cards', (cards) => {
       this.setState({
         cards: cards,
         useIdx: null,
@@ -55,52 +53,53 @@ class Cards extends React.Component<Props, State> {
       })
     })
 
-    this.socket.on('use card', (useIdx) => {
+    this.props.socket.on('use card', (useIdx) => {
       this.setState({
         useIdx: useIdx,
       })
     })
 
-    this.socket.on('discard card', (discardIdx) => {
+    this.props.socket.on('discard card', (discardIdx) => {
       this.setState({
         discardIdx: discardIdx,
       })
     })
 
-    this.socket.on('your turn', () => {
+    this.props.socket.on('your turn', () => {
       this.setState({
         yourTurn: true,
       })
       yourTurn.play()
     })
 
-    this.socket.on('you died', () => {
+    this.props.socket.on('you died', () => {
       this.setState({
         dead: true,
       })
     })
 
-    this.socket.emit('cards')
+    this.props.socket.emit('cards')
+
+    // $FlowFixMe
+    this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState, ss) {
     if (prevState.dead !== this.state.dead && this.state.dead === true) {
       death.play()
     }
   }
 
-  yourTurnAnimEnd: () => void = () => {
-    this.setState({yourTurnNotification: false})
-  }
-
-  ready: () => void = () => {
-    this.socket.emit('player action', {useIdx: this.state.useIdx, discardIdx: this.state.discardIdx})
+  yourTurnAnimEnd(): void {
+    this.setState({yourTurn: false, yourTurnNotification: false})
   }
 
   render() {
-    const yourTurn = this.state.yourTurn ? <div className={styles.yourTurnLayer}><div className={styles.yourTurn} onAnimationEnd={this.yourTurnAnimEnd}>
-      Your Turn!
-    </div></div> : null
+    const yourTurn = this.state.yourTurn ? <div className={styles.yourTurnLayer}>
+      <div className={styles.yourTurn} onAnimationEnd={this.yourTurnAnimEnd}>
+        Your Turn!
+      </div>
+    </div> : null
 
     const youDied = this.state.dead ? (
       <div className={styles.youDied}>You died!</div>
@@ -109,10 +108,9 @@ class Cards extends React.Component<Props, State> {
     return (
       <div className={styles.cards}>
         {this.state.cards.map((card, index) => (
-          <Card key={index} id={index} card={card} socket={this.socket}
-            use={this.state.useIdx === index}
-            discard={this.state.discardIdx === index}
-          />
+          <CardC key={index} idx={index} card={card} socket={this.props.socket}
+                 use={this.state.useIdx === index}
+                 discard={this.state.discardIdx === index}/>
         ))}
         {yourTurn}
         {youDied}
@@ -120,4 +118,5 @@ class Cards extends React.Component<Props, State> {
     )
   }
 }
+
 export default hot(module)(Cards)

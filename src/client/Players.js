@@ -5,7 +5,7 @@ import * as React from 'react'
 import styles from './Players.css'
 import PlayerC from './PlayerC'
 import Player from '../server/Player'
-import Card from '../server/Card'
+import ClientCard from './ClientCard'
 
 const getRow: (Array<Player>, number) => Array<Player> = (players, row) => {
   const firstRowSize = Math.ceil(players.length / 2)
@@ -18,7 +18,7 @@ const getRow: (Array<Player>, number) => Array<Player> = (players, row) => {
 
 type Props = {
   players: Array<Player>,
-  cards: Array<Card>,
+  cards: Array<ClientCard>,
   turnIdx: number,
 }
 
@@ -42,17 +42,19 @@ class Players extends React.Component<Props> {
 
     const livePlayers = this.props.players.filter(p => !p.dead)
     return (
-			<div className={styles.players}>
+      <div className={styles.players}>
         {[0, 1].map((index) => (
           <div key={index} className={styles.row}>
             {getRow(livePlayers, index).map((player) => (
-              <PlayerC key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]} highlight={player.id === highlightId} dead={false}/>
+              <PlayerC key={player.id} player={player} cards={cards[this.props.players.indexOf(player)]}
+                       highlight={player.id === highlightId} dead={false}/>
             ))}
           </div>
         ))}
         {deadPlayersElem}
-			</div>
+      </div>
     )
   }
 }
+
 export default hot(module)(Players)

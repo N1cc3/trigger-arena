@@ -2,9 +2,9 @@
 
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
+import socketIOClient from 'socket.io-client'
 import styles from './Menu.css'
 import Button from './comp/Button'
-import socketIOClient from 'socket.io-client'
 import Game from '../server/Game'
 
 type Props = {
@@ -38,7 +38,8 @@ class Menu extends React.Component<Props> {
           <Button className={[styles.button, styles.join].join(' ')} color="green" onClick={this.join} tabIndex="1">
             <span role="img" aria-label="Card">🃏</span> Join
           </Button>
-          <Button className={[styles.button, styles.host].join(' ')} color="darkturquoise" onClick={this.host} tabIndex="2">
+          <Button className={[styles.button, styles.host].join(' ')} color="darkturquoise" onClick={this.host}
+                  tabIndex="2">
             <span role="img" aria-label="House">🏠</span> Host
           </Button>
         </div>
@@ -47,4 +48,5 @@ class Menu extends React.Component<Props> {
     )
   }
 }
+
 export default hot(module)(Menu)

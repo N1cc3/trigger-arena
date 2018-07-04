@@ -4,6 +4,8 @@ import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import styles from './Player.css'
 import CardMini from './CardMini'
+import Player from '../server/Player'
+import Card from '../server/Card'
 
 import heart from './img/heart.png'
 import skull0 from './img/skull0.png'
@@ -14,8 +16,6 @@ import skull4 from './img/skull4.png'
 import skull5 from './img/skull5.png'
 import skull6 from './img/skull6.png'
 import skull7 from './img/skull7.png'
-import Player from '../server/Player'
-import Card from '../server/Card'
 
 const skulls = [skull0, skull1, skull2, skull3, skull4, skull5, skull6, skull7]
 const randomSkull = () => {
@@ -46,7 +46,7 @@ class PlayerC extends React.Component<Props, State> {
     this.skull = randomSkull()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState, ss) {
     const newHp = this.props.player.hp
     if (this.state.hp !== newHp) {
       const hpDiff = newHp - this.state.hp
@@ -64,16 +64,16 @@ class PlayerC extends React.Component<Props, State> {
     const hpDiffStyle = {
       color: hpDiff != null && hpDiff > 0 ? 'green' : 'red',
       fontSize: hpDiff != null ? `${1.5 + 0.5 * Math.abs(hpDiff)}em` : '0',
-      background: `radial-gradient(circle closest-side, ${backgroundColor}, transparent)`
+      background: `radial-gradient(circle closest-side, ${backgroundColor}, transparent)`,
     }
     const hpDiffElem = hpDiff != null ? <div className={styles.hpDiff} style={hpDiffStyle}
-      onAnimationEnd={() => this.setState({hpDiff: null})}>
+                                             onAnimationEnd={() => this.setState({hpDiff: null})}>
       {Math.abs(hpDiff)}
     </div> : null
 
     const hp = this.props.player.hp
     const hpStyle = {
-      backgroundImage: `url(${hp > 0 ? heart : this.skull})`
+      backgroundImage: `url(${hp > 0 ? heart : this.skull})`,
     }
     const hpElement = <div className={styles.hp} style={hpStyle}>
       {hp > 0 ? hp : null}
@@ -81,7 +81,7 @@ class PlayerC extends React.Component<Props, State> {
     </div>
 
     return (
-			<div className={styles.player} highlight={this.props.highlight.toString()} dead={this.props.dead.toString()}>
+      <div className={styles.player} highlight={this.props.highlight.toString()} dead={this.props.dead.toString()}>
         <div className={styles.stats}>
           <div className={styles.name}>{this.props.player.name}</div>
           {hpElement}
@@ -89,8 +89,9 @@ class PlayerC extends React.Component<Props, State> {
         <div className={styles.cards}>
           {boardCards}
         </div>
-			</div>
+      </div>
     )
   }
 }
+
 export default hot(module)(PlayerC)

@@ -57,7 +57,8 @@
     "test": "node scripts/test.js --env=jsdom",
     "server": "nodemon src/server/server.js --exec babel-node --presets env,stage-2",
     "clean": "rm -rf build && mkdir build",
-    "build-babel": "babel -d ./build ./src/server -s"
+    "build-babel": "babel -d ./build ./src/server -s",
+    "flow": "flow"
   },
   "jest": {
     "collectCoverageFrom": [

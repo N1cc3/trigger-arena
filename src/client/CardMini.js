@@ -59,7 +59,7 @@ class CardMini extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState, ss) {
     if (this.props.card.triggered === false) this.triggered = false
     if (this.props.card.triggered && this.triggered === false) this.trigger()
   }
@@ -86,20 +86,21 @@ class CardMini extends React.Component<Props, State> {
       <div className={styles.cooldown}>
         {this.isPeriodic ? this.props.card.cooldown : '⌛'}
       </div>
-    : null
+      : null
 
     return (
       <div className={styles.card}
-        instant={this.isInstant.toString()}
-        used={(this.props.card.cooldown > 0).toString()}
-        periodic={this.isPeriodic.toString()}
-        rarity={rarityName}
-        new={this.state.new.toString()}>
+           instant={this.isInstant.toString()}
+           used={(this.props.card.cooldown > 0).toString()}
+           periodic={this.isPeriodic.toString()}
+           rarity={rarityName}
+           new={this.state.new.toString()}>
         <div>
           # {this.props.card.number}
         </div>
         <div>
-          <span role="img" aria-label="Gem" className={styles.rarityGem} rarity={rarityName}>💎</span> {Math.round(this.props.card.rarity)}
+          <span role="img" aria-label="Gem" className={styles.rarityGem}
+                rarity={rarityName}>💎</span> {Math.round(this.props.card.rarity)}
         </div>
         <div>
           <span role="img" aria-label="Light Bulb">💡</span> {this.props.card.trigger.shortName}
@@ -116,6 +117,7 @@ class CardMini extends React.Component<Props, State> {
   }
 
 }
+
 export default hot(module)(CardMini)
 
 const getRarityName: (number) => RarityName = (r) => {

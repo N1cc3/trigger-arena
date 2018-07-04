@@ -7,9 +7,12 @@ class ClientCard extends Card {
 
   constructor(...args) {
     super(...args)
-    this.onUse = () => {}
-    this.onReady = () => {}
+    this.onUse = () => {
+    }
+    this.onReady = () => {
+    }
     this.triggered = false
   }
 }
+
 export default ClientCard
