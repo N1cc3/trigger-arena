@@ -79,9 +79,6 @@ class Cards extends React.Component<Props, State> {
     })
 
     this.props.socket.emit('cards')
-
-    // $FlowFixMe
-    this.yourTurnAnimEnd = this.yourTurnAnimEnd.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState, ss) {
@@ -90,7 +87,7 @@ class Cards extends React.Component<Props, State> {
     }
   }
 
-  yourTurnAnimEnd(): void {
+  yourTurnAnimEnd: () => void = () => {
     this.setState({yourTurn: false, yourTurnNotification: false})
   }
 

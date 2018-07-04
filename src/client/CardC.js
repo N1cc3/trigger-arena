@@ -20,20 +20,11 @@ type Props = {
 }
 
 class CardC extends React.Component<Props> {
-  constructor(props) {
-    super(props)
-
-    // $FlowFixMe
-    this.useCard = this.useCard.bind(this)
-    // $FlowFixMe
-    this.discardCard = this.discardCard.bind(this)
-  }
-
-  useCard() {
+  useCard: () => void = () => {
     this.props.socket.emit('use card', this.props.idx)
   }
 
-  discardCard() {
+  discardCard: () => void = () => {
     this.props.socket.emit('discard card', this.props.idx)
   }
 

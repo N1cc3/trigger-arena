@@ -32,8 +32,6 @@ class Button extends React.Component<Props, State> {
     this.state = {
       pressed: false,
     }
-    this.buttonDown = this.buttonDown.bind(this)
-    this.buttonUp = this.buttonUp.bind(this)
   }
 
   buttonDown: () => void = () => {
