@@ -160,7 +160,7 @@ class GameC extends React.Component<Props, State> {
         const game: ?Game = this.game
         if (game != null) {
           prevState.cards = game.cards.map(c => {
-            const clientCard = new ClientCard(c.trigger, c.effect, c.effect, c.rarity)
+            const clientCard = new ClientCard(c.trigger, c.effect, c.target, c.rarity)
             clientCard.ownerIdx = c.ownerIdx
             clientCard.cooldown = c.cooldown
             clientCard.number = c.number
