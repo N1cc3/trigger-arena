@@ -103,7 +103,7 @@ class GameC extends React.Component<Props, State> {
 
     if (first) { // Animate used card
 
-      const card: ClientCard = new ClientCard(event.card.trigger, event.card.effect, event.card.effect, event.card.rarity)
+      const card: ClientCard = new ClientCard(event.card.trigger, event.card.effect, event.card.target, event.card.rarity)
       card.onUse = () => {
         this.setState((prevState) => {
           if (card.trigger.id === 'instant') {
