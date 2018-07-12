@@ -55,9 +55,9 @@
     "start": "node scripts/start.js",
     "build": "npm run clean && node scripts/build.js && npm run build-babel",
     "test": "node scripts/test.js --env=jsdom",
-    "server": "nodemon src/server/server.js --exec babel-node --presets env,stage-2",
+    "server": "nodemon src/server/server.js --exec babel-node --presets env,stage-2,flow",
     "clean": "rm -rf build && mkdir build",
-    "build-babel": "babel -d ./build ./src/server -s",
+    "build-babel": "babel -d ./build ./src/server -s --presets flow",
     "flow": "flow"
   },
   "jest": {

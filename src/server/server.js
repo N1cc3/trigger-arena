@@ -6,8 +6,7 @@ import SocketIO from 'socket.io'
 import path from 'path'
 import enforce from 'express-sslify'
 import compression from 'compression'
-import Game from './Game.js'
-import Player from './Player.js'
+import Game from './Game'
 
 const app = express()
 const server = http.createServer(app)
@@ -25,104 +24,110 @@ const clients: Array<string> = []
 const games: Array<Game> = []
 
 io.on('connection', socket => {
+
   const socketId: string = socket.id
   console.log(`New client connected: ${socketId}`)
-  const playerId: number = clients.push(socketId) - 1
-  const player: Player = new Player(playerId)
-  let game: ?Game = null
 
-  socket.emit('connected', player)
+  const playerId: number = clients.push(socketId) - 1
+
+  socket.emit('connected')
+
+  socket.on('join game', (gameId) => {
+
+    gameId = Number(gameId)
+    console.log(`Client ${socketId} wants to join game ${gameId}`)
+
+    const game: ?Game = games.find(g => g.id === gameId)
+    if (game == null || game.started) return
+
+    const player = game.newPlayer(playerId)
+    socket.join(gameId)
+    io.to(gameId).emit('join game', player)
+
+    const nextTurn: (number, number) => void = (useIdx, discardIdx) => {
+
+      console.log(`Client ${socketId} wants to use card ${useIdx} and discard card ${discardIdx}`)
+      if (game.animating) return
+
+      game.animating = true
+      const events = game.nextTurn(useIdx, discardIdx)
+
+      socket.emit('cards', player.handCards)
+      io.to(game.id).emit('next turn', {game: game, events: events})
+
+    }
+
+    socket.on('next turn', (useIdx, discardIdx) => {
+
+      nextTurn(useIdx, discardIdx)
+
+    })
+
+    socket.on('change name', (name) => {
+
+      console.log(`Client ${socketId} wants to change name to ${name}`)
+      player.name = name
+      io.emit('change name', player)
+      socket.emit('change name success')
+
+    })
+
+    socket.on('cards', () => {
+
+      console.log(`Client ${socketId} asks for his cards`)
+      socket.emit('cards', player.handCards)
+
+    })
+
+    socket.on('disconnect', () => {
+
+      console.log(`Client ${socketId} disconnected`)
+      player.hp = -Infinity
+      if (player === game.getPlayerInTurn()) nextTurn(0, 1) // End player turn if they disconnect
+
+    })
+
+  })
 
   socket.on('host game', () => {
+
     console.log(`Client ${socketId} wants to host a game`)
     let gameId: number = Math.floor(Math.random() * 9999)
     while (games.map(g => g.id).includes(gameId)) {
       gameId = Math.floor(Math.random() * 9999)
     }
-    game = new Game(gameId)
+
+    const game: Game = new Game(gameId)
     games.push(game)
+
     socket.join(gameId)
     socket.emit('host game', game)
-  })
 
-  socket.on('join game', (gameId) => {
-    gameId = Number(gameId)
-    console.log(`Client ${socketId} wants to join game ${gameId}`)
-    game = games.find(g => g.id === gameId)
-    if (game && !game.started) {
-      socket.join(gameId)
-      game.players.push(player)
-      io.to(gameId).emit('join game', player)
-    }
-  })
+    socket.on('next turn', () => {
 
-  socket.on('change name', (name) => {
-    console.log(`Client ${socketId} wants to change name to ${name}`)
-    player.name = name
-    io.emit('change name', player)
-  })
+      game.animating = false
 
-  const nextTurn = () => {
-    if (game == null) return
-    const events = game.nextTurn()
-    socket.emit('cards', player.handCards)
-    game.animating = true
-    io.to(game.id).emit('next turn', {game: game, events: events})
-  }
-
-  socket.on('use card', (useIdx) => {
-    if (game == null) return
-    console.log(`Client ${socketId} wants to use card ${useIdx}`)
-    if (game.players.indexOf(player) === game.turnIdx
-      && player.discardIdx !== useIdx
-      && game.started
-      && !game.animating) {
-      player.use(useIdx)
-      socket.emit('use card', useIdx)
-      if (player.isReady()) nextTurn()
-    }
-  })
-
-  socket.on('discard card', (discardIdx) => {
-    if (game == null) return
-    console.log(`Client ${socketId} wants to discard card ${discardIdx}`)
-    if (game.players.indexOf(player) === game.turnIdx
-      && player.useIdx !== discardIdx
-      && game.started
-      && !game.animating) {
-      player.discard(discardIdx)
-      socket.emit('discard card', discardIdx)
-      if (player.isReady()) nextTurn()
-    }
-  })
-
-  socket.on('next turn', () => {
-    if (game == null) return
-    game.animating = false
-    for (const p of game.players) {
-      if (p.dead) {
-        io.to(clients[p.id]).emit('you died')
+      for (const player of game.players) {
+        if (player.isDead()) {
+          io.to(clients[player.id]).emit('you died')
+        }
       }
-    }
-    io.to(clients[game.players[game.turnIdx].id]).emit('your turn')
+
+      io.to(clients[game.getPlayerInTurn().id]).emit('your turn')
+
+    })
+
+    socket.on('start game', () => {
+
+      console.log(`Client ${socketId} wants to start the game`)
+      game.started = true
+
+      socket.emit('start game')
+
+    })
+
   })
 
-  socket.on('cards', () => {
-    console.log(`Client ${socketId} asks for his cards`)
-    socket.emit('cards', player.handCards)
-  })
-
-  socket.on('start game', () => {
-    if (game == null) return
-    console.log(`Client ${socketId} wants to start the game`)
-    game.started = true
-    socket.emit('start game')
-  })
-
-  socket.on('disconnect', () => {
-    console.log(`Client ${socketId} disconnected`)
-    player.hp = -Infinity
-  })
 })
 
 server.listen(port, () => console.log(`Listening on port ${port}`))
