@@ -1,6 +1,5 @@
 // @flow
 
-import { randomCard } from './CardData.js'
 import Card from './Card'
 
 class Player {
@@ -16,7 +15,7 @@ class Player {
     this.name = 'Unknown Player'
     this.hp = 10
 
-    this.handCards = [randomCard(), randomCard(), randomCard()]
+    this.handCards = []
     this.boardCards = []
   }
 

@@ -9,7 +9,6 @@ class Card {
   trigger: Trigger
   effect: Effect
   target: Target
-  cooldownAfterTrigger: number
   rarity: number
 
   cooldown: number
@@ -19,22 +18,22 @@ class Card {
     trigger: Trigger,
     effect: Effect,
     target: Target,
-    initCooldown: number,
-    triggerCooldown: number,
+    rarity: number,
   ) {
     this.id = id
     this.trigger = trigger
     this.effect = effect
     this.target = target
+    this.rarity = rarity
 
-    this.cooldown = initCooldown
-    this.cooldownAfterTrigger = triggerCooldown
+    this.cooldown = trigger.getInitCooldown()
   }
 
   resolve: (Game, ?Event, Player) => ?Event = (game, lastEvent, cardOwner) => {
-    if (this.cooldown === 0 && this.trigger.isTriggered(game, lastEvent)) {
+    if (this.cooldown === 0 && this.trigger.isTriggered(game, this, lastEvent)) {
       const targets = this.target.resolve(game, cardOwner)
       this.effect.apply(game, targets)
+      this.cooldown = this.trigger.getCooldownAfterTrigger()
       return new Event(this, targets)
     } else return null
   }
@@ -54,15 +53,17 @@ export interface CardAttribute {
 }
 
 export interface Trigger extends CardAttribute {
-  isTriggered: (Game, ?Event) => boolean;
-  shouldDiscardCard: () => boolean;
+  +isTriggered: (Game, Card, ?Event) => boolean;
+  +getInitCooldown: () => number;
+  +getCooldownAfterTrigger: () => number;
+  +shouldDiscardCard: () => boolean;
 }
 
 export interface Effect extends CardAttribute {
-  apply: (Game, Array<Player>) => void;
+  +apply: (Game, Array<Player>) => void;
 }
 
 export interface Target extends CardAttribute {
-  resolve: (Game, Player) => Array<Player>;
-  shouldDiscardCard: (Game) => boolean;
+  +resolve: (Game, Player) => Array<Player>;
+  +shouldDiscardCard: (Game) => boolean;
 }

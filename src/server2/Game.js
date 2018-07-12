@@ -3,6 +3,7 @@
 import Event from './Event'
 import Player from './Player'
 import Card from './Card'
+import { randomCard } from './CardData'
 
 class Game {
   id: number
@@ -10,15 +11,28 @@ class Game {
   players: Array<Player>
   turn: number
 
+  started: boolean
+  animating: boolean
+
   constructor(id: number) {
     this.id = id
 
     this.players = []
     this.turn = 0
+
+    this.started = false
+    this.animating = false
   }
 
-  nextTurn: (Card, Card) => Array<Event> = (useCard: Card, discardCard: Card) => {
+  nextTurn: (number, number) => Array<Event> = (useCardIdx, discardCardIdx) => {
     const playerInTurn: Player = this.getPlayerInTurn()
+
+    const useCard: Card = playerInTurn.handCards[useCardIdx]
+    const discardCard: Card = playerInTurn.handCards[discardCardIdx]
+
+    playerInTurn.handCards[useCardIdx] = this.newCard()
+    playerInTurn.handCards[discardCardIdx] = this.newCard()
+
     const events: Array<Event> = []
 
     playerInTurn.boardCards.push(useCard)
@@ -28,13 +42,28 @@ class Game {
     if (instantEvent != null) {
       events.push(instantEvent)
       events.push(...this.resolveAllCombos(instantEvent, playerInTurn))
-
-      if (useCard.shouldBeDiscarded(this)) {
-        removeFrom(playerInTurn.boardCards, useCard)
-      }
     }
 
-    // TODO: Check all cards for triggers (i.e. periodics)
+    // Resolve periodic card
+    for (const card of this.getCards()) {
+      const cardOwner = this.getCardOwner(card)
+      if (cardOwner == null) continue
+
+      const event = card.resolve(this, null, cardOwner)
+      if (event == null) continue
+
+      events.push(event)
+      events.push(...this.resolveAllCombos(event, cardOwner))
+    }
+
+    // Discards
+    for (const player of this.players) {
+      for (const card of player.boardCards) {
+        if (card.shouldBeDiscarded(this)) {
+          removeFrom(player.boardCards, card)
+        }
+      }
+    }
 
     return events
   }
@@ -50,6 +79,7 @@ class Game {
       events.push(...this.resolveCombosOneStep(events[i], cardOwner))
       i++
     }
+    return events
   }
 
   resolveCombosOneStep: (Event, Player) => Array<Event> = (event, cardOwner) => {
@@ -75,11 +105,22 @@ class Game {
     }
     return null
   }
+
+  newCard: () => Card = () => {
+    return randomCard(this.getCards().length)
+  }
+
+  newPlayer: (number) => Player = (id) => {
+    const player = new Player(id)
+    player.handCards = [this.newCard(), this.newCard(), this.newCard()]
+    this.players.push(player)
+    return player
+  }
 }
 
 export default Game
 
-const mod: (number, number) => number = (n, m) => {
+export const mod: (number, number) => number = (n, m) => {
   return ((n % m) + m) % m
 }
 
