@@ -4,7 +4,6 @@ import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import styles from './Player.css'
 import CardMini from './CardMini'
-import Card from '../server/Card'
 
 import heart from './img/heart.png'
 import skull0 from './img/skull0.png'
@@ -15,7 +14,7 @@ import skull4 from './img/skull4.png'
 import skull5 from './img/skull5.png'
 import skull6 from './img/skull6.png'
 import skull7 from './img/skull7.png'
-import type { ClientCard, PlayerData } from './GameC'
+import type { ClientCard, PlayerData } from '../api/Api'
 
 const skulls = [skull0, skull1, skull2, skull3, skull4, skull5, skull6, skull7]
 const randomSkull = () => {

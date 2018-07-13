@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 import styles from './CardMini.css'
 import { Howl } from 'howler'
 import foomSrc from './sounds/foom.mp3'
-import type { ClientCard } from './GameC'
+import type { ClientCard } from '../api/Api'
 import Instant from '../server/triggers/Instant'
 import Periodic from '../server/triggers/Periodic'
 

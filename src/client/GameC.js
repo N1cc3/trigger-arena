@@ -12,11 +12,12 @@ import playerJoinSrc from './sounds/playerJoin.mp3'
 import gameStartSrc from './sounds/gameStart.mp3'
 import damageSrc from './sounds/damage.mp3'
 import healSrc from './sounds/heal.mp3'
-import type { Effect, Target, Trigger } from '../server/Card'
-import Card from '../server/Card'
+import type { Effect } from '../server/Card'
 import Instant from '../server/triggers/Instant'
 import Heal from '../server/effects/Heal'
 import Damage from '../server/effects/Damage'
+import type { ClientCard, EventData, GameData, PlayerData } from '../api/Api'
+import { cardTransform } from '../api/Api'
 
 const playerJoin = new Howl({
   src: [playerJoinSrc],
@@ -34,52 +35,6 @@ const heal = new Howl({
   src: [healSrc],
 })
 
-export type ClientCard = {
-  id: number,
-  trigger: Trigger,
-  effect: Effect,
-  target: Target,
-  rarity: number,
-  cooldown: number,
-  onUse: () => void,
-  onReady: () => void,
-  triggered: boolean,
-}
-
-export const cardTransform: (Card, () => void, () => void, boolean) => ClientCard = (card, onUse, onReady, triggered) => {
-  return {
-    id: card.id,
-    trigger: card.trigger,
-    effect: card.effect,
-    target: card.target,
-    rarity: card.rarity,
-    cooldown: card.cooldown,
-    onUse: onUse,
-    onReady: onReady,
-    triggered: triggered,
-  }
-}
-
-export type EventData = {
-  card: Card,
-  targetIdxs: Array<number>,
-}
-export type TurnResultsData = {
-  events: Array<EventData>,
-  usedCard: Card,
-}
-export type PlayerData = {
-  id: number,
-  name: string,
-  hp: number,
-  dead: boolean,
-  boardCards: Array<ClientCard>,
-}
-export type GameData = {
-  id: number,
-  players: Array<PlayerData>,
-  turnIdx: number,
-}
 type Props = {
   socket: socketIOClient,
   game: GameData,

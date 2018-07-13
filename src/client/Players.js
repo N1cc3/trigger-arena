@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import styles from './Players.css'
 import PlayerC from './PlayerC'
-import type { PlayerData } from './GameC'
+import type { PlayerData } from '../api/Api'
 
 const getRow: (Array<PlayerData>, number) => Array<PlayerData> = (players, row) => {
   const firstRowSize = Math.ceil(players.length / 2)
@@ -22,7 +22,8 @@ type Props = {
 
 class Players extends React.Component<Props> {
   render() {
-    const highlightId = this.props.players[this.props.turnIdx].id
+    const playerInTurn: ?PlayerData = this.props.players[this.props.turnIdx]
+    const highlightId = playerInTurn != null ? playerInTurn.id : -1
 
     const deadPlayers = this.props.players.filter(p => p.dead)
     const livePlayers = this.props.players.filter(p => !p.dead)

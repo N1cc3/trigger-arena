@@ -7,10 +7,8 @@ import path from 'path'
 import enforce from 'express-sslify'
 import compression from 'compression'
 import type { TurnResults } from './Game'
-import Game, { mod } from './Game'
-import Player from './Player'
-import type { EventData, GameData, PlayerData, TurnResultsData } from '../client/GameC'
-import { cardTransform } from '../client/GameC'
+import Game from './Game'
+import { gameTransform, turnResultsTransform } from '../api/Api'
 
 const app = express()
 const server = http.createServer(app)
@@ -26,44 +24,6 @@ app.get('/', function (req, res) {
 
 const clients: Array<string> = []
 const games: Array<Game> = []
-
-const turnResultsTransform: (Game, TurnResults) => TurnResultsData = (game, turnResults) => {
-  const transformed: TurnResultsData = {
-    events: [],
-    usedCard: turnResults.usedCard,
-  }
-
-  for (const event of turnResults.events) {
-    const eventC: EventData = {
-      card: event.card,
-      targetIdxs: [],
-    }
-
-    for (const target of event.targets) {
-      eventC.targetIdxs.push(game.players.indexOf(target))
-    }
-  }
-
-  return transformed
-}
-
-const playersTransform: (Array<Player>) => Array<PlayerData> = (players) => {
-  return players.map(p => ({
-    id: p.id,
-    name: p.name,
-    hp: p.hp,
-    dead: p.isDead(),
-    boardCards: p.boardCards.map(c => cardTransform(c, ()=>{}, ()=>{}, false)),
-  }))
-}
-
-const gameTransform: (Game) => GameData = (game) => {
-  return {
-    id: game.id,
-    players: playersTransform(game.players),
-    turnIdx: mod(game.turn, game.players.length),
-  }
-}
 
 io.on('connection', socket => {
 
