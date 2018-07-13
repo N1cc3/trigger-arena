@@ -12,11 +12,11 @@ import playerJoinSrc from './sounds/playerJoin.mp3'
 import gameStartSrc from './sounds/gameStart.mp3'
 import damageSrc from './sounds/damage.mp3'
 import healSrc from './sounds/heal.mp3'
-import Player from '../server/Player'
-import Game from '../server/Game'
-import Event from '../server/Event'
-import CardAttribute from '../server/CardAttribute'
-import ClientCard from './ClientCard'
+import type { Effect, Target, Trigger } from '../server/Card'
+import Card from '../server/Card'
+import Instant from '../server/triggers/Instant'
+import Heal from '../server/effects/Heal'
+import Damage from '../server/effects/Damage'
 
 const playerJoin = new Howl({
   src: [playerJoinSrc],
@@ -34,45 +34,87 @@ const heal = new Howl({
   src: [healSrc],
 })
 
+export type ClientCard = {
+  id: number,
+  trigger: Trigger,
+  effect: Effect,
+  target: Target,
+  rarity: number,
+  cooldown: number,
+  onUse: () => void,
+  onReady: () => void,
+  triggered: boolean,
+}
+
+export const cardTransform: (Card, () => void, () => void, boolean) => ClientCard = (card, onUse, onReady, triggered) => {
+  return {
+    id: card.id,
+    trigger: card.trigger,
+    effect: card.effect,
+    target: card.target,
+    rarity: card.rarity,
+    cooldown: card.cooldown,
+    onUse: onUse,
+    onReady: onReady,
+    triggered: triggered,
+  }
+}
+
+export type EventData = {
+  card: Card,
+  targetIdxs: Array<number>,
+}
+export type TurnResultsData = {
+  events: Array<EventData>,
+  usedCard: Card,
+}
+export type PlayerData = {
+  id: number,
+  name: string,
+  hp: number,
+  dead: boolean,
+  boardCards: Array<ClientCard>,
+}
+export type GameData = {
+  id: number,
+  players: Array<PlayerData>,
+  turnIdx: number,
+}
 type Props = {
   socket: socketIOClient,
-  gameId: number,
+  game: GameData,
   onGameOver: () => void,
 }
 
 type State = {
-  players: Array<Player>,
-  cards: Array<ClientCard>,
+  game: GameData,
   instant: ?ClientCard,
-  turnIdx: number,
   started: boolean,
   gameOver: boolean,
-  winner: ?Player,
+  winner: ?PlayerData,
 }
 
 class GameC extends React.Component<Props, State> {
-  game: ?Game
-  events: Array<Event>
+  game: GameData
+  events: Array<EventData>
 
   constructor(props) {
     super(props)
 
     this.state = {
-      players: [],
-      cards: [],
+      game: this.props.game,
       instant: null,
-      turnIdx: 0,
       started: false,
       gameOver: false,
       winner: null,
     }
 
-    this.game = null
+    this.game = this.props.game
     this.events = []
 
     this.props.socket.on('join game', (player) => {
       this.setState((prevState) => {
-        prevState.players.push(player)
+        prevState.game.players.push(player)
         return prevState
       })
       playerJoin.play()
@@ -80,7 +122,7 @@ class GameC extends React.Component<Props, State> {
 
     this.props.socket.on('change name', (player) => {
       this.setState((prevState) => {
-        const p: ?Player = prevState.players.find(p => p.id === player.id)
+        const p: ?PlayerData = prevState.game.players.find(p => p.id === player.id)
         if (p) p.name = player.name
         return prevState
       })
@@ -99,37 +141,38 @@ class GameC extends React.Component<Props, State> {
   }
 
   animateEvents = (first: boolean = false) => {
-    const event: Event = this.events.shift()
+    const event: EventData = this.events.shift()
 
     if (first) { // Animate used card
 
-      const card: ClientCard = new ClientCard(event.card.trigger, event.card.effect, event.card.effect, event.card.rarity)
-      card.onUse = () => {
-        this.setState((prevState) => {
-          if (card.trigger.id === 'instant') {
-            if (prevState.instant != null) prevState.instant.cooldown++
-          } else {
-            const card1: ?ClientCard = prevState.cards.find(c => c.number === card.number)
-            const card2: ?ClientCard = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
-            if (card1 != null && card2 != null) card1.cooldown = card2.cooldown + 1
-          }
-          applyEffect(card.effect, prevState.players, event.targetIdxs)
-          return prevState
-        })
-      }
-      card.onReady = () => {
-        this.setState({instant: null})
-        this.animateEvents()
-      }
-      card.triggered = false
-      card.number = event.card.number
-      card.ownerIdx = event.card.ownerIdx
+      const card = cardTransform(
+        event.card,
+        () => {
+          this.setState((prevState) => {
+            if (event.card.trigger instanceof Instant) {
+              if (prevState.instant != null) prevState.instant.cooldown++
+            } else {
+              const card1 = findCard(prevState.game.players, card.id)
+              const card2 = findCard(this.game.players, card.id)
+              if (card1 != null && card2 != null) card1.cooldown = card2.cooldown + 1
+            }
+            applyEffect(event.card.effect, prevState.game.players, event.targetIdxs)
+            return prevState
+          })
+        },
+        () => {
+          this.setState({instant: null})
+          this.animateEvents()
+        },
+        false,
+      )
 
-      if (card.trigger.id === 'instant') {
+      if (card.trigger instanceof Instant) {
         this.setState({instant: card})
       } else {
         this.setState((prevState) => {
-          prevState.cards.push(card)
+          const cardOwner = findCardOwner(prevState.game.players, card.id)
+          if (cardOwner != null) cardOwner.boardCards.push(card)
           return prevState
         })
       }
@@ -137,19 +180,20 @@ class GameC extends React.Component<Props, State> {
     } else if (event) { // Animate combo or periodic card
 
       this.setState((prevState) => {
-        const card: ?ClientCard = prevState.cards.find(c => c.number === event.card.number)
-        if (card == null) return prevState
-        card.triggered = true
-        card.onUse = () => {
-          this.setState((prevState) => {
-            applyEffect(card.effect, prevState.players, event.targetIdxs)
-            const card2: ?ClientCard = this.game != null ? this.game.cards.find(c => c.number === card.number) : null
-            if (card2 != null) card.cooldown = card2.cooldown + 1
-            return prevState
-          })
-        }
-        card.onReady = () => {
-          this.animateEvents()
+        const card = findCard(prevState.game.players, event.card.id)
+        if (card != null) {
+          card.triggered = true
+          card.onUse = () => {
+            this.setState((prevState) => {
+              applyEffect(card.effect, prevState.game.players, event.targetIdxs)
+              const card2 = findCard(this.game.players, card.id)
+              if (card2 != null) card.cooldown = card2.cooldown + 1
+              return prevState
+            })
+          }
+          card.onReady = () => {
+            this.animateEvents()
+          }
         }
         return prevState
       })
@@ -157,23 +201,9 @@ class GameC extends React.Component<Props, State> {
     } else { // Event animations complete
 
       this.setState((prevState) => {
-        const game: ?Game = this.game
-        if (game != null) {
-          prevState.cards = game.cards.map(c => {
-            const clientCard = new ClientCard(c.trigger, c.effect, c.effect, c.rarity)
-            clientCard.ownerIdx = c.ownerIdx
-            clientCard.cooldown = c.cooldown
-            clientCard.number = c.number
-            return clientCard
-          })
-          for (const card of prevState.cards) {
-            card.triggered = false
-          }
-          prevState.turnIdx = game.turnIdx
-          prevState.gameOver = game.gameOver
-          prevState.winner = game.winner
-          prevState.players = game.players
-        }
+        // prevState.gameOver = game.gameOver
+        // prevState.winner = game.winner
+        prevState.game = this.game
         return prevState
       })
 
@@ -191,7 +221,7 @@ class GameC extends React.Component<Props, State> {
 
   render() {
     const gameId = !this.state.started ? (
-      <div className={styles.gameId}>Game ID: {('0000' + this.props.gameId).slice(-4)}</div>
+      <div className={styles.gameId}>Game ID: {('0000' + this.props.game.id).slice(-4)}</div>
     ) : null
 
     const startButton = this.state.started ? null : (
@@ -217,9 +247,8 @@ class GameC extends React.Component<Props, State> {
       <div className={styles.game}>
         {gameId}
 
-        <Players players={this.state.players}
-                 cards={this.state.cards}
-                 turnIdx={this.state.turnIdx}/>
+        <Players players={this.state.game.players}
+                 turnIdx={this.state.game.turnIdx}/>
 
         {instant}
         {startButton}
@@ -231,21 +260,33 @@ class GameC extends React.Component<Props, State> {
 
 export default hot(module)(GameC)
 
-const applyEffect: (CardAttribute, Array<Player>, Array<number>) => void = (effect, players, targetIdxs) => {
+const applyEffect: (Effect, Array<PlayerData>, Array<number>) => void = (effect, players, targetIdxs) => {
   for (const targetIdx of targetIdxs) {
-    const value = effect.variableValue
+    const value = effect.value
     if (value == null) continue
+
     const target = players[targetIdx]
-    switch (effect.id) {
-      case 'heal':
-        target.hp += value
-        heal.play()
-        break
-      case 'damage':
-      default:
-        target.hp -= value
-        damage.play()
-        break
+
+    if (effect instanceof Heal) {
+      target.hp += value
+      heal.play()
+    } else if (effect instanceof Damage) {
+      target.hp -= value
+      damage.play()
     }
+  }
+}
+
+const findCard: (Array<PlayerData>, number) => ?ClientCard = (players, cardId) => {
+  for (const player of players) {
+    const card = player.boardCards.find(c => c.id === cardId)
+    if (card != null) return card
+  }
+}
+
+const findCardOwner: (Array<PlayerData>, number) => ?PlayerData = (players, cardId) => {
+  for (const player of players) {
+    const card = player.boardCards.find(c => c.id === cardId)
+    if (card != null) return player
   }
 }

@@ -5,6 +5,8 @@ import Player from './Player'
 import Card from './Card'
 import { randomCard } from './CardData'
 
+export type TurnResults = { events: Array<Event>, usedCard: Card }
+
 class Game {
   id: number
 
@@ -24,11 +26,11 @@ class Game {
     this.animating = false
   }
 
-  nextTurn: (number, number) => Array<Event> = (useCardIdx, discardCardIdx) => {
+  nextTurn: (number, number) => TurnResults = (useCardIdx, discardCardIdx) => {
     const playerInTurn: Player = this.getPlayerInTurn()
 
     const useCard: Card = playerInTurn.handCards[useCardIdx]
-    const discardCard: Card = playerInTurn.handCards[discardCardIdx]
+    // const discardCard: Card = playerInTurn.handCards[discardCardIdx]
 
     playerInTurn.handCards[useCardIdx] = this.newCard()
     playerInTurn.handCards[discardCardIdx] = this.newCard()
@@ -65,7 +67,7 @@ class Game {
       }
     }
 
-    return events
+    return { events: events, usedCard: useCard }
   }
 
   getPlayerInTurn: () => Player = () => {

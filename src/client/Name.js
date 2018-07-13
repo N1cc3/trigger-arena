@@ -8,7 +8,6 @@ import Button from './comp/Button'
 
 type Props = {
   socket: socketIOClient,
-  playerId: number,
   onReady: () => void,
 }
 
@@ -24,10 +23,8 @@ class Name extends React.Component<Props, State> {
       name: '',
     }
 
-    this.props.socket.on('change name', (player) => {
-      if (player.id === this.props.playerId) {
-        this.props.onReady()
-      }
+    this.props.socket.on('change name success', () => {
+      this.props.onReady()
     })
   }
 

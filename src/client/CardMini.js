@@ -6,7 +6,9 @@ import ReactDOM from 'react-dom'
 import styles from './CardMini.css'
 import { Howl } from 'howler'
 import foomSrc from './sounds/foom.mp3'
-import ClientCard from './ClientCard'
+import type { ClientCard } from './GameC'
+import Instant from '../server/triggers/Instant'
+import Periodic from '../server/triggers/Periodic'
 
 const foom = new Howl({
   src: [foomSrc],
@@ -35,8 +37,8 @@ class CardMini extends React.Component<Props, State> {
     }
 
     this.triggered = false
-    this.isInstant = (this.props.card.trigger.id === 'instant')
-    this.isPeriodic = (this.props.card.trigger.id === 'periodic')
+    this.isInstant = (this.props.card.trigger instanceof Instant)
+    this.isPeriodic = (this.props.card.trigger instanceof Periodic)
   }
 
   componentDidMount() {
@@ -96,7 +98,7 @@ class CardMini extends React.Component<Props, State> {
            rarity={rarityName}
            new={this.state.new.toString()}>
         <div>
-          # {this.props.card.number}
+          # {this.props.card.id}
         </div>
         <div>
           <span role="img" aria-label="Gem" className={styles.rarityGem}

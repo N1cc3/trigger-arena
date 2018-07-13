@@ -12,7 +12,7 @@ class Player {
 
   constructor(id: number) {
     this.id = id
-    this.name = 'Unknown Player'
+    this.name = '?'
     this.hp = 10
 
     this.handCards = []

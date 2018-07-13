@@ -4,7 +4,6 @@ import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import styles from './Player.css'
 import CardMini from './CardMini'
-import Player from '../server/Player'
 import Card from '../server/Card'
 
 import heart from './img/heart.png'
@@ -16,6 +15,7 @@ import skull4 from './img/skull4.png'
 import skull5 from './img/skull5.png'
 import skull6 from './img/skull6.png'
 import skull7 from './img/skull7.png'
+import type { ClientCard, PlayerData } from './GameC'
 
 const skulls = [skull0, skull1, skull2, skull3, skull4, skull5, skull6, skull7]
 const randomSkull = () => {
@@ -23,8 +23,8 @@ const randomSkull = () => {
 }
 
 type Props = {
-  player: Player,
-  cards: Array<Card>,
+  player: PlayerData,
+  cards: Array<ClientCard>,
   highlight: boolean,
   dead: boolean,
 }
@@ -56,7 +56,7 @@ class PlayerC extends React.Component<Props, State> {
 
   render() {
     const boardCards = this.props.cards ? this.props.cards.map((card) => (
-      <CardMini key={card.number} card={card}/>
+      <CardMini key={card.id} card={card}/>
     )) : null
 
     const hpDiff = this.state.hpDiff
@@ -66,10 +66,11 @@ class PlayerC extends React.Component<Props, State> {
       fontSize: hpDiff != null ? `${1.5 + 0.5 * Math.abs(hpDiff)}em` : '0',
       background: `radial-gradient(circle closest-side, ${backgroundColor}, transparent)`,
     }
-    const hpDiffElem = hpDiff != null ? <div className={styles.hpDiff} style={hpDiffStyle}
-                                             onAnimationEnd={() => this.setState({hpDiff: null})}>
-      {Math.abs(hpDiff)}
-    </div> : null
+    const hpDiffElem = hpDiff != null ?
+      <div className={styles.hpDiff} style={hpDiffStyle}
+           onAnimationEnd={() => this.setState({hpDiff: null})}>
+        {Math.abs(hpDiff)}
+      </div> : null
 
     const hp = this.props.player.hp
     const hpStyle = {

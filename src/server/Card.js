@@ -46,24 +46,24 @@ class Card {
 export default Card
 
 export interface CardAttribute {
-  +type: string;
-  +longName: string;
-  +shortName: string;
+  type: string;
+  longName: string;
+  shortName: string;
   value: ?number;
 }
 
 export interface Trigger extends CardAttribute {
-  +isTriggered: (Game, Card, ?Event) => boolean;
-  +getInitCooldown: () => number;
-  +getCooldownAfterTrigger: () => number;
-  +shouldDiscardCard: () => boolean;
+  isTriggered: (Game, Card, ?Event) => boolean;
+  getInitCooldown: () => number;
+  getCooldownAfterTrigger: () => number;
+  shouldDiscardCard: () => boolean;
 }
 
 export interface Effect extends CardAttribute {
-  +apply: (Game, Array<Player>) => void;
+  apply: (Game, Array<Player>) => void;
 }
 
 export interface Target extends CardAttribute {
-  +resolve: (Game, Player) => Array<Player>;
-  +shouldDiscardCard: (Game) => boolean;
+  resolve: (Game, Player) => Array<Player>;
+  shouldDiscardCard: (Game) => boolean;
 }

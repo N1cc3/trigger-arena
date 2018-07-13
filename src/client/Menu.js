@@ -18,7 +18,7 @@ class Menu extends React.Component<Props> {
     super(props)
 
     this.props.socket.on('host game', (game) => {
-      this.props.onHost(game.id)
+      this.props.onHost(game)
     })
   }
 

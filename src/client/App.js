@@ -12,6 +12,7 @@ import styles from './App.css'
 import { Howl } from 'howler'
 import menuMusicSrc from './sounds/menuMusic.mp3'
 import gameOverMusicSrc from './sounds/gameOverMusic.mp3'
+import Game from '../server/Game'
 
 const menuMusic = new Howl({
   src: [menuMusicSrc],
@@ -37,10 +38,9 @@ const doorView = (socket, onJoin) => {
   return <Door socket={socket} onJoin={onJoin}/>
 }
 
-const nameView = (socket, playerId, onReady) => {
+const nameView = (socket, onReady) => {
   return <Name
     socket={socket}
-    playerId={playerId}
     onReady={onReady}
   />
 }
@@ -53,8 +53,8 @@ const menuView = (socket, onJoin, onHost) => {
   return <Menu socket={socket} onJoin={onJoin} onHost={onHost}/>
 }
 
-const gameView = (socket, gameId) => {
-  return <GameC socket={socket} gameId={gameId} onGameOver={onGameOver}/>
+const gameView = (socket, game) => {
+  return <GameC socket={socket} game={game} onGameOver={onGameOver}/>
 }
 
 type Props = {
@@ -62,7 +62,6 @@ type Props = {
 }
 
 type State = {
-  playerId: ?number,
   active: React.Node,
 }
 
@@ -80,23 +79,22 @@ class App extends React.Component<Props, State> {
     }
 
     const goToName = () => {
-      this.setState({active: nameView(this.props.socket, this.state.playerId, goToDoor)})
+      this.setState({active: nameView(this.props.socket, goToCards)})
     }
 
     const goToDoor = () => {
-      this.setState({active: doorView(this.props.socket, goToCards)})
+      this.setState({active: doorView(this.props.socket, goToName)})
     }
 
-    const goToGame = (gameId: Number) => {
+    const goToGame = (game: Game) => {
       menuMusic.play()
       menuMusic.fade(0, 1, 2000)
-      this.setState({active: gameView(this.props.socket, gameId)})
+      this.setState({active: gameView(this.props.socket, game)})
     }
 
-    this.props.socket.on('connected', (player) => {
+    this.props.socket.on('connected', () => {
       this.setState({
-        playerId: player.id,
-        active: menuView(this.props.socket, goToName, goToGame),
+        active: menuView(this.props.socket, goToDoor, goToGame),
       })
     })
   }
