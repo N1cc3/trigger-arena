@@ -3,7 +3,7 @@
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import socketIOClient from 'socket.io-client'
-import styles from './Cards.css'
+import styles from './PlayerView.css'
 import CardC from './CardC'
 import { Howl } from 'howler'
 import deathSrc from './sounds/death.mp3'
@@ -30,7 +30,7 @@ type State = {
   dead: boolean,
 }
 
-class Cards extends React.Component<Props, State> {
+class PlayerView extends React.Component<Props, State> {
   socket: socketIOClient
 
   constructor(props) {
@@ -116,4 +116,4 @@ class Cards extends React.Component<Props, State> {
   }
 }
 
-export default hot(module)(Cards)
+export default hot(module)(PlayerView)

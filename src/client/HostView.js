@@ -3,7 +3,7 @@
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import socketIOClient from 'socket.io-client'
-import styles from './GameC.css'
+import styles from './HostView.css'
 import Players from './Players'
 import CardMini from './CardMini'
 import Button from './comp/Button'
@@ -49,7 +49,7 @@ type State = {
   winner: ?PlayerData,
 }
 
-class GameC extends React.Component<Props, State> {
+class HostView extends React.Component<Props, State> {
   game: GameData
   events: Array<EventData>
 
@@ -213,7 +213,7 @@ class GameC extends React.Component<Props, State> {
   }
 }
 
-export default hot(module)(GameC)
+export default hot(module)(HostView)
 
 const applyEffect: (Effect, Array<PlayerData>, Array<number>) => void = (effect, players, targetIdxs) => {
   for (const targetIdx of targetIdxs) {

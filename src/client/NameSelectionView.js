@@ -3,7 +3,7 @@
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import socketIOClient from 'socket.io-client'
-import styles from './Name.css'
+import styles from './NameSelectionView.css'
 import Button from './comp/Button'
 
 type Props = {
@@ -15,7 +15,7 @@ type State = {
   name: string,
 }
 
-class Name extends React.Component<Props, State> {
+class NameSelectionView extends React.Component<Props, State> {
   constructor(props) {
     super(props)
 
@@ -50,4 +50,4 @@ class Name extends React.Component<Props, State> {
   }
 }
 
-export default hot(module)(Name)
+export default hot(module)(NameSelectionView)

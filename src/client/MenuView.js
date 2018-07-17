@@ -3,7 +3,7 @@
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import socketIOClient from 'socket.io-client'
-import styles from './Menu.css'
+import styles from './MenuView.css'
 import Button from './comp/Button'
 import Game from '../server/Game'
 
@@ -13,7 +13,7 @@ type Props = {
   onJoin: () => void,
 }
 
-class Menu extends React.Component<Props> {
+class MenuView extends React.Component<Props> {
   constructor(props) {
     super(props)
 
@@ -49,4 +49,4 @@ class Menu extends React.Component<Props> {
   }
 }
 
-export default hot(module)(Menu)
+export default hot(module)(MenuView)

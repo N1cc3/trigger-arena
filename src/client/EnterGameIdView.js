@@ -2,7 +2,7 @@
 
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
-import styles from './Door.css'
+import styles from './EnterGameIdView.css'
 import Button from './comp/Button'
 import socketIOClient from 'socket.io-client'
 
@@ -15,7 +15,7 @@ type State = {
   gameId: string,
 }
 
-class Door extends React.Component<Props, State> {
+class EnterGameIdView extends React.Component<Props, State> {
   constructor(props) {
     super(props)
 
@@ -50,4 +50,4 @@ class Door extends React.Component<Props, State> {
   }
 }
 
-export default hot(module)(Door)
+export default hot(module)(EnterGameIdView)
