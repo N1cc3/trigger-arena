@@ -32,8 +32,6 @@ type State = {
 }
 
 class PlayerView extends React.Component<Props, State> {
-  socket: socketIOClient
-
   constructor(props) {
     super(props)
 
@@ -89,7 +87,7 @@ class PlayerView extends React.Component<Props, State> {
   }
 
   endTurn: () => void = () => {
-
+    this.props.socket.emit('next turn', {useIdx: this.state.useIdx, discardIdx: this.state.discardIdx})
   }
 
   render() {
@@ -117,7 +115,7 @@ class PlayerView extends React.Component<Props, State> {
         </div>
 
         <div className={styles.sidebar}>
-          <Button className={styles.endTurn} color={cardsChosen ? 'green' : 'grey'} onClick={this.endTurn()}>
+          <Button className={styles.endTurn} color={cardsChosen ? 'green' : 'grey'} onClick={() => this.endTurn()}>
             End Turn
           </Button>
         </div>

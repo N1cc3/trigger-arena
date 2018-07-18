@@ -60,9 +60,12 @@ io.on('connection', socket => {
 
     }
 
-    socket.on('next turn', (useIdx, discardIdx) => {
+    socket.on('next turn', (actions) => {
 
-      nextTurn(useIdx, discardIdx)
+      if (actions.useIdx != null && actions.discardIdx != null
+        && actions.useIdx !== actions.discardIdx
+        && game.getPlayerInTurn() === player
+      ) nextTurn(actions.useIdx, actions.discardIdx)
 
     })
 
