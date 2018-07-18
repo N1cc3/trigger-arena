@@ -67,6 +67,8 @@ class Game {
       }
     }
 
+    this.turn++
+
     return { events: events, usedCard: useCard }
   }
 
