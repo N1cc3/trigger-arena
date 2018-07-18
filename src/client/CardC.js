@@ -2,7 +2,6 @@
 
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
-import socketIOClient from 'socket.io-client'
 import styles from './CardC.css'
 import Button from './comp/Button'
 import Card from '../server/Card'
@@ -10,7 +9,6 @@ import Card from '../server/Card'
 type RarityName = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'
 
 type Props = {
-  socket: socketIOClient,
   idx: 0 | 1 | 2,
   card: Card,
   onUse: () => void,
@@ -20,14 +18,6 @@ type Props = {
 }
 
 class CardC extends React.Component<Props> {
-  useCard: () => void = () => {
-    this.props.socket.emit('use card', this.props.idx)
-  }
-
-  discardCard: () => void = () => {
-    this.props.socket.emit('discard card', this.props.idx)
-  }
-
   render() {
     const rarityName: RarityName = getRarityName(this.props.card.rarity)
 
@@ -51,11 +41,11 @@ class CardC extends React.Component<Props> {
         </div>
         <div className={styles.buttons}>
           <Button className={styles.use} color="green"
-                  onClick={this.useCard}>
+                  onClick={this.props.onUse}>
             Use
           </Button>
           <Button className={styles.discard} color="red"
-                  onClick={this.discardCard}>
+                  onClick={this.props.onDiscard}>
             Discard
           </Button>
         </div>

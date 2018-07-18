@@ -74,6 +74,14 @@ class PlayerView extends React.Component<Props, State> {
     if (prevState.dead !== this.state.dead && this.state.dead === true) {
       death.play()
     }
+
+    if (this.state.useIdx != null
+      && prevState.useIdx !== this.state.discardIdx
+      && this.state.useIdx === this.state.discardIdx) this.setState({discardIdx: null})
+
+    if (this.state.discardIdx != null
+      && prevState.discardIdx !== this.state.useIdx
+      && this.state.discardIdx === this.state.useIdx) this.setState({useIdx: null})
   }
 
   yourTurnAnimEnd: () => void = () => {
@@ -102,8 +110,9 @@ class PlayerView extends React.Component<Props, State> {
         <div className={styles.cards}>
           {this.state.cards.map((card, index) => (
             <CardC key={index} idx={index} card={card} socket={this.props.socket}
-                   use={this.state.useIdx === index}
-                   discard={this.state.discardIdx === index}/>
+                   use={this.state.useIdx === index} discard={this.state.discardIdx === index}
+                   onUse={() => this.setState({useIdx: index})} onDiscard={() => this.setState({discardIdx: index})}
+            />
           ))}
         </div>
 
