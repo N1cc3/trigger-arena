@@ -6,8 +6,8 @@ import Game from '../Game'
 
 class Random implements Target {
   type = 'random'
-  shortName = 'Random'
-  longName = 'Random'
+  getShortName = () => 'Random'
+  getLongName = () => 'Random'
   value = null
 
   resolve = (game: Game, player: Player) => {

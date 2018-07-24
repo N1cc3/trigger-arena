@@ -12,8 +12,8 @@ class Damage implements Effect {
   }
 
   type = 'damage'
-  shortName = `${this.value ? this.value : '?'} dmg`
-  longName = `Deal ${this.value ? this.value : '?'} damage`
+  getShortName = () => `${this.value ? this.value : '?'} dmg`
+  getLongName = () => `Deal ${this.value ? this.value : '?'} damage`
 
   apply = (game: Game, targets: Array<Player>) => {
     if (this.value == null) return

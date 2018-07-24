@@ -7,8 +7,8 @@ import Event from '../Event'
 
 class Instant implements Trigger {
   type = 'instant'
-  shortName = 'Instant'
-  longName = 'Instant'
+  getShortName = () => 'Instant'
+  getLongName = () => 'Instant'
   value = null
 
   isTriggered = (game: Game, card: Card, event: ?Event) => {

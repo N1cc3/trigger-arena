@@ -8,7 +8,7 @@ import enforce from 'express-sslify'
 import compression from 'compression'
 import type { TurnResults } from './Game'
 import Game from './Game'
-import { gameTransform, turnResultsTransform } from '../api/Api'
+import { cardTransform, gameTransform, turnResultsTransform } from '../api/Api'
 
 const app = express()
 const server = http.createServer(app)
@@ -55,7 +55,7 @@ io.on('connection', socket => {
       const turnResults: TurnResults = game.nextTurn(useIdx, discardIdx)
       const turnResultsTransformed = turnResultsTransform(game, turnResults)
 
-      socket.emit('cards', player.handCards)
+      socket.emit('cards', player.handCards.map(c => cardTransform(c)))
       io.to(game.id).emit('next turn', { game: gameTransform(game), ...turnResultsTransformed })
 
     }
@@ -81,7 +81,7 @@ io.on('connection', socket => {
     socket.on('cards', () => {
 
       console.log(`Client ${socketId} asks for his cards`)
-      socket.emit('cards', player.handCards)
+      socket.emit('cards', player.handCards.map(c => cardTransform(c)))
 
     })
 
@@ -107,7 +107,7 @@ io.on('connection', socket => {
     games.push(game)
 
     socket.join(gameId)
-    socket.emit('host game', game)
+    socket.emit('host game', gameTransform(game))
 
     socket.on('next turn', () => {
 

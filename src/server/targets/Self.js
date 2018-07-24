@@ -6,8 +6,8 @@ import Game from '../Game'
 
 class Self implements Target {
   type = 'self'
-  shortName = 'Self'
-  longName = 'Self'
+  getShortName = () => 'Self'
+  getLongName = () => 'Self'
   value = null
 
   resolve = (game: Game, player: Player) => {

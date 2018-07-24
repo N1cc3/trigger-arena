@@ -3,7 +3,7 @@
 import Event from './Event'
 import Player from './Player'
 import Card from './Card'
-import { randomCard } from './CardData'
+import { randomCard } from './CardGenerator'
 
 export type TurnResults = { events: Array<Event>, usedCard: Card }
 

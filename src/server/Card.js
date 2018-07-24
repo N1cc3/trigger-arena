@@ -47,8 +47,8 @@ export default Card
 
 export interface CardAttribute {
   type: string;
-  longName: string;
-  shortName: string;
+  getLongName: () => string;
+  getShortName: () => string;
   value: ?number;
 }
 

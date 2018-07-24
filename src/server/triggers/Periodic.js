@@ -13,8 +13,8 @@ class Periodic implements Trigger {
   }
 
   type = 'periodic'
-  shortName = `Every ${this.value ? this.value : '?'}. turn`
-  longName = `Every ${this.value ? this.value : '?'}. turn`
+  getShortName = () => `Every ${this.value ? this.value : '?'}. turn`
+  getLongName = () => `Every ${this.value ? this.value : '?'}. turn`
 
   isTriggered = (game: Game, card: Card, event: ?Event) => true
 

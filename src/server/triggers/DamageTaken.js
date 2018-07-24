@@ -7,8 +7,8 @@ import Event from '../Event'
 
 class DamageTaken implements Trigger {
   type = 'damageTaken'
-  shortName = 'Dmg taken'
-  longName = 'On damage taken'
+  getShortName = () => 'Dmg taken'
+  getLongName = () => 'On damage taken'
   value = null
 
   isTriggered = (game: Game, card: Card, event: ?Event) => {

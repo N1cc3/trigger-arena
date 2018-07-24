@@ -3,7 +3,7 @@
 import { hot } from 'react-hot-loader'
 import * as React from 'react'
 import socketIOClient from 'socket.io-client'
-import styles from './HostView.css'
+import styles from './BoardView.css'
 import Players from './Players'
 import CardMini from './CardMini'
 import Button from './comp/Button'
@@ -16,8 +16,7 @@ import type { Effect } from '../server/Card'
 import Instant from '../server/triggers/Instant'
 import Heal from '../server/effects/Heal'
 import Damage from '../server/effects/Damage'
-import type { ClientCard, EventData, GameData, PlayerData } from '../api/Api'
-import { cardTransform } from '../api/Api'
+import type { CardData, EventData, GameData, PlayerData, TurnResultsData } from '../api/Api'
 
 const playerJoin = new Howl({
   src: [playerJoinSrc],
@@ -43,13 +42,13 @@ type Props = {
 
 type State = {
   game: GameData,
-  instant: ?ClientCard,
+  instant: ?CardData,
   started: boolean,
   gameOver: boolean,
   winner: ?PlayerData,
 }
 
-class HostView extends React.Component<Props, State> {
+class BoardView extends React.Component<Props, State> {
   game: GameData
   events: Array<EventData>
 
@@ -88,39 +87,37 @@ class HostView extends React.Component<Props, State> {
       gameStart.play()
     })
 
-    this.props.socket.on('next turn', (turnResult) => {
-      this.game = turnResult.game
-      this.events = turnResult.events
-      this.animateEvents(this.events.length > 0)
+    this.props.socket.on('next turn', (turnResults: TurnResultsData) => {
+      console.log(turnResults)
+      this.game = turnResults.game
+      this.events = turnResults.events
+      this.animateEvents(turnResults.usedCard)
     })
   }
 
-  animateEvents = (first: boolean = false) => {
+  animateEvents = (card: ?CardData) => {
     const event: EventData = this.events.shift()
 
-    if (first) { // Animate used card
+    if (card != null) { // Animate used card
 
-      const card = cardTransform(
-        event.card,
-        () => {
-          this.setState((prevState) => {
-            if (event.card.trigger instanceof Instant) {
-              if (prevState.instant != null) prevState.instant.cooldown++
-            } else {
-              const card1 = findCard(prevState.game.players, card.id)
-              const card2 = findCard(this.game.players, card.id)
-              if (card1 != null && card2 != null) card1.cooldown = card2.cooldown + 1
-            }
-            applyEffect(event.card.effect, prevState.game.players, event.targetIdxs)
-            return prevState
-          })
-        },
-        () => {
-          this.setState({instant: null})
-          this.animateEvents()
-        },
-        false,
-      )
+      card.onUse = () => {
+        this.setState((prevState) => {
+          if (event.card.trigger instanceof Instant) {
+            if (prevState.instant != null) prevState.instant.cooldown++
+          } else {
+            const card1 = findCard(prevState.game.players, card.id)
+            const card2 = findCard(this.game.players, card.id)
+            if (card1 != null && card2 != null) card1.cooldown = card2.cooldown + 1
+          }
+          applyEffect(event.card.effect, prevState.game.players, event.targetIdxs)
+          return prevState
+        })
+      }
+      card.onReady = () => {
+        this.setState({instant: null})
+        this.animateEvents()
+      }
+      card.triggered = false
 
       if (card.trigger instanceof Instant) {
         this.setState({instant: card})
@@ -213,7 +210,7 @@ class HostView extends React.Component<Props, State> {
   }
 }
 
-export default hot(module)(HostView)
+export default hot(module)(BoardView)
 
 const applyEffect: (Effect, Array<PlayerData>, Array<number>) => void = (effect, players, targetIdxs) => {
   for (const targetIdx of targetIdxs) {
@@ -222,17 +219,17 @@ const applyEffect: (Effect, Array<PlayerData>, Array<number>) => void = (effect,
 
     const target = players[targetIdx]
 
-    if (effect instanceof Heal) {
+    if (effect.type === Heal.prototype.type) {
       target.hp += value
       heal.play()
-    } else if (effect instanceof Damage) {
+    } else if (effect.type === Damage.prototype.type) {
       target.hp -= value
       damage.play()
     }
   }
 }
 
-const findCard: (Array<PlayerData>, number) => ?ClientCard = (players, cardId) => {
+const findCard: (Array<PlayerData>, number) => ?CardData = (players, cardId) => {
   for (const player of players) {
     const card = player.boardCards.find(c => c.id === cardId)
     if (card != null) return card

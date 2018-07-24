@@ -12,8 +12,8 @@ class Heal implements Effect {
   }
 
   type = 'heal'
-  shortName = `Heal ${this.value ? this.value : '?'}`
-  longName = `Heal ${this.value ? this.value : '?'} hp`
+  getShortName = () => `Heal ${this.value ? this.value : '?'}`
+  getLongName = () => `Heal ${this.value ? this.value : '?'} hp`
 
   apply = (game: Game, targets: Array<Player>) => {
     if (this.value == null) return

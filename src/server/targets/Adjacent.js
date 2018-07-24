@@ -6,8 +6,8 @@ import Game, { mod } from '../Game'
 
 class Adjacent implements Target {
   type = 'adjacent'
-  shortName = 'Adjacent'
-  longName = 'Adjacent'
+  getShortName = () => 'Adjacent'
+  getLongName = () => 'Adjacent'
   value = null
 
   resolve = (game: Game, player: Player) => {
