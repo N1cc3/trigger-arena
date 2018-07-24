@@ -123,11 +123,16 @@ class BoardView extends React.Component<Props, State> {
         this.setState({instant: card})
       } else {
         this.setState((prevState) => {
-          const cardOwner = findCardOwner(prevState.game.players, card.id)
-          if (cardOwner != null) cardOwner.boardCards.push(card)
+          const cardOwner: ?PlayerData = findCardOwner(this.game.players, card.id)
+          if (cardOwner != null) {
+            const cardOwnerInGame: ?PlayerData = prevState.game.players.find(p => p.id === cardOwner.id)
+            cardOwnerInGame.boardCards.push(card)
+          }
           return prevState
         })
       }
+
+      this.animateEvents()
 
     } else if (event) { // Animate combo or periodic card
 

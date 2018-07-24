@@ -14,7 +14,7 @@ import skull4 from './img/skull4.png'
 import skull5 from './img/skull5.png'
 import skull6 from './img/skull6.png'
 import skull7 from './img/skull7.png'
-import type { CardData, PlayerData } from '../api/Api'
+import type { PlayerData } from '../api/Api'
 
 const skulls = [skull0, skull1, skull2, skull3, skull4, skull5, skull6, skull7]
 const randomSkull = () => {
@@ -23,7 +23,6 @@ const randomSkull = () => {
 
 type Props = {
   player: PlayerData,
-  cards: Array<CardData>,
   highlight: boolean,
   dead: boolean,
 }
@@ -54,7 +53,8 @@ class PlayerC extends React.Component<Props, State> {
   }
 
   render() {
-    const boardCards = this.props.cards ? this.props.cards.map((card) => (
+    console.log(this.props.player.boardCards)
+    const boardCards = this.props.player.boardCards ? this.props.player.boardCards.map((card) => (
       <CardMini key={card.id} card={card}/>
     )) : null
 
