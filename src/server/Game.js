@@ -16,6 +16,8 @@ class Game {
   started: boolean
   animating: boolean
 
+  cardCount: number
+
   constructor(id: number) {
     this.id = id
 
@@ -24,6 +26,8 @@ class Game {
 
     this.started = false
     this.animating = false
+
+    this.cardCount = 0
   }
 
   nextTurn: (number, number) => TurnResults = (useCardIdx, discardCardIdx) => {
@@ -111,7 +115,7 @@ class Game {
   }
 
   newCard: () => Card = () => {
-    return randomCard(this.getCards().length)
+    return randomCard(this.cardCount++)
   }
 
   newPlayer: (number) => Player = (id) => {
