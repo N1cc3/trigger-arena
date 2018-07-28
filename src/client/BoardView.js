@@ -88,7 +88,6 @@ class BoardView extends React.Component<Props, State> {
     })
 
     this.props.socket.on('next turn', (turnResults: TurnResultsData) => {
-      console.log(turnResults)
       this.game = turnResults.game
       this.events = turnResults.events
       this.animateEvents(turnResults.usedCard)
@@ -102,7 +101,7 @@ class BoardView extends React.Component<Props, State> {
 
       card.onUse = () => {
         this.setState((prevState) => {
-          if (event.card.trigger instanceof Instant) {
+          if (card.trigger.type === 'instant') {
             if (prevState.instant != null) prevState.instant.cooldown++
           } else {
             const card1 = findCard(prevState.game.players, card.id)
@@ -119,20 +118,18 @@ class BoardView extends React.Component<Props, State> {
       }
       card.triggered = false
 
-      if (card.trigger instanceof Instant) {
+      if (card.trigger.type === 'instant') {
         this.setState({instant: card})
       } else {
         this.setState((prevState) => {
           const cardOwner: ?PlayerData = findCardOwner(this.game.players, card.id)
           if (cardOwner != null) {
             const cardOwnerInGame: ?PlayerData = prevState.game.players.find(p => p.id === cardOwner.id)
-            cardOwnerInGame.boardCards.push(card)
+            if (cardOwnerInGame != null) cardOwnerInGame.boardCards.push(card)
           }
           return prevState
         })
       }
-
-      this.animateEvents()
 
     } else if (event) { // Animate combo or periodic card
 
@@ -187,6 +184,7 @@ class BoardView extends React.Component<Props, State> {
       </Button>
     )
 
+    console.log(this.state.instant)
     const instant = this.state.instant ? (
       <div className={styles.instantLayer}>
         <CardMini card={this.state.instant}/>

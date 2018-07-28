@@ -37,8 +37,8 @@ class CardMini extends React.Component<Props, State> {
     }
 
     this.triggered = false
-    this.isInstant = (this.props.card.trigger instanceof Instant)
-    this.isPeriodic = (this.props.card.trigger instanceof Periodic)
+    this.isInstant = (this.props.card.trigger.type === 'instant')
+    this.isPeriodic = (this.props.card.trigger.type === 'periodic')
   }
 
   componentDidMount() {

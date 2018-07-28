@@ -6,8 +6,10 @@ import type { CardAttribute } from '../server/Card'
 
 
 export type CardAttributeData = {
+  type: string,
   longName: string,
   shortName: string,
+  value: ?number,
 }
 
 export type CardData = {

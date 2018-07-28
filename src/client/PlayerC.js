@@ -53,7 +53,6 @@ class PlayerC extends React.Component<Props, State> {
   }
 
   render() {
-    console.log(this.props.player.boardCards)
     const boardCards = this.props.player.boardCards ? this.props.player.boardCards.map((card) => (
       <CardMini key={card.id} card={card}/>
     )) : null
