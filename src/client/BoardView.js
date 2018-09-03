@@ -113,6 +113,7 @@ class BoardView extends React.Component<Props, State> {
         })
       }
       card.onReady = () => {
+        console.log('on ready')
         this.setState({instant: null})
         this.animateEvents()
       }

@@ -111,6 +111,8 @@ io.on('connection', socket => {
 
     socket.on('next turn', () => {
 
+      console.log('next turn')
+
       game.animating = false
 
       for (const player of game.players) {

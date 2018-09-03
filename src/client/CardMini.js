@@ -7,8 +7,6 @@ import styles from './CardMini.css'
 import { Howl } from 'howler'
 import foomSrc from './sounds/foom.mp3'
 import type { CardData } from '../api/Api'
-import Instant from '../server/triggers/Instant'
-import Periodic from '../server/triggers/Periodic'
 
 const foom = new Howl({
   src: [foomSrc],
@@ -16,15 +14,15 @@ const foom = new Howl({
 
 type RarityName = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'
 
-type Props = {
+type CardMiniProps = {
   card: CardData,
 }
 
-type State = {
+type CardMiniState = {
   new: boolean,
 }
 
-class CardMini extends React.Component<Props, State> {
+class CardMini extends React.Component<CardMiniProps, CardMiniState> {
   triggered: boolean
   isInstant: boolean
   isPeriodic: boolean

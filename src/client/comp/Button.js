@@ -15,18 +15,18 @@ const buttonUpSound = new Howl({
   src: [buttonUpSoundSrc],
 })
 
-type Props = {
+type ButtonProps = {
   className: ?string,
   color: ?string,
   onClick: ?(e: SyntheticEvent<HTMLDivElement>) => void,
   children: ?React.Node
 }
 
-type State = {
+type ButtonState = {
   pressed: boolean,
 }
 
-class Button extends React.Component<Props, State> {
+class Button extends React.Component<ButtonProps, ButtonState> {
   constructor(props) {
     super(props)
     this.state = {

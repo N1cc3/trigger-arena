@@ -15,12 +15,12 @@ const getRow: (Array<PlayerData>, number) => Array<PlayerData> = (players, row) 
   }
 }
 
-type Props = {
+type PlayersProps = {
   players: Array<PlayerData>,
   turnIdx: number,
 }
 
-class Players extends React.Component<Props> {
+class Players extends React.Component<PlayersProps> {
   render() {
     const playerInTurn: ?PlayerData = this.props.players[this.props.turnIdx]
     const highlightId = playerInTurn != null ? playerInTurn.id : -1
